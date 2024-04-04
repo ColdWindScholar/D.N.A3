@@ -309,11 +309,11 @@ def env_setup():
         with open(SETUP_JSON, 'r', encoding='utf-8') as ss:
             data = json.load(ss)
         for (name, value) in question_list.items():
-            print("> " + str(i) + ".\t" + name + ": " + data[value])
+            print(f"{YELLOW}[{i}]{CLOSE}\t{BLUE}{name}{CLOSE}: {GREEN}{data[value]}{CLOSE}")
             data1[str(i)] = name
             i += 1
         print("\n")
-        sum = input("请输入你要更改的序列，输入00为返回：")
+        sum = input(f"请输入你要更改的序列，输入{YELLOW}00{CLOSE}为返回：")
         if sum in ["00", "0"]:
             return
         if sum not in data1.keys():
