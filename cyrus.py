@@ -282,7 +282,6 @@ def validate_default_env_setup(SETUP_MANIFEST):
 
 
 def env_setup():
-    os.system('cls' if os.name == 'nt' else "clear")
     question_list = {
         '安卓版本[12]': "ANDROID_SDK",
         '机型代号[alioth]': "DEVICE_CODE",
@@ -303,19 +302,20 @@ def env_setup():
         '动态分区扇区大小[2048]': "SUPER_SECTOR",
         '自定义UTC时间戳[live]': "UTC",
         '分段DAT/IMG支持个数[15]': "UNPACK_SPLIT_DAT"}
-    print("\n> {0}设置文件{1}: {2}".format(GREEN, CLOSE, SETUP_JSON.replace(PWD_DIR, "")))
-    i = 1
-    data1 = {}
-    with open(SETUP_JSON, 'r', encoding='utf-8') as ss:
-        data = json.load(ss)
-    for (name, value) in question_list.items():
-        print("> " + str(i) + ".\t" + name + ": " + data[value])
-        data1[str(i)] = name
-        i = i + 1
     while True:
+        os.system('cls' if os.name == 'nt' else "clear")
+        print("\n> {0}设置文件{1}: {2}".format(GREEN, CLOSE, SETUP_JSON.replace(PWD_DIR, "")))
+        i = 1
+        data1 = {}
+        with open(SETUP_JSON, 'r', encoding='utf-8') as ss:
+            data = json.load(ss)
+        for (name, value) in question_list.items():
+            print("> " + str(i) + ".\t" + name + ": " + data[value])
+            data1[str(i)] = name
+            i += 1
         print("\n")
         sum = input("请输入你要更改的序列，输入00为返回：")
-        if sum in ["00",   "0"]:
+        if sum in ["00", "0"]:
             return
         if sum not in data1.keys():
             continue
@@ -1640,7 +1640,7 @@ def menu_once():
                     if int(which) < len(dict0):
                         if input(
                                 "\x1b[0;31m> 是否删除 \x1b[0;34mNo.{} \x1b[0;31m工程: \x1b[0;32m{}\x1b[0;31m [0/1]:\x1b[0m ".format(
-                                        which, os.path.basename(dict0[int(which)]))) == "1":
+                                    which, os.path.basename(dict0[int(which)]))) == "1":
                             if os.path.isdir(dict0[int(which)]):
                                 rmdire(dict0[int(which)])
                                 if IS_ARM64:
@@ -1771,7 +1771,7 @@ def menu_modules():
                                 if int(which) < len(dict0):
                                     if input(
                                             "\x1b[0;31m> 是否删除 \x1b[0;34mNo.{} \x1b[0;31m插件: \x1b[0;32m{}\x1b[0;31m [0/1]:\x1b[0m ".format(
-                                                    which, os.path.basename(dict0[int(which)]))) == "1":
+                                                which, os.path.basename(dict0[int(which)]))) == "1":
                                         if os.path.isdir(dict0[int(which)]):
                                             rmdire(dict0[int(which)])
                                             continue
