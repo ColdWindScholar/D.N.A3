@@ -313,13 +313,13 @@ def env_setup():
             data1[str(i)] = name
             i += 1
         print("\n")
-        sum = input(f"请输入你要更改的序列，输入{YELLOW}00{CLOSE}为返回：")
-        if sum in ["00", "0"]:
+        sum_ = input(f"请输入你要更改的序列，输入{YELLOW}00{CLOSE}为返回：")
+        if sum_ in ["00", "0"]:
             return
-        if sum not in data1.keys():
+        if sum_ not in data1.keys():
             continue
-        hh = input(data1[sum] + "：")
-        data[question_list[data1[sum]]] = hh
+        hh = input(data1[sum_] + "：")
+        data[question_list[data1[sum_]]] = hh
         validate_default_env_setup(data)
         with open(SETUP_JSON, 'w', encoding='utf-8') as ss:
             json.dump(data, ss, ensure_ascii=False, indent=4)
