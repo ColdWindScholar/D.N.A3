@@ -1095,7 +1095,7 @@ def decompress_img(source, distance, keep=1):
                     shutil.rmtree(distance)
                     os.unlink(source)
         else:
-            while file_type == 'erofs':
+            if file_type == 'erofs':
                 image_size = os.path.getsize(source)
                 with open(DNA_CONF_DIR + os.path.basename(distance) + '_size.txt', 'w') as sf:
                     sf.write(str(image_size))
@@ -1105,10 +1105,10 @@ def decompress_img(source, distance, keep=1):
                     except Exception as e:
                         print("Error moving file:", e)
                     source = source.replace('.unsparse', '')
-                    dump_erofs_cmd = 'extract.erofs -i {} -o {} -x'.format(
+                dump_erofs_cmd = 'extract.erofs -i {} -o {} -x'.format(
                         source.replace(os.sep, '/'),
                         DNA_MAIN_DIR)
-                    call(dump_erofs_cmd)
+                call(dump_erofs_cmd)
 
             distance = DNA_MAIN_DIR + os.path.basename(source).replace('.unsparse.img', '').replace('.img', '')
             if os.path.isdir(distance):
