@@ -936,7 +936,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                             level = SETUP_MANIFEST["REPACK_BR_LEVEL"]
                             DISPLAY("重新生成: {}.new.dat.br {} ...".format(label, level), 3)
                             newdat_brotli = newdat + ".br"
-                            os.system("brotli -{}jfo {} {}".format(level, newdat_brotli, newdat))
+                            call("brotli -{}jfo {} {}".format(level, newdat_brotli, newdat))
                             if os.path.isfile(newdat_brotli):
                                 print(" Done")
                             else:
@@ -1152,7 +1152,7 @@ def decompress_img(source, distance, keep=1):
                                 call(lpunpack_cmd)
                                 for img in glob.glob(DNA_TEMP_DIR + '*_b.img'):
                                     if not SETUP_MANIFEST['IS_VAB'] == '1' or os.path.getsize(img) == 0:
-                                        os.system('rm -rf {}'.format(img))
+                                        os.remove(img)
                                     else:
                                         new_distance = DNA_MAIN_DIR + os.path.basename(img).rsplit('.', 1)[0]
                                         decompress_img(img, new_distance, keep=0)
