@@ -15,7 +15,7 @@ import zipfile
 from easygui import fileopenbox
 import requests
 from rich.console import Console
-from tqdm import tqdm
+from rich.progress import track
 import tarfile
 import devdex
 import extract_payload
@@ -1526,13 +1526,10 @@ def download_rom(rom, url):
     print("Size: {}Mb".format(str(file_size_in_mb)))
     print("Path: {}".format(rom))
     if not os.path.isfile(rom):
-        pbar = tqdm(total=file_size)
         with open(rom, "wb") as f:
-            for chunk in res.iter_content(2097152):
+            for chunk in track(res.iter_content(2097152), description="Downloading"):
                 f.write(chunk)
-                pbar.set_description("Downloading")
-                pbar.update(2097152)
-            pbar.close()
+
         if zipfile.is_zipfile(rom):
             print("{0}Successed !{1}".format(RED, CLOSE))
             choose_zrom()
