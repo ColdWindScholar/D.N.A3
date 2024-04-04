@@ -1,0 +1,8 @@
+{
+    "CLASS" : "alpha",
+    "KEEPVERITY" : "false",
+    "KEEPFORCEENCRYPT" : "false",
+    "PATCHVBMETAFLAG" : "false",
+    "TARGET" : "arm",
+    "IS_64BIT" : "true"
+}

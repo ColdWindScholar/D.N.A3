@@ -1,0 +1,8 @@
+backports.statistics
+beautifulsoup4
+easygui
+Requests
+tqdm
+protobuf==3.20.1
+rich
+pyinstaller

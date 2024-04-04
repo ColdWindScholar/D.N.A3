@@ -1,0 +1,9 @@
+{
+    "name": "Redmi K40",       # 名字任意
+    "region": "CN",            # 根据MIUI地区版本选择CN,TW,RU,EN,ID,IN,EU,TR,JP,SG  有些机型没有在某些地区发布，按实际情况选择填写!
+    "mode": "recovery",        # 线刷包或卡刷包<fastboot/recovery>
+    "type": "develop",         # 开发版或稳定版<stable/develop>，根据xiaomirom.com来划分，开发版公测和内测同属develop
+    "version": ""              # 具体版本号，例如: <稳定版: V13.0.3.0.SKHCNXM>, <开发版: 22.2.16>
+}
+
+# 此文件为配置说明，不可直接用做配置文件!
