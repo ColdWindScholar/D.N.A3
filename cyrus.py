@@ -18,7 +18,6 @@ import requests
 from rich.console import Console
 from tqdm import tqdm
 
-import datetime
 import devdex
 import extract_payload
 import img2sdat
