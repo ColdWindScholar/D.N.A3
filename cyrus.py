@@ -1982,7 +1982,7 @@ def menu_main(project):
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                             if ASK:
                                 DISPLAY('是否合成: {}.new.dat [1/0]: '.format(f_basename))
-                                if input() == '0':
+                                if input() != '1':
                                     continue
                             recompress(source, fsconfig, contexts, infojson, int(option))
                     for file in infile:
@@ -2005,7 +2005,7 @@ def menu_main(project):
                             if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                                 if ASK:
                                     DISPLAY(f'是否合成: {f_basename}.new.dat.br [1/0]: ')
-                                    if input() == '0':
+                                    if input() != '1':
                                         continue
                                 recompress(source, fsconfig, contexts, infojson, int(option))
                     else:
