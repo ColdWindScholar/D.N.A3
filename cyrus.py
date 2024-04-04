@@ -46,13 +46,11 @@ if os.getenv('PREFIX'):
     if "com.termux" in os.getenv('PREFIX'):
         ostype = 'Android'
 if platform.machine() in ('aarch64', 'armv8l', 'arm64'):
-    INTSU = "apt install "
     ostype = 'Android'
     if os.path.isdir("/sdcard/Download"):
         IS_ARM64 = True
         ROM_DIR = "/sdcard/Download/"
 BIN_PATH = PWD_DIR + f"local/bin/{ostype}/{platform.machine()}/"
-INTSU = "sudo apt install "
 PASSWORD_DICT = {
     '1': "FC", '2': "0A", '3': "EF", '4': "0D", '5': "C9", '6': "8A", '7': "B3", '8': "AD", '9': "04", '0': "00"}
 PASSWORD_DICT_REVERSE = {v: k for k, v in PASSWORD_DICT.items()}
@@ -83,11 +81,8 @@ if os.path.isdir(BIN_PATH):
         change_permissions_recursive(BIN_PATH, 0o777)
 
     for prog in programs:
-        locate = shutil.which(prog)
-        if not locate:
-            sys.exit("[x] Not found: {0}\n[i] Please run <{1}{0}> to install \n   Or add <{0}> to {2}".format(prog,
-                                                                                                              INTSU,
-                                                                                                              BIN_PATH))
+        if not shutil.which(prog):
+            sys.exit(f"[x] Not found: {prog}\n[i] Please install {prog} \n   Or add <{prog}> to {BIN_PATH}")
 else:
     print("Run err on: " + platform.machine())
     sys.exit()
