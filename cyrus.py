@@ -16,7 +16,7 @@ from easygui import fileopenbox
 import requests
 from rich.console import Console
 from tqdm import tqdm
-
+import tarfile
 import devdex
 import extract_payload
 import fspatch
@@ -54,7 +54,6 @@ BIN_PATH = PWD_DIR + f"local/bin/{ostype}/{platform.machine()}/"
 PASSWORD_DICT = {
     '1': "FC", '2': "0A", '3': "EF", '4': "0D", '5': "C9", '6': "8A", '7': "B3", '8': "AD", '9': "04", '0': "00"}
 PASSWORD_DICT_REVERSE = {v: k for k, v in PASSWORD_DICT.items()}
-SUPPORT_FSS = ('ext4', 'erofs', 'ufs', 'emmc')
 BLUE, RED, WHITE, CYAN, YELLOW, MAGENTA, GREEN, BOLD, CLOSE = ('\x1b[94m', '\x1b[91m',
                                                                '\x1b[97m', '\x1b[36m',
                                                                '\x1b[93m', '\x1b[1;35m',
@@ -1274,59 +1273,57 @@ def appendf(msg, log):
 
 
 def decompress_win(infile_list):
-    for fs in SUPPORT_FSS:
-        if infile_list[fs]:
-            for i in infile_list[fs]:
-                if infile_list[fs][i]:
-                    if fs != "ufs":
-                        if fs != "emmc":
-                            fsconfig_0 = []
-                            contexts_0 = []
-                            symlinks_0 = []
-                            for s in infile_list[fs][i]:
-                                if re.search("\\.win.*?[\\d]$", s):
-                                    (fsconfig, contexts, symlinks) = untar_main(s)
-                                else:
-                                    if not os.path.isdir(i):
-                                        os.makedirs(i)
-                                    (fsconfig, contexts, symlinks) = untar_main(s, i)
-                                fsconfig_0.extend(fsconfig)
-                                contexts_0.extend(contexts)
-                                if symlinks != -1:
-                                    symlinks_0.extend(symlinks)
-
-                            if fsconfig_0:
-                                fsconfig_0.sort()
-                                if "vendor" in i or "odm" in i:
-                                    fsconfig_0.insert(0, "/ 0 2000 0755")
-                                    fsconfig_0.insert(1, i + " 0 2000 0755")
-                                else:
-                                    fsconfig_0.insert(0, "/ 0 0 0755")
-                                    fsconfig_0.insert(1, i + " 0 0 0755")
-                                appendf("\n".join((str(k) for k in fsconfig_0)), "%s_fsconfig.txt" % i)
-                            if contexts_0:
-                                contexts_0.sort()
-                                SAR = False
-                                for c in contexts_0:
-                                    if re.search("/{}/system/build\\.prop ".format(i), c):
-                                        SAR = True
-                                        break
-
-                                if SAR:
-                                    contexts_0.insert(0, "/ u:object_r:rootfs:s0")
-                                    contexts_0.insert(1, "/{}(/.*)? u:object_r:rootfs:s0".format(i))
-                                    contexts_0.insert(2, "/{} u:object_r:rootfs:s0".format(i))
-                                    contexts_0.insert(3, "/{}/system(/.*)? u:object_r:system_file:s0".format(i))
-                                else:
-                                    contexts_0.insert(0, "/ u:object_r:system_file:s0")
-                                    contexts_0.insert(1, "/{}(/.*)? u:object_r:system_file:s0".format(i))
-                                    contexts_0.insert(2, "/{} u:object_r:system_file:s0".format(i))
-                                appendf("\n".join((str(j) for j in contexts_0)), "%s_contexts.txt" % i)
-                            if not symlinks_0 != -1:
-                                symlinks_0.sort()
-                                appendf("\n".join((str(h) for h in symlinks_0)), "%s_symlinks.txt" % i)
-                            for s in infile_list[fs][i]:
-                                decompress_img(s, DNA_MAIN_DIR + os.path.basename(s).rsplit(".", 1)[0])
+    parts = []
+    for i in infile_list:
+        parts.append(i.split(".")[0] + ".win")
+        with open(i.split(".")[0] + ".win", "ab" if os.path.exists(i.split(".")[0] + ".win") else "wb") as f:
+            with open(i, "rb") as f2:
+                print(f'合并{i}到{i.split(".")[0] + ".win"}')
+                f.write(f2.read())
+            try:
+                os.remove(i)
+            except:
+                pass
+    parts = list(set(parts))
+    for i in parts:
+        if seekfd.gettype(i) in ['erofs', 'ext', 'super', 'boot', 'vendor_boot']:
+            decompress_img(i, DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0])
+        elif tarfile.is_tarfile(i):
+            with tarfile.open(i, 'r:gz') as tar:
+                tar.extractall(path=(DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0]))
+            i = os.path.basename(i).rsplit('.', 1)[0]
+            fsconfig_0 = []
+            contexts_0 = []
+            symlinks_0 = []
+            if fsconfig_0:
+                fsconfig_0.sort()
+                if "vendor" in i or "odm" in i:
+                    fsconfig_0.insert(0, "/ 0 2000 0755")
+                    fsconfig_0.insert(1, i + " 0 2000 0755")
+                else:
+                    fsconfig_0.insert(0, "/ 0 0 0755")
+                    fsconfig_0.insert(1, i + " 0 0 0755")
+                appendf("\n".join((str(k) for k in fsconfig_0)), "%s_fsconfig.txt" % i)
+            if contexts_0:
+                contexts_0.sort()
+                SAR = False
+                for c in contexts_0:
+                    if re.search("{}/system/build\\.prop ".format(i, c)):
+                        SAR = True
+                        break
+                if SAR:
+                    contexts_0.insert(0, "/ u:object_r:rootfs:s0")
+                    contexts_0.insert(1, "/{}(/.*)? u:object_r:rootfs:s0".format(i))
+                    contexts_0.insert(2, "/{} u:object_r:rootfs:s0".format(i))
+                    contexts_0.insert(3, "/{}/system(/.*)? u:object_r:system_file:s0".format(i))
+                else:
+                    contexts_0.insert(0, "/ u:object_r:system_file:s0")
+                    contexts_0.insert(1, "/{}(/.*)? u:object_r:system_file:s0".format(i))
+                    contexts_0.insert(2, "/{} u:object_r:system_file:s0".format(i))
+                appendf("\n".join((str(j) for j in contexts_0)), "%s_contexts.txt" % i)
+            if not symlinks_0 != -1:
+                symlinks_0.sort()
+                appendf("\n".join((str(h) for h in symlinks_0)), "%s_symlinks.txt" % i)
 
 
 def decompress(infile, flag=4):
@@ -1854,22 +1851,12 @@ def menu_main(project):
                     ASK = False
                 decompress(infile, int(option))
             elif int(option) == 5:
-                infile = glob.glob(DNA_TEMP_DIR + '*.win*')
+                infile = glob.glob(DNA_TEMP_DIR + '*.win[0-9][0-9][0-9]')
+                infile = sorted(infile)
                 BECOME_SILENT = input('> 是否开启静默 [0/1]: ')
                 if BECOME_SILENT == '1':
                     ASK = False
-                all_name = {"system": [],
-                            }
-                all_name = dict(zip(('ext4', 'erofs', 'ufs', 'emmc'), all_name.values()))
-                for a in sorted(infile):
-                    a_basename = a.split('.')[0]
-                    for fs in SUPPORT_FSS:
-                        if fs in a:
-                            if a_basename not in all_name[fs]:
-                                all_name[fs].append(a)
-                            else:
-                                all_name[fs][a_basename].append(a)
-                decompress_win(all_name)
+                decompress_win(infile)
             elif int(option) == 6:
                 menu_more(project)
             elif int(option) == 7:
