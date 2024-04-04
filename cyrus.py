@@ -445,8 +445,9 @@ def patch_twrp(BOOTIMG):
                     print("+ Done")
                     if not os.path.isdir(DNA_DIST_DIR):
                         os.mkdir(DNA_DIST_DIR)
-                    os.system("mv -f new-boot.img {}{}_twrp.img".format(DNA_DIST_DIR,
-                                                                        os.path.basename(BOOTIMG).split(".")[0]))
+                    new_boot_img_name = "{}{}_twrp.img".format(os.path.basename(BOOTIMG).split(".")[0],
+                                                               os.path.basename(DNA_DIST_DIR))
+                    os.rename("new-boot.img", os.path.join(DNA_DIST_DIR, new_boot_img_name))
                     os.chdir(PWD_DIR)
                     add_magisk = input("> 是否继续添加脸谱 [1/0]: ")
                     if add_magisk != "0":
@@ -639,7 +640,8 @@ def repack_super():
         parts = []
         for file in infile:
             parts.append(os.path.basename(file).rsplit('_', 1)[0])
-    os.system('echo "{}" >> {}alivable_super_parts.txt'.format(parts, DNA_DIST_DIR))
+    with open(DNA_DIST_DIR+"alivable_super_parts.txt", "w") as f:
+        f.write(format(parts))
     (group_size_a, group_size_b) = (0, 0)
     argvs = 'lpmake --metadata-size 65536 --super-name super --device super:{}:{} '.format(SETUP_MANIFEST['SUPER_SIZE'],
                                                                                            str(int(SETUP_MANIFEST[
