@@ -1056,14 +1056,6 @@ def boot_utils(source, distance, flag=1):
     PAUSE()
 
 
-def run_imgextractor(source, distance):
-    try:
-        imgextractor.ULTRAMAN().MONSTER(source, distance, PASSWORD_DICT)
-    except:
-        shutil.rmtree(distance)
-        os.unlink(source)
-
-
 def decompress_img(source, distance, keep=1):
     SUPPORT_FST = [
         'ext', 'erofs', 'super']
@@ -1097,7 +1089,11 @@ def decompress_img(source, distance, keep=1):
             os.makedirs(DNA_CONF_DIR)
         if file_type == 'ext':
             with Console().status(f"[yellow]正在提取{os.path.basename(source)}[/]"):
-                run_imgextractor(source, distance)
+                try:
+                    imgextractor.ULTRAMAN().MONSTER(source, distance, PASSWORD_DICT)
+                except:
+                    shutil.rmtree(distance)
+                    os.unlink(source)
         else:
             while file_type == 'erofs':
                 image_size = os.path.getsize(source)
@@ -1238,7 +1234,6 @@ def decompress_bin(infile, outdir, orzdir, flag='1'):
                 part = part + ".img"
             if part in payload_partitions:
                 extract_payload.main(infile, outdir, part)
-
     else:
         print("> {0}提取【{1}】所有镜像文件:{2}\n".format(YELLOW, os.path.basename(infile), CLOSE))
         extract_payload.main(infile, outdir)
@@ -1544,7 +1539,7 @@ def download_rom(rom, url):
     res = requests.get(url, stream=True)
     file_size = int(res.headers.get("Content-Length"))
     file_size_in_mb = int(file_size / 1048576)
-    print("> {0}D.N.A DOWNLOADER:{1}\n".format(GREEN, CLOSE))
+    print(f"> {GREEN}D.N.A DOWNLOADER:{CLOSE}\n")
     print("Link: {}".format(url))
     print("Size: {}Mb".format(str(file_size_in_mb)))
     print("Path: {}".format(rom))
@@ -1555,7 +1550,6 @@ def download_rom(rom, url):
                 f.write(chunk)
                 pbar.set_description("Downloading")
                 pbar.update(2097152)
-
             pbar.close()
         if zipfile.is_zipfile(rom):
             print("{0}Successed !{1}".format(RED, CLOSE))
