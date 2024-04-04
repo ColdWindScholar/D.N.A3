@@ -612,9 +612,8 @@ def patch_addons(project):
         DISPLAY("复制 default/{}/* ...".format(SETUP_MANIFEST["ANDROID_SDK"]))
         source_dir = os.path.join(PWD_DIR, "local", "etc", "devices", "default", SETUP_MANIFEST["ANDROID_SDK"],
                                   "addons")
-        destination_dir = DNA_MAIN_DIR
         try:
-            shutil.copytree(source_dir, destination_dir, dirs_exist_ok=True)
+            shutil.copytree(source_dir, DNA_MAIN_DIR, dirs_exist_ok=True)
         except Exception as e:
             print("Error copying files:", e)
     if os.path.isdir("{}local/etc/devices/{}/{}/addons".format(PWD_DIR, SETUP_MANIFEST["DEVICE_CODE"],
@@ -1887,7 +1886,7 @@ def menu_main(project):
                 BECOME_SILENT = input('> 是否开启静默 [0/1]: ')
                 if BECOME_SILENT == '1':
                     ASK = False
-                all_name = {'system': [], "system": [], 'system': [], "system": [],
+                all_name = {"system": [],
                             }
                 all_name = dict(zip(('ext4', 'erofs', 'ufs', 'emmc'), all_name.values()))
                 for a in sorted(infile):
