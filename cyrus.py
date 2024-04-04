@@ -56,7 +56,8 @@ if platform.machine() in ('aarch64', 'armv8l', 'arm64'):
         IS_ARM64 = True
         ROM_DIR = "/sdcard/Download/"
 print("固件放置路径: " + ROM_DIR)
-time.sleep(1)
+print("D.N.A3 By 寒风居士")
+time.sleep(3)
 PASSWORD_DICT = {
     '1': "FC", '2': "0A", '3': "EF", '4': "0D", '5': "C9", '6': "8A", '7': "B3", '8': "AD", '9': "04", '0': "00"}
 PASSWORD_DICT_REVERSE = {v: k for k, v in PASSWORD_DICT.items()}
