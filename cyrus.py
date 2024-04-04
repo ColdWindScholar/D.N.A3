@@ -510,8 +510,11 @@ def patch_magisk(BOOTIMG):
 
                 fileHash = base64.b64encode(sha1.digest()).decode("utf-8 ")
                 SHA1 = base64.b64decode(fileHash).hex()
-                os.system("cat {} > stock_boot.img".format(BOOTIMG))
-                os.system("cp -af ramdisk.cpio ramdisk.cpio.orig")
+                with open(BOOTIMG, 'rb') as source_file:
+                    with open('stock_boot.img', 'wb') as dest_file:
+                        shutil.copyfileobj(source_file, dest_file)
+
+                shutil.copy2('ramdisk.cpio', 'ramdisk.cpio.orig')
                 print("- Patching ramdisk magisk@{}".format(MAGISK_MANIFEST["CLASS"]))
                 CONFIGS = "KEEPVERITY={}\nKEEPFORCEENCRYPT={}\nPATCHVBMETAFLAG={}\n".format(
                     MAGISK_MANIFEST["KEEPVERITY"], MAGISK_MANIFEST["KEEPFORCEENCRYPT"],
@@ -562,8 +565,17 @@ def patch_magisk(BOOTIMG):
                 if is_64bit:
                     patch_cmds += '"add 0644 overlay.d/sbin/magisk64.xz magisk64.xz" '
                 patch_cmds += '"patch" "backup ramdisk.cpio.orig" "mkdir 000 .backup" "add 000 .backup/.magisk config"'
-                os.system(patch_cmds)
-                os.system("rm -f ramdisk.cpio.orig config magisk*.xz magiskinit magisk*")
+                call(patch_cmds)
+                files_to_delete = ['ramdisk.cpio.orig', 'config', 'magisk*.xz', 'magiskinit', 'magisk*']
+
+                for file_pattern in files_to_delete:
+                    matching_files = glob.glob(file_pattern)
+                    for file_to_delete in matching_files:
+                        try:
+                            os.remove(file_to_delete)
+                            print(f"Clean: {file_to_delete}")
+                        except Exception as e:
+                            print(f"Error deleting {file_to_delete}: {e}")
                 for dt in ('dtb', 'kernel_dtb', 'extra'):
                     if os.path.isfile(dt):
                         print("- Patch fstab in {}".format(dt))
@@ -579,8 +591,9 @@ def patch_magisk(BOOTIMG):
                     print("+ Done")
                     if not os.path.isdir(DNA_DIST_DIR):
                         os.mkdir(DNA_DIST_DIR)
-                    os.system("mv -f new-boot.img {}{}_magisk.img".format(DNA_DIST_DIR,
-                                                                          os.path.basename(BOOTIMG).split(".")[0]))
+                    new_boot_img_name = os.path.basename(BOOTIMG).split(".")[0] + "_magisk.img"
+                    destination_path = os.path.join(DNA_DIST_DIR, new_boot_img_name)
+                    shutil.move("new-boot.img", destination_path)
                     if os.path.isdir(DNA_MAIN_DIR + "system" + os.sep + "system"):
                         try:
                             os.makedirs(
@@ -588,11 +601,15 @@ def patch_magisk(BOOTIMG):
                         except:
                             pass
                         else:
-                            os.system("cp -rf '{}' {}system/system/data-app/Magisk/Magisk.apk".format(MAGISK_FILE,
-                                                                                                      DNA_MAIN_DIR))
+                            destination_path = os.path.join(DNA_MAIN_DIR, 'system', 'system', 'data-app', 'Magisk',
+                                                            'Magisk.apk')
+
+                            # 拷贝文件
+                            shutil.copy(MAGISK_FILE, destination_path)
                     elif os.path.isdir(DNA_MAIN_DIR + "vendor"):
                         os.makedirs(DNA_MAIN_DIR + "vendor" + os.sep + "data-app" + os.sep + "Magisk")
-                        os.system("cp -rf {} {}vendor/data-app/Magisk/Magisk.apk".format(MAGISK_FILE, DNA_MAIN_DIR))
+                        destination_path = os.path.join(DNA_MAIN_DIR, 'vendor', 'data-app', 'Magisk', 'Magisk.apk')
+                        shutil.copy(MAGISK_FILE, destination_path)
             os.chdir(PWD_DIR)
             if os.path.isdir("{}bootimg".format(DNA_MAIN_DIR)):
                 rmdire(f"{DNA_MAIN_DIR}bootimg")
