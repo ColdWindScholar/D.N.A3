@@ -1775,18 +1775,18 @@ def menu_more(project):
             with CoastTime():
                 devdex.deodex(project)
         elif not int(option) == 6:
-                if os.path.isfile(
-                        "{}local/etc/devices/{}/{}/reduce.txt".format(PWD_DIR, SETUP_MANIFEST["DEVICE_CODE"],
-                                                                      SETUP_MANIFEST["ANDROID_SDK"])):
-                    REDUCE_CONF = "{}local/etc/devices/{}/{}/reduce.txt".format(PWD_DIR,
-                                                                                SETUP_MANIFEST["DEVICE_CODE"],
-                                                                                SETUP_MANIFEST["ANDROID_SDK"])
-                elif os.path.isfile(
-                        "{}local/etc/devices/default/{}/reduce.txt".format(PWD_DIR, SETUP_MANIFEST["ANDROID_SDK"])):
-                    REDUCE_CONF = "{}local/etc/devices/default/{}/reduce.txt".format(PWD_DIR,
-                                                                                     SETUP_MANIFEST["ANDROID_SDK"])
-                else:
-                    PAUSE("精简列表<reduce.txt>丢失！")
+            if os.path.isfile(
+                    "{}local/etc/devices/{}/{}/reduce.txt".format(PWD_DIR, SETUP_MANIFEST["DEVICE_CODE"],
+                                                                  SETUP_MANIFEST["ANDROID_SDK"])):
+                REDUCE_CONF = "{}local/etc/devices/{}/{}/reduce.txt".format(PWD_DIR,
+                                                                            SETUP_MANIFEST["DEVICE_CODE"],
+                                                                            SETUP_MANIFEST["ANDROID_SDK"])
+            elif os.path.isfile(
+                    "{}local/etc/devices/default/{}/reduce.txt".format(PWD_DIR, SETUP_MANIFEST["ANDROID_SDK"])):
+                REDUCE_CONF = "{}local/etc/devices/default/{}/reduce.txt".format(PWD_DIR,
+                                                                                 SETUP_MANIFEST["ANDROID_SDK"])
+            else:
+                PAUSE("精简列表<reduce.txt>丢失！")
             with CoastTime():
                 for line in open(REDUCE_CONF):
                     line = line.replace("/", os.sep).strip("\n")
@@ -1799,7 +1799,7 @@ def menu_more(project):
                                 except NotADirectoryError:
                                     os.remove(DNA_MAIN_DIR + line)
 
-            PAUSE()
+        PAUSE()
 
         if int(option) == 7:
             with CoastTime():
