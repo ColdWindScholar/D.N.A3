@@ -130,15 +130,14 @@ def PAUSE(info='> 任意键继续'):
 
 
 def DISPLAY(message, flag=1):
+    flags = {
+        1: "\x1b[1;33m",
+        2: "\x1b[1;36m",
+        3: "\x1b[1;34m",
+        4: "\x1b[1;31m"
+    }
     message = f"[ {time.strftime('%H:%M:%S', time.localtime())} ]\t {message}"
-    if flag == 1:
-        print("\x1b[1;33m" + message + "\x1b[0m\n")
-    elif flag == 4:
-        print(("\x1b[1;36m" + message), end="\x1b[0m\n", flush=True)
-    elif flag == 3:
-        print(("\x1b[1;34m" + message), end="\x1b[0m\n", flush=True)
-    else:
-        print(("\x1b[1;31m" + message), end="\x1b[0m\n", flush=True)
+    print(f"{flags[flag]} {message} \x1b[0m")
 
 
 def CHAR2NUM(chars):
