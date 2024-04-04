@@ -97,10 +97,10 @@ for i in os.listdir(local + os.sep + "local"+os.sep+"bin"):
     if i in pclist:
         continue
     else:
-        if os.path.isdir(local + os.sep + "local" + os.sep + i):
-            shutil.rmtree(local + os.sep + "local" + os.sep + i)
+        if os.path.isdir(local + os.sep + "local"+os.sep+"bin" + os.sep + i):
+            shutil.rmtree(local + os.sep + "local"+os.sep+"bin" + os.sep + i)
         else:
-            os.remove(local + os.sep + "local" + os.sep + i)
+            os.remove(local + os.sep + "local"+os.sep+"bin" + os.sep + i)
 for i in os.listdir(local):
     if i not in ['dna', 'dna.exe', 'local', 'LICENSE']:
         print(f"Removing {i}")
