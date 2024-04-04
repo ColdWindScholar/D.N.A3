@@ -130,8 +130,7 @@ def PAUSE(info='> 任意键继续'):
 
 
 def DISPLAY(message, flag=1):
-    time_now = time.strftime("%H:%M:%S", time.localtime())
-    message = "[ {} ]\t {}".format(time_now, message)
+    message = f"[ {time.strftime('%H:%M:%S', time.localtime())} ]\t {message}"
     if flag == 1:
         print("\x1b[1;33m" + message + "\x1b[0m\n")
     elif flag == 4:
@@ -143,10 +142,7 @@ def DISPLAY(message, flag=1):
 
 
 def CHAR2NUM(chars):
-    result = re.sub("(?<=\\w)(?=(?:\\w\\w)+$)", " ", chars)
-    chars = result.split()
-    res = [PASSWORD_DICT_REVERSE[r] for r in chars]
-    return "".join(res)
+    return "".join([PASSWORD_DICT_REVERSE[r] for r in re.sub("(?<=\\w)(?=(?:\\w\\w)+$)", " ", chars).split()])
 
 
 def GETDIRSIZE(ddir, max_=1.06, flag=1):
