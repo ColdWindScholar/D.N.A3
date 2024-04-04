@@ -127,6 +127,7 @@
 ####  **交流反馈** 
 
 1.  QQ群1：[MIO-KITCHEN 官方2群](https://qm.qq.com/q/1UFWpnuiIY)
+2.  QQ群2: [DNA3](https://qm.qq.com/q/VE8gFAXZaq)
 
 ####  **免责声明** 
 
