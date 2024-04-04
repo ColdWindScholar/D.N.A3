@@ -1185,10 +1185,15 @@ def decompress_dat(transfer, source, distance, keep=0):
     if os.path.isfile(source + ".1"):
         max = SETUP_MANIFEST["UNPACK_SPLIT_DAT"]
         DISPLAY("合并: {}.1~{} ...".format(os.path.basename(source), max))
-        for i in range(1, int(max)):
-            if os.path.exists("{}.{}".format(source, i)):
-                os.system("cat {}.{} >> {}".format(source, i, source))
-                os.remove("{}.{}".format(source, i))
+        with open(source, "ab") as f:
+            for i in range(1, int(max)):
+                if os.path.exists("{}.{}".format(source, i)):
+                    with open("{}.{}".format(source, i), "rb") as f2:
+                        f.write(f2.read())
+                    try:
+                        os.remove("{}.{}".format(source, i))
+                    except:
+                        pass
 
     DISPLAY("正在分解: " + os.path.basename(source) + " ...", 3)
     sdat2img.main(transfer, source, distance)
