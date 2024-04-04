@@ -1275,10 +1275,11 @@ def appendf(msg, log):
 def decompress_win(infile_list):
     parts = []
     for i in infile_list:
+        if i.endswith(".win"):
+            parts.append(i)
         main = os.path.join(os.path.dirname(i), os.path.basename(i).split(".")[0] + ".win")
         if i == main:
             continue
-        parts.append(main)
         with open(main, "ab" if os.path.exists(main) else "wb") as f:
             with open(i, "rb") as f2:
                 print(f'合并{i}到{main}')
@@ -1289,10 +1290,12 @@ def decompress_win(infile_list):
                 pass
     parts = list(set(parts))
     for i in parts:
+        if not os.path.exists(i):
+            continue
         if seekfd.gettype(i) in ['erofs', 'ext', 'super', 'boot', 'vendor_boot']:
             decompress_img(i, DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0])
         elif tarfile.is_tarfile(i):
-            with tarfile.open(i, 'r:gz') as tar:
+            with tarfile.open(i, 'r') as tar:
                 tar.extractall(path=(DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0]))
             i = os.path.basename(i).rsplit('.', 1)[0]
             fsconfig_0 = []
@@ -1311,7 +1314,7 @@ def decompress_win(infile_list):
                 contexts_0.sort()
                 SAR = False
                 for c in contexts_0:
-                    if re.search("{}/system/build\\.prop ".format(i, c)):
+                    if re.search("{}/system/build\\.prop ".format(i), c):
                         SAR = True
                         break
                 if SAR:
@@ -1327,6 +1330,8 @@ def decompress_win(infile_list):
             if not symlinks_0 != -1:
                 symlinks_0.sort()
                 appendf("\n".join((str(h) for h in symlinks_0)), "%s_symlinks.txt" % i)
+        else:
+            PAUSE("未知格式")
 
 
 def decompress(infile, flag=4):
@@ -1857,7 +1862,9 @@ def menu_main(project):
                 infile = glob.glob(DNA_TEMP_DIR + '*.win[0-9][0-9][0-9]')
                 for i in glob.glob(DNA_TEMP_DIR + '*.win*'):
                     infile.append(i)
-                infile = sorted(infile)
+                for i in glob.glob(DNA_TEMP_DIR + '*.win'):
+                    infile.append(i)
+                infile = list(set(sorted(infile)))
                 BECOME_SILENT = input('> 是否开启静默 [0/1]: ')
                 if BECOME_SILENT == '1':
                     ASK = False
