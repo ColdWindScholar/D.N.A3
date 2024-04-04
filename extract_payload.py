@@ -4,9 +4,8 @@ import os.path
 import struct
 import subprocess
 import sys
-import threading
-import time
 import zipfile
+
 from rich.console import Console
 
 if os.name == 'nt':
