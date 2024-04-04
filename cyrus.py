@@ -1350,7 +1350,7 @@ def decompress(infile, flag=4):
                     transfer = None
             if ASK:
                 DISPLAY('是否分解: {} [1/0]: '.format(os.path.basename(part)), 2)
-                if input() == '0':
+                if input() != '1':
                     continue
             if flag == 2:
                 distance = part.rsplit('.', 1)[0]
