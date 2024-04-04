@@ -1071,6 +1071,7 @@ def boot_utils(source, distance, flag=1):
     elif flag == 2:
         DISPLAY("重新合成: {}.img".format(os.path.basename(source)))
         dboot(source, distance)
+    PAUSE()
 
 
 def run_imgextractor(source, distance, PASSWORD_DICT):
