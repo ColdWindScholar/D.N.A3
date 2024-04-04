@@ -15,7 +15,7 @@ import zipfile
 from easygui import fileopenbox
 import requests
 from rich.console import Console
-from rich.progress import track
+from rich.progress import Progress
 import tarfile
 import devdex
 import extract_payload
@@ -1521,16 +1521,21 @@ def download_rom(rom, url):
     res = requests.get(url, stream=True)
     file_size = int(res.headers.get("Content-Length"))
     file_size_in_mb = int(file_size / 1048576)
+    com = 0
     print(f"> {GREEN}D.N.A DOWNLOADER:{CLOSE}\n")
     print("Link: {}".format(url))
     print("Size: {}Mb".format(str(file_size_in_mb)))
     print("Path: {}".format(rom))
     if not os.path.isfile(rom):
-        with open(rom, "wb") as f:
-            for chunk in track(res.iter_content(2097152), description="Downloading"):
-                f.write(chunk)
+        with Progress() as progress:
+            task = progress.add_task("[yellow]Downloading...", total=file_size)
+            with open(rom, "wb") as f:
+                for chunk in res.iter_content(2097152):
+                    f.write(chunk)
+                    com+=len(chunk)
+                    progress.update(task, completed=com)
 
-        if zipfile.is_zipfile(rom):
+        if os.path.exists(rom):
             print("{0}Successed !{1}".format(RED, CLOSE))
             choose_zrom()
         else:
