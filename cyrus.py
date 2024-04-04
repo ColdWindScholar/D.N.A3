@@ -1516,8 +1516,6 @@ def choose_zrom(flag=0):
 
         if sFilePath is not None:
             extract_zrom(sFilePath)
-    elif flag == 2:
-        print('\x1b[0;33m> 插件列表\x1b[0m')
     else:
         print('\x1b[0;33m> 固件列表\x1b[0m')
         print("固件放置路径: " + ROM_DIR)
@@ -1744,7 +1742,7 @@ def menu_modules():
             if int(choice) == 88:
                 sys.exit()
             elif int(choice) == 33:
-                choose_zrom(2)
+                extract_zrom(input("请输入插件路径："))
             elif int(choice) == 44:
                 if not len(dict0) > 1:
                     which = input("> 输入序号进行删除: ")
