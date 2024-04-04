@@ -1542,7 +1542,7 @@ def choose_zrom(flag=0):
         choice = input('> 选择: ')
         if choice:
             if int(choice) == 66:
-                download_zrom(input('> {0}选择下载方式:  [0]米柚在更系列  [1]输入下载直链{1} >> '.format(RED, CLOSE)))
+                download_zrom("1")
             elif int(choice) == 0:
                 return
             elif 0 < int(choice) < len(dict0):
