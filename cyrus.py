@@ -1798,22 +1798,22 @@ def menu_more(project):
                                     os.remove(DNA_MAIN_DIR + line)
             PAUSE()
 
-        if int(option) == 7:
+        elif int(option) == 7:
             with CoastTime():
                 patch_addons(project)
             PAUSE()
         elif int(option) == 8 or int(option) == 9:
-                if os.path.isfile(DNA_DIST_DIR + "boot.img"):
-                    currentbootimg = DNA_DIST_DIR + "boot.img"
-                elif os.path.isfile(DNA_TEMP_DIR + "boot.img"):
-                    currentbootimg = DNA_TEMP_DIR + "boot.img"
-                if not os.path.isfile(currentbootimg):
-                    with CoastTime():
-                        if int(option) == 8:
-                            patch_twrp(currentbootimg)
-                        else:
-                            patch_magisk(currentbootimg)
-                    PAUSE()
+            if os.path.isfile(DNA_DIST_DIR + "boot.img"):
+                currentbootimg = DNA_DIST_DIR + "boot.img"
+            elif os.path.isfile(DNA_TEMP_DIR + "boot.img"):
+                currentbootimg = DNA_TEMP_DIR + "boot.img"
+            if not os.path.isfile(currentbootimg):
+                with CoastTime():
+                    if int(option) == 8:
+                        patch_twrp(currentbootimg)
+                    else:
+                        patch_magisk(currentbootimg)
+            PAUSE()
         elif int(option) == 11:
             repack_super()
             PAUSE()
