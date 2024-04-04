@@ -1984,7 +1984,7 @@ def menu_main(project):
                                 DISPLAY('是否合成: {}.new.dat [1/0]: '.format(f_basename))
                                 if input() != '1':
                                     continue
-                            recompress(source, fsconfig, contexts, infojson, int(option))
+                            recompress(source, fsconfig, contexts, infojson, 9)
                     for file in infile:
                         f_basename = os.path.basename(file).rsplit('_', 1)[0]
                         source = DNA_MAIN_DIR + f_basename
