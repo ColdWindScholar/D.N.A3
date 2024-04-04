@@ -1658,9 +1658,7 @@ def menu_once():
                                 menu_once()
                     PAUSE("> Number {} Error !".format(which))
         elif int(choice) == 66:
-            choose = input(
-                "> {0}选择下载方式: [0]在线更新(xiaomirom.com)\n\t\t[1]输入下载直链{1} >> ".format(RED, CLOSE))
-            download_zrom(choose)
+            download_zrom("1")
         elif int(choice) == 77:
             env_setup()
             LOAD_SETUP_JSON()
