@@ -45,13 +45,14 @@ ostype = platform.system()
 if os.getenv('PREFIX'):
     if "com.termux" in os.getenv('PREFIX'):
         ostype = 'Android'
-BIN_PATH = PWD_DIR + f"local/bin/{ostype}/{platform.machine()}/"
-INTSU = "sudo apt install "
 if platform.machine() in ('aarch64', 'armv8l', 'arm64'):
     INTSU = "apt install "
+    ostype = 'Android'
     if os.path.isdir("/sdcard/Download"):
         IS_ARM64 = True
         ROM_DIR = "/sdcard/Download/"
+BIN_PATH = PWD_DIR + f"local/bin/{ostype}/{platform.machine()}/"
+INTSU = "sudo apt install "
 PASSWORD_DICT = {
     '1': "FC", '2': "0A", '3': "EF", '4': "0D", '5': "C9", '6': "8A", '7': "B3", '8': "AD", '9': "04", '0': "00"}
 PASSWORD_DICT_REVERSE = {v: k for k, v in PASSWORD_DICT.items()}
