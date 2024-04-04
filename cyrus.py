@@ -603,8 +603,6 @@ def patch_magisk(BOOTIMG):
                         else:
                             destination_path = os.path.join(DNA_MAIN_DIR, 'system', 'system', 'data-app', 'Magisk',
                                                             'Magisk.apk')
-
-                            # 拷贝文件
                             shutil.copy(MAGISK_FILE, destination_path)
                     elif os.path.isdir(DNA_MAIN_DIR + "vendor"):
                         os.makedirs(DNA_MAIN_DIR + "vendor" + os.sep + "data-app" + os.sep + "Magisk")
@@ -1802,12 +1800,12 @@ def menu_more(project):
             with CoastTime():
                 patch_addons(project)
             PAUSE()
-        elif int(option) == 8 or int(option) == 9:
+        elif int(option) in [8,9]:
             if os.path.isfile(DNA_DIST_DIR + "boot.img"):
                 currentbootimg = DNA_DIST_DIR + "boot.img"
             elif os.path.isfile(DNA_TEMP_DIR + "boot.img"):
                 currentbootimg = DNA_TEMP_DIR + "boot.img"
-            if not os.path.isfile(currentbootimg):
+            if os.path.isfile(currentbootimg):
                 with CoastTime():
                     if int(option) == 8:
                         patch_twrp(currentbootimg)
