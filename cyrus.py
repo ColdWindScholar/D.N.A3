@@ -309,7 +309,7 @@ def env_setup():
         with open(SETUP_JSON, 'r', encoding='utf-8') as ss:
             data = json.load(ss)
         for (name, value) in question_list.items():
-            print(f"{YELLOW}[{i}]{CLOSE}\t{BOLD}{name}{CLOSE}: {GREEN}{data[value]}{CLOSE}")
+            print(f"{YELLOW}[{'0' if i < 10 else ''}{i}]{CLOSE}\t{BOLD}{name}{CLOSE}: {GREEN}{data[value]}{CLOSE}")
             data1[str(i)] = name
             i += 1
         print("\n")
