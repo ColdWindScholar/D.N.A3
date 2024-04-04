@@ -419,11 +419,11 @@ def patch_twrp(BOOTIMG):
                                                                       SETUP_MANIFEST[
                                                                           "ANDROID_SDK"])) and os.path.isfile(BOOTIMG):
         if os.path.isdir("{}bootimg".format(DNA_MAIN_DIR)):
-            os.system("rm -rf {}bootimg".format(DNA_MAIN_DIR))
+            rmdire(f"{DNA_MAIN_DIR}bootimg")
         os.makedirs(DNA_MAIN_DIR + "bootimg")
         print("- Unpacking boot image")
         os.chdir(DNA_MAIN_DIR + "bootimg")
-        os.system("magiskboot unpack {}".format(BOOTIMG))
+        call("magiskboot unpack {}".format(BOOTIMG))
         if os.path.isfile("kernel"):
             if os.path.isfile("ramdisk.cpio"):
                 print("- Replace ramdisk twrp@{}".format(SETUP_MANIFEST["ANDROID_SDK"]))
@@ -433,13 +433,13 @@ def patch_twrp(BOOTIMG):
                 for dt in ('dtb', 'kernel_dtb', 'extra'):
                     if os.path.isfile(dt):
                         print("- Patch fstab in {}".format(dt))
-                        os.system("magiskboot dtb {} patch".format(dt))
-                    os.system(
+                        call("magiskboot dtb {} patch".format(dt))
+                    call(
                         "magiskboot hexpatch kernel 736B69705F696E697472616D667300 77616E745F696E697472616D667300")
-                    os.system("magiskboot hexpatch kernel 77616E745F696E697472616D6673 736B69705F696E697472616D6673")
-                    os.system("magiskboot hexpatch kernel 747269705F696E697472616D6673 736B69705F696E697472616D6673")
+                    call("magiskboot hexpatch kernel 77616E745F696E697472616D6673 736B69705F696E697472616D6673")
+                    call("magiskboot hexpatch kernel 747269705F696E697472616D6673 736B69705F696E697472616D6673")
                     print("- Repacking boot image")
-                    os.system("magiskboot repack {}".format(BOOTIMG))
+                    call("magiskboot repack {}".format(BOOTIMG))
 
                 if os.path.isfile("new-boot.img"):
                     print("+ Done")
@@ -453,7 +453,7 @@ def patch_twrp(BOOTIMG):
                         patch_magisk("{}{}_twrp.img".format(DNA_DIST_DIR, os.path.basename(BOOTIMG).split(".")[0]))
         os.chdir(PWD_DIR)
         if os.path.isdir("{}bootimg".format(DNA_MAIN_DIR)):
-            os.system("rm -rf {}bootimg".format(DNA_MAIN_DIR))
+            rmdire(f"{DNA_MAIN_DIR}bootimg")
     else:
         PAUSE("> 未发现local/etc/devices/{}/{}/ramdisk.cpio文件".format(SETUP_MANIFEST["DEVICE_CODE"],
                                                                         SETUP_MANIFEST["ANDROID_SDK"]))
@@ -491,11 +491,11 @@ def patch_magisk(BOOTIMG):
         return
     if os.path.isfile(BOOTIMG):
         if os.path.isdir("{}bootimg".format(DNA_MAIN_DIR)):
-            os.system("rm -rf {}bootimg".format(DNA_MAIN_DIR))
+            rmdire(f"{DNA_MAIN_DIR}bootimg")
         os.makedirs(DNA_MAIN_DIR + "bootimg")
         print("- Unpacking boot image")
         os.chdir(DNA_MAIN_DIR + "bootimg")
-        os.system("magiskboot unpack {}".format(BOOTIMG))
+        call("magiskboot unpack {}".format(BOOTIMG))
         if os.path.isfile("kernel"):
             if os.path.isfile("ramdisk.cpio"):
 
@@ -555,8 +555,8 @@ def patch_magisk(BOOTIMG):
                                 os.renames(v, k)
 
                         fantasy_zip.close()
-                        os.system("magiskboot compress=xz magisk32 magisk32.xz")
-                        os.system("magiskboot compress=xz magisk64 magisk64.xz")
+                        call("magiskboot compress=xz magisk32 magisk32.xz")
+                        call("magiskboot compress=xz magisk64 magisk64.xz")
                         patch_cmds = 'magiskboot cpio ramdisk.cpio "add 0750 init magiskinit" "mkdir 0750 overlay.d" "mkdir 0750 overlay.d/sbin" "add 0644 overlay.d/sbin/magisk32.xz magisk32.xz" '
 
                 if is_64bit:
@@ -567,13 +567,13 @@ def patch_magisk(BOOTIMG):
                 for dt in ('dtb', 'kernel_dtb', 'extra'):
                     if os.path.isfile(dt):
                         print("- Patch fstab in {}".format(dt))
-                        os.system("magiskboot dtb {} patch".format(dt))
-                    os.system(
+                        call("magiskboot dtb {} patch".format(dt))
+                    call(
                         "magiskboot hexpatch kernel 736B69705F696E697472616D667300 77616E745F696E697472616D667300")
-                    os.system("magiskboot hexpatch kernel 77616E745F696E697472616D6673 736B69705F696E697472616D6673")
-                    os.system("magiskboot hexpatch kernel 747269705F696E697472616D6673 736B69705F696E697472616D6673")
+                    call("magiskboot hexpatch kernel 77616E745F696E697472616D6673 736B69705F696E697472616D6673")
+                    call("magiskboot hexpatch kernel 747269705F696E697472616D6673 736B69705F696E697472616D6673")
                     print("- Repacking boot image")
-                    os.system("magiskboot repack {}".format(BOOTIMG))
+                    call("magiskboot repack {}".format(BOOTIMG))
 
                 if os.path.isfile("new-boot.img"):
                     print("+ Done")
@@ -595,7 +595,7 @@ def patch_magisk(BOOTIMG):
                         os.system("cp -rf {} {}vendor/data-app/Magisk/Magisk.apk".format(MAGISK_FILE, DNA_MAIN_DIR))
             os.chdir(PWD_DIR)
             if os.path.isdir("{}bootimg".format(DNA_MAIN_DIR)):
-                os.system("rm -rf {}bootimg".format(DNA_MAIN_DIR))
+                rmdire(f"{DNA_MAIN_DIR}bootimg")
 
 
 def patch_addons(project):
@@ -1218,7 +1218,7 @@ def decompress_dat(transfer, source, distance, keep=0):
 def decompress_bro(transfer, source, distance, keep=0):
     sTime = time.time()
     DISPLAY("正在分解: " + os.path.basename(source) + " ...", 3)
-    os.system("brotli -df {} -o {}".format(source, distance))
+    call("brotli -df {} -o {}".format(source, distance))
     if os.path.isfile(distance):
         tTime = time.time() - sTime
         print("\x1b[1;32m [%ds]\x1b[0m" % tTime)
@@ -1429,7 +1429,7 @@ def extract_zrom(rom):
             else:
                 DISPLAY('已安装插件: ' + ModName + '，是否删除原插件后安装 ? [0/1]: ', 2)
                 if input() == '1':
-                    os.system('rm -rf ' + SUB_DIR)
+                    rmdire(SUB_DIR)
                     fantasy_zip.extractall(SUB_DIR)
                     fantasy_zip.close()
                     if os.path.isfile(SUB_DIR + os.sep + 'run.sh') and os.name != "nt":
