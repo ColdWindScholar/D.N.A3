@@ -18,11 +18,11 @@ jobs:
       - name: Rename Tool
         run: |
           cd DNA3-win
-          move ./DNA3-win.zip ../DNA3-4-${{ github.run_number }}-win.zip
+          move ./DNA3-win.zip ../DNA3-${{ github.run_number }}-win.zip
           cd ..
           cd DNA3-linux
           ls
-          move ./DNA3-linux.zip ../DNA3-4-${{ github.run_number }}-linux.zip
+          move ./DNA3-linux.zip ../DNA3-${{ github.run_number }}-linux.zip
           cd ..
       - name: Upload release
         uses: ncipollo/release-action@v1
@@ -30,7 +30,7 @@ jobs:
           allowUpdates: true
           omitBodyDuringUpdate: true
           removeArtifacts: true
-          name: "DNA3-4.${{ github.run_number }}"
+          name: "DNA3.${{ github.run_number }}"
           tag: "CI_BUILD_${{ github.run_number }}"
           body: |
             Build times: ${{ github.run_number }}
