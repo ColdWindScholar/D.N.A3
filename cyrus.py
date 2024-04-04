@@ -1493,10 +1493,7 @@ def lists_project(dTitle, sPath, flag):
 
 
 def choose_zrom(flag=0):
-    if os.name == 'nt':
-        os.system('cls')
-    else:
-        os.system('clear')
+    os.system('cls' if os.name == 'nt' else 'clear')
     if flag == 1:
         print('\x1b[0;33m> 选择固件:\x1b[0m')
         sFilePath = fileopenbox(msg='选择一个固件', default='*.zip')
@@ -1767,7 +1764,6 @@ def menu_main(project):
     global ASK, ASK, ASK, ASK, ASK, ASK
     envelop_project(project)
     ASK = True
-    pause = False
     os.system('cls' if os.name == 'nt' else 'clear')
     print('\x1b[1;36m> 当前工程: \x1b[0m{}'.format(project))
     print('-------------------------------------------------------\n')
@@ -1965,6 +1961,5 @@ def menu_main(project):
                                 recompress(source, fsconfig, contexts, infojson, int(option))
             else:
                 PAUSE('\x1b[0;33m{option}\x1b[0m enter error !')
-            if pause:
-                PAUSE()
+            PAUSE()
     menu_main(project)
