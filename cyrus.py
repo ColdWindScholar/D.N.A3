@@ -1290,13 +1290,17 @@ def decompress_win(infile_list):
                 pass
     parts = list(set(parts))
     for i in parts:
+        if not os.path.isdir(DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0]):
+            os.makedirs(DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0])
         if not os.path.exists(i):
             continue
         if seekfd.gettype(i) in ['erofs', 'ext', 'super', 'boot', 'vendor_boot']:
             decompress_img(i, DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0])
         elif tarfile.is_tarfile(i):
             with tarfile.open(i, 'r') as tar:
-                tar.extractall(path=(DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0]))
+                for n in tar.getmembers():
+                    print(f"正在提取:{n.name}")
+                    tar.extract(n, DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0])
             i = os.path.basename(i).rsplit('.', 1)[0]
             fsconfig_0 = []
             contexts_0 = []
@@ -1869,6 +1873,7 @@ def menu_main(project):
                 if BECOME_SILENT == '1':
                     ASK = False
                 decompress_win(infile)
+                PAUSE()
             elif int(option) == 6:
                 menu_more(project)
             elif int(option) == 7:
