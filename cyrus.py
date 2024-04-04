@@ -131,12 +131,12 @@ def PAUSE(info='> 任意键继续'):
 
 def DISPLAY(message, flag=1, end='\n'):
     flags = {
-        1: "\x1b[1;33m",
-        2: "\x1b[1;36m",
-        3: "\x1b[1;34m",
-        4: "\x1b[1;31m"
+        1: "3",
+        2: "6",
+        3: "4",
+        4: "1"
     }
-    print(f"{flags[flag]} [ {time.strftime('%H:%M:%S', time.localtime())} ]\t {message} \x1b[0m", end=end)
+    print(f"\x1b[1;3{flags[flag]}m [ {time.strftime('%H:%M:%S', time.localtime())} ]\t {message} \x1b[0m", end=end)
 
 
 def CHAR2NUM(chars):
