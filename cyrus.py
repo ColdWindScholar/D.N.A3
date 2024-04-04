@@ -58,9 +58,6 @@ if platform.machine() in ('aarch64', 'armv8l', 'arm64'):
     if os.path.isdir("/sdcard/Download"):
         IS_ARM64 = True
         ROM_DIR = "/sdcard/Download/"
-print("固件放置路径: " + ROM_DIR)
-print("D.N.A3 By 寒风居士")
-time.sleep(3)
 PASSWORD_DICT = {
     '1': "FC", '2': "0A", '3': "EF", '4': "0D", '5': "C9", '6': "8A", '7': "B3", '8': "AD", '9': "04", '0': "00"}
 PASSWORD_DICT_REVERSE = {v: k for k, v in PASSWORD_DICT.items()}
@@ -1540,6 +1537,7 @@ def choose_zrom(flag=0):
         print('\x1b[0;33m> 插件列表\x1b[0m')
     else:
         print('\x1b[0;33m> 固件列表\x1b[0m')
+        print("固件放置路径: " + ROM_DIR)
         lists_project('返回上级', ROM_DIR + '*.zip', 1)
         choice = input('> 选择: ')
         if choice:
