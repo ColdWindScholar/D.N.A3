@@ -48,8 +48,9 @@ ROM_DIR = PWD_DIR
 SETUP_JSON = PWD_DIR + "local/set/setup.json"
 MAGISK_JSON = PWD_DIR + "local/set/magisk.json"
 ostype = platform.system()
-if "com.termux" in os.getenv('PREFIX'):
-    ostype = 'Android'
+if os.getenv('PREFIX'):
+    if "com.termux" in os.getenv('PREFIX'):
+        ostype = 'Android'
 BIN_PATH = PWD_DIR + f"local/bin/{ostype}/{platform.machine()}/"
 INTSU = "sudo apt install "
 if platform.machine() in ('aarch64', 'armv8l', 'arm64'):
