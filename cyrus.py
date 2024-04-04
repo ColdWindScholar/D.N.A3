@@ -210,7 +210,7 @@ def LOAD_SETUP_JSON():
 
         try:
             open(file_path, 'w').close()
-        except Exception as e:
+        except Exception:
             pass
     if not os.path.isfile("{}local/etc/devices/{}/{}/reduce.txt".format(PWD_DIR, SETUP_MANIFEST["DEVICE_CODE"],
                                                                         SETUP_MANIFEST["ANDROID_SDK"])):
@@ -594,7 +594,7 @@ def patch_magisk(BOOTIMG):
                 rmdire(f"{DNA_MAIN_DIR}bootimg")
 
 
-def patch_addons(project):
+def patch_addons():
     if os.path.isdir("{}local/etc/devices/default/{}/addons".format(PWD_DIR, SETUP_MANIFEST["ANDROID_SDK"])):
         DISPLAY("复制 default/{}/* ...".format(SETUP_MANIFEST["ANDROID_SDK"]))
         source_dir = os.path.join(PWD_DIR, "local", "etc", "devices", "default", SETUP_MANIFEST["ANDROID_SDK"],
@@ -1719,7 +1719,7 @@ def menu_more(project):
 
         elif int(option) == 7:
             with CoastTime():
-                patch_addons(project)
+                patch_addons()
             PAUSE()
         elif int(option) in [8, 9]:
             if os.path.isfile(DNA_DIST_DIR + "boot.img"):

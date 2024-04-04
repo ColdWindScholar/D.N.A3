@@ -97,6 +97,7 @@ class ULTRAMAN(object):
 
         header = EXT4_IMAGE_HEADER(img_file.read(28))
         imgsize = header.block_size * header.total_blocks
+        img_file.close()
 
         return imgsize
 
