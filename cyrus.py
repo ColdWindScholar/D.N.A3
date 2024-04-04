@@ -1298,6 +1298,7 @@ def decompress_win(infile_list):
             decompress_img(i, DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0])
         elif tarfile.is_tarfile(i):
             PAUSE(f"此功能存在问题， 请手动解包tar， {i}")
+            # 无论如何指定路径， 总是会提取到/ 我想 这应该是一个BUG
             continue
             with tarfile.open(i, 'r') as tar:
                 for n in tar.getmembers():
