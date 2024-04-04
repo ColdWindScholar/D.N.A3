@@ -1275,10 +1275,13 @@ def appendf(msg, log):
 def decompress_win(infile_list):
     parts = []
     for i in infile_list:
-        parts.append(i.split(".")[0] + ".win")
-        with open(i.split(".")[0] + ".win", "ab" if os.path.exists(i.split(".")[0] + ".win") else "wb") as f:
+        main = os.path.join(os.path.dirname(i), os.path.basename(i).split(".")[0] + ".win")
+        if i == main:
+            continue
+        parts.append(main)
+        with open(main, "ab" if os.path.exists(main) else "wb") as f:
             with open(i, "rb") as f2:
-                print(f'合并{i}到{i.split(".")[0] + ".win"}')
+                print(f'合并{i}到{main}')
                 f.write(f2.read())
             try:
                 os.remove(i)
@@ -1852,6 +1855,8 @@ def menu_main(project):
                 decompress(infile, int(option))
             elif int(option) == 5:
                 infile = glob.glob(DNA_TEMP_DIR + '*.win[0-9][0-9][0-9]')
+                for i in glob.glob(DNA_TEMP_DIR + '*.win*'):
+                    infile.append(i)
                 infile = sorted(infile)
                 BECOME_SILENT = input('> 是否开启静默 [0/1]: ')
                 if BECOME_SILENT == '1':
