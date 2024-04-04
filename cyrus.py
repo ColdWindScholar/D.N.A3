@@ -1195,8 +1195,7 @@ def decompress_bro(transfer, source, distance, keep=0):
     DISPLAY("正在分解: " + os.path.basename(source) + " ...", 3)
     call("brotli -df {} -o {}".format(source, distance))
     if os.path.isfile(distance):
-        tTime = time.time() - sTime
-        print("\x1b[1;32m [%ds]\x1b[0m" % tTime)
+        print("\x1b[1;32m [%ds]\x1b[0m" % (time.time() - sTime))
         if keep == 0:
             os.remove(source)
         elif keep == 1:
