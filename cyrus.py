@@ -129,14 +129,14 @@ def PAUSE(info='> 任意键继续'):
     input(info)
 
 
-def DISPLAY(message, flag=1):
+def DISPLAY(message, flag=1, end='\n'):
     flags = {
         1: "\x1b[1;33m",
         2: "\x1b[1;36m",
         3: "\x1b[1;34m",
         4: "\x1b[1;31m"
     }
-    print(f"{flags[flag]} [ {time.strftime('%H:%M:%S', time.localtime())} ]\t {message} \x1b[0m")
+    print(f"{flags[flag]} [ {time.strftime('%H:%M:%S', time.localtime())} ]\t {message} \x1b[0m", end=end)
 
 
 def CHAR2NUM(chars):
@@ -1332,7 +1332,7 @@ def decompress(infile, flag=4):
                 else:
                     transfer = None
             if ASK:
-                DISPLAY('是否分解: {} [1/0]: '.format(os.path.basename(part)), 2)
+                DISPLAY('是否分解: {} [1/0]: '.format(os.path.basename(part)), 2, '')
                 if input() != '1':
                     continue
             if flag == 2:
@@ -1347,7 +1347,7 @@ def decompress(infile, flag=4):
         if seekfd.gettype(part) not in ('ext', 'sparse', 'erofs', 'super', 'boot', 'vendor_boot'):
             continue
         if ASK:
-            DISPLAY('是否分解: {} [1/0]: '.format(os.path.basename(part)), 2)
+            DISPLAY('是否分解: {} [1/0]: '.format(os.path.basename(part)), 2, '')
             if input() == '1':
                 decompress_img(part, DNA_MAIN_DIR + os.path.basename(part).rsplit('.', 1)[0])
 
@@ -1421,7 +1421,7 @@ def extract_zrom(rom):
         ModName = ModName.replace(' ', '_')
         SUB_DIR = MOD_DIR + 'DNA_' + ModName
         if not os.path.isdir(SUB_DIR):
-            DISPLAY('是否安装插件: ' + ModName + ' ? [1/0]: ', 2)
+            DISPLAY('是否安装插件: ' + ModName + ' ? [1/0]: ', 2, '')
             if input() != '0':
                 fantasy_zip.extractall(SUB_DIR)
                 fantasy_zip.close()
@@ -1433,7 +1433,7 @@ def extract_zrom(rom):
                     rmdire(SUB_DIR)
                     print('\x1b[1;31m\n 安装失败 !!!\x1b[0m')
             else:
-                DISPLAY('已安装插件: ' + ModName + '，是否删除原插件后安装 ? [0/1]: ', 2)
+                DISPLAY('已安装插件: ' + ModName + '，是否删除原插件后安装 ? [0/1]: ', 2, '')
                 if input() == '1':
                     rmdire(SUB_DIR)
                     fantasy_zip.extractall(SUB_DIR)
@@ -1859,7 +1859,7 @@ def menu_main(project):
                     source = DNA_MAIN_DIR + f_basename
                     if os.path.isdir(source):
                         if ASK:
-                            DISPLAY(f'是否合成: {f_basename}.img [1/0]: ')
+                            DISPLAY(f'是否合成: {f_basename}.img [1/0]: ', end='')
                             if input() != '1':
                                 continue
                         boot_utils(source, DNA_DIST_DIR, 2)
@@ -1883,7 +1883,7 @@ def menu_main(project):
                                 SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                             if ASK:
-                                DISPLAY(f'是否合成: {f_basename}.img [1/0]: ')
+                                DISPLAY(f'是否合成: {f_basename}.img [1/0]: ', end='')
                                 if input() != '1':
                                     continue
                             recompress(source, fsconfig, contexts, infojson, int(option))
@@ -1909,7 +1909,7 @@ def menu_main(project):
                                 SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                             if ASK:
-                                DISPLAY('是否合成: {f_basename}.img [1/0]: '.format(f_basename=f_basename))
+                                DISPLAY(f'是否合成: {f_basename}.img [1/0]: ', end='')
                                 if input() != '1':
                                     continue
                             recompress(source, fsconfig, contexts, infojson, int(option))
@@ -1930,7 +1930,7 @@ def menu_main(project):
                             SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                     if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                         if ASK:
-                            DISPLAY('是否合成: {}.new.dat [1/0]: '.format(f_basename))
+                            DISPLAY(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
                             if input() == '1':
                                 recompress(source, fsconfig, contexts, infojson, int(option))
             elif int(option) == 10:
@@ -1957,7 +1957,7 @@ def menu_main(project):
                                 SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                             if ASK:
-                                DISPLAY('是否合成: {}.new.dat [1/0]: '.format(f_basename))
+                                DISPLAY('是否合成: {}.new.dat [1/0]: '.format(f_basename), end='')
                                 if input() != '1':
                                     continue
                             recompress(source, fsconfig, contexts, infojson, 9)
@@ -1980,7 +1980,7 @@ def menu_main(project):
                                     SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                             if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                                 if ASK:
-                                    DISPLAY(f'是否合成: {f_basename}.new.dat.br [1/0]: ')
+                                    DISPLAY(f'是否合成: {f_basename}.new.dat.br [1/0]: ', end='')
                                     if input() != '1':
                                         continue
                                 recompress(source, fsconfig, contexts, infojson, int(option))
