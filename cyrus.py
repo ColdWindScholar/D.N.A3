@@ -1047,8 +1047,6 @@ def boot_utils(source, distance, flag=1):
 
 
 def decompress_img(source, distance, keep=1):
-    SUPPORT_FST = [
-        'ext', 'erofs', 'super']
     if os.path.basename(source) in ('dsp.img', 'exaid.img', 'cust.img'):
         return
     sTime = time.time()
@@ -1072,7 +1070,7 @@ def decompress_img(source, distance, keep=1):
             if keep == 0:
                 os.remove(source)
             decompress_img(new_source, distance)
-    if file_type in SUPPORT_FST:
+    if file_type in ['ext', 'erofs', 'super']:
         if file_type != 'ext':
             DISPLAY('正在分解: {} <{}>'.format(os.path.basename(source), file_type), 3)
         if not os.path.isdir(DNA_CONF_DIR):
