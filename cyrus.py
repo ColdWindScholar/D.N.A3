@@ -188,7 +188,7 @@ def LOAD_SETUP_JSON():
     global SETUP_MANIFEST
     with codecs.open(SETUP_JSON, "r", "utf-8") as manifest_file:
         SETUP_MANIFEST = json.load(manifest_file)
-    set_default_env_setup(SETUP_MANIFEST)
+    set_default_env_setup()
     validate_default_env_setup(SETUP_MANIFEST)
     with codecs.open(SETUP_JSON, "w", "utf-8") as f:
         json.dump(SETUP_MANIFEST, f, indent=4)
@@ -223,7 +223,7 @@ def LOAD_SETUP_JSON():
             json.dump(default_magisk, g, indent=4)
 
 
-def set_default_env_setup(data):
+def set_default_env_setup():
     properties = {
         'IS_VAB': "1",
         'IS_DYNAMIC': "1",
@@ -314,7 +314,7 @@ def check_permissions():
     if not os.path.isfile(SETUP_JSON):
         if not os.path.isdir(os.path.dirname(SETUP_JSON)):
             os.makedirs(os.path.dirname(SETUP_JSON))
-        set_default_env_setup(1)
+        set_default_env_setup()
     menu_once()
 
 
