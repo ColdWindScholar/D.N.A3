@@ -155,7 +155,7 @@ def DISPLAY(message, flag=1):
 
 def CHAR2NUM(chars):
     result = re.sub("(?<=\\w)(?=(?:\\w\\w)+$)", " ", chars)
-    chars = result.split(" ")
+    chars = result.split()
     res = [PASSWORD_DICT_REVERSE[r] for r in chars]
     return "".join(res)
 
@@ -371,7 +371,7 @@ def find_file(path, rule, flag=1):
     elif flag == 5:
         with open(path, "r") as f:
             for l in f:
-                finds.append(l.split(" ")[0])
+                finds.append(l.split()[0])
 
     return finds
 
