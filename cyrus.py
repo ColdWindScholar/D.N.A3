@@ -1368,8 +1368,8 @@ def envelop_project(project):
                         f.write("/persist(/.*)?          u:object_r:mnt_vendor_file:s0\n")
                         for i in ["dsp", "odm", "op1", "op2", "charger_log", "audit_filter_table", "keydata",
                                   "keyrefuge"
-                                  "omr", "publiccert.pem", "sepolicy_version", "cust", "donuts_key", "v_key"
-                            , "carrier", "dqmdbg", "ADF", "APD", "asdf", "batinfo", "voucher", "xrom", "custom",
+                                  "omr", "publiccert.pem", "sepolicy_version", "cust", "donuts_key", "v_key",
+                             "carrier", "dqmdbg", "ADF", "APD", "asdf", "batinfo", "voucher", "xrom", "custom",
                                   "cpefs", "modem", "module_hashes", "pds", "tombstones", "avb", "op_odm", "addon.d",
                                   "factory", "oneplus(/.*)?"]:
                             f.write(f"/{i}                    u:object_r:rootfs:s0\n")
@@ -1910,8 +1910,6 @@ def menu_main(project):
                                 recompress(source, fsconfig, contexts, infojson, int(option))
             elif int(option) == 10:
                 infile = glob.glob(DNA_CONF_DIR + '*_contexts.txt')
-                if len(infile) > 0:
-                    pause = True
                 ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 for file in infile:
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
