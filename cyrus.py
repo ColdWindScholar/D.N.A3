@@ -1824,6 +1824,9 @@ def menu_main(project):
         if not option.isdigit():
             input('> 输入序号数字')
         else:
+            if int(option) == 55:
+                PAUSE("Github: https://github.com/ColdWindScholar/D.N.A3/")
+                PAUSE("Wrote By ColdWindScholar (3590361911@qq.com)")
             if int(option) == 88:
                 sys.exit()
             elif int(option) == 0:
