@@ -280,13 +280,6 @@ def validate_default_env_setup(SETUP_MANIFEST):
         sys.exit(
             'Invalid ["UNPACK_SPLIT_DAT" : "{}"] - must be one of <1-999>'.format(SETUP_MANIFEST["UNPACK_SPLIT_DAT"]))
 
-def env_change(name, value):
-    with open(SETUP_JSON, 'r', encoding='utf-8') as ss:
-        data = json.load(ss)
-    with open(SETUP_JSON, 'w', encoding='utf-8') as ss:
-        data[name] = value
-        json.dump(data, ss, ensure_ascii=False, indent=4)
-
 
 def env_setup():
     if os.name == 'nt':
