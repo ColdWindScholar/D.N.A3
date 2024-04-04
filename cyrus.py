@@ -694,20 +694,14 @@ def repack_super():
         if int(group_size_a) <= half_size:
             group_size_a = str(half_size)
             group_size_b = str(half_size)
-        else:
-            PAUSE('out of size !')
-            return None
+
     half_size = int(SETUP_MANIFEST['SUPER_SIZE']) / 2
     if int(group_size_a) <= half_size:
         group_size_a = half_size
-    else:
-        PAUSE('out of size !')
-        return None
+
     if int(group_size_b) <= half_size:
         group_size_b = half_size
-    else:
-        PAUSE('out of size !')
-        return None
+
     argvs += '--group {0}_a:{1} --group {0}_b:{2} --output {3} '.format(
         SETUP_MANIFEST['GROUP_NAME'],
         str(group_size_a),
