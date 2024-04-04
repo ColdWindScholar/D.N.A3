@@ -1279,7 +1279,7 @@ def decompress_bro(transfer, source, distance, keep=0):
         print("\x1b[1;31m [Failed]\x1b[0m")
 
 
-def decompress_bin(infile, outdir, orzdir, flag='1', keep=1):
+def decompress_bin(infile, outdir, orzdir, flag='1'):
     os.system("cls" if os.name == "nt" else "clear")
     if flag == "1":
         payload_partitions = extract_payload.info(infile)
