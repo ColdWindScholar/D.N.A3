@@ -135,11 +135,11 @@ def DISPLAY(message, flag=1):
     if flag == 1:
         print("\x1b[1;33m" + message + "\x1b[0m")
     elif flag == 4:
-        print(("\x1b[1;36m" + message), end="\x1b[0m", flush=True)
+        print(("\x1b[1;36m" + message), end="\x1b[0m\n", flush=True)
     elif flag == 3:
-        print(("\x1b[1;34m" + message), end="\x1b[0m", flush=True)
+        print(("\x1b[1;34m" + message), end="\x1b[0m\n", flush=True)
     else:
-        print(("\x1b[1;31m" + message), end="\x1b[0m", flush=True)
+        print(("\x1b[1;31m" + message), end="\x1b[0m\n", flush=True)
 
 
 def CHAR2NUM(chars):
@@ -1547,7 +1547,7 @@ def choose_zrom(flag=0):
         choice = input('> 选择: ')
         if choice:
             if int(choice) == 66:
-                download_zrom("1")
+                download_zrom()
             elif int(choice) == 0:
                 return
             elif 0 < int(choice) < len(dict0):
@@ -1585,15 +1585,14 @@ def download_rom(rom, url):
         PAUSE("> 发现 " + os.path.basename(rom))
 
 
-def download_zrom(flag=''):
-    if flag == "1":
-        url = input("> 输入zip直链: ")
-        if url != "":
-            rom = url.split("/")[-1]
-            if rom.split(".")[-1] == "zip":
-                sFilePath = str(ROM_DIR + rom)
-                if not os.path.isfile(sFilePath):
-                    download_rom(sFilePath, url)
+def download_zrom():
+    url = input("> 输入zip直链: ")
+    if url != "":
+        rom = url.split("/")[-1]
+        if rom.split(".")[-1] == "zip":
+            sFilePath = str(ROM_DIR + rom)
+            if not os.path.isfile(sFilePath):
+                download_rom(sFilePath, url)
 
 
 def creat_project():
@@ -1660,7 +1659,7 @@ def menu_once():
                                 menu_once()
                     PAUSE("> Number {} Error !".format(which))
         elif int(choice) == 66:
-            download_zrom("1")
+            download_zrom()
         elif int(choice) == 77:
             env_setup()
             LOAD_SETUP_JSON()
