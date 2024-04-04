@@ -1824,10 +1824,13 @@ def menu_main(project):
                 menu_once()
             elif int(option) == 1:
                 infile = DNA_TEMP_DIR + 'payload.bin'
-                outdir = DNA_TEMP_DIR
-                orzdir = DNA_TEMP_DIR + 'orz' + os.sep
-                choose = input('> {0}选择提取方式:  [0]全盘提取  [1]指定镜像{1} >> '.format(RED, CLOSE))
-                decompress_bin(infile, outdir, orzdir, choose)
+                if not os.path.exists(infile):
+                    PAUSE("未发现Payload.Bin")
+                else:
+                    outdir = DNA_TEMP_DIR
+                    orzdir = DNA_TEMP_DIR + 'orz' + os.sep
+                    choose = input('> {0}选择提取方式:  [0]全盘提取  [1]指定镜像{1} >> '.format(RED, CLOSE))
+                    decompress_bin(infile, outdir, orzdir, choose)
             elif int(option) == 2:
                 infile = glob.glob(DNA_TEMP_DIR + '*.br')
 
