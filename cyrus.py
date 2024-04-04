@@ -1370,8 +1370,7 @@ def envelop_project(project):
         os.makedirs(DNA_MAIN_DIR)
     if not os.path.isfile(DNA_CONF_DIR + "file_contexts"):
         if os.path.isdir(DNA_CONF_DIR):
-            rule = "^[a-z].*?_file_contexts$"
-            contexts_files = find_file(DNA_MAIN_DIR, rule)
+            contexts_files = find_file(DNA_MAIN_DIR, "^[a-z].*?_file_contexts$")
             if len(contexts_files) > 0:
                 with open(DNA_CONF_DIR + "file_contexts", "w", encoding='utf-8', newline="\n") as f:
                     for text in contexts_files:
