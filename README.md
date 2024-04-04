@@ -40,7 +40,7 @@
 
 ####  **软件架构  同时支持** 
 
-1. 手机 Termux Proot Ubuntu 20.04及以上版本 Arm64[aarch64] 或者 <Linux Deploy> Chroot Ubuntu 20.04及以上版本 Arm64[aarch64] 【推荐chroot，效率更高】
+1. 手机 Termux 及以上版本 Arm64[aarch64] （原生支持TERMUX 无需容器！）
 
 2. 电脑 Win10  x86_64[x64]  
 
@@ -53,28 +53,9 @@
 1.  手机安装原版[Termux.apk](https://search.f-droid.org/?q=termux&lang=zh_Hans)  运行Termux 获取存储权限
     - `termux-setup-storage`
 
-2.  下载git、tar、proot【复制下面命令，在Termux中输入，回车】
-    - `pkg install git tar proot wget -y`
+###### 原生支持TERMUX 无需容器！
 
-3.  下载ubuntu.tar.xz及安装脚本【复制下面命令，在Termux中输入，回车】
-    - 【 **方法1** 】：可能下载太慢
-    - `git clone https://gitee.com/sharpeter/proot-ubuntu --depth 1`
-
-    - `bash proot-ubuntu/install_ubuntu.sh`
-
-    - 【 **方法2** 】：使用清华源链接，默认下载最新版，速度理论上不错！
-
-    - `wget https://gitee.com/sharpeter/proot-ubuntu/raw/master/install_ubuntu.sh`
-
-    - `bash install_ubuntu.sh`
-
-    - 【 **注意** 】等待下载、解压完成
-
-4.  执行启动ubuntu 20.04【复制下面命令，在Termux中输入，回车】
-    - `ubuntu`
-    - 【 **注意** 】  很多人说这里输进去没反应，注意看  ~ 变成 root@localhost 就说明 ubuntu 已经启动了 ，如果报错了就 【 `rm -rf ubnutu` 】 再从第3步开始！！！
-
-5.  执行第4条后进入ubuntu系统   【 **PC版教程从此开始，手机端继续往下** 】    【复制下面命令，终端中执行】
+5.  进入ubuntu/linux/termux系统   【 **PC版教程从此开始，手机端继续往下** 】    【复制下面命令，终端中执行】
     - `sudo apt update && sudo apt upgrade -y`        【 _必须执行，近期这一步出错是因为清华源抽风，执行mv -f /etc/apt/sources.list.bak /etc/apt/sources.list后再执行这一步，网速慢科学上网_ 】
     - `sudo apt install git cpio aria2 brotli android-sdk-libsparse-utils openjdk-11-jre p7zip-full -y`     【 _必须执行，使用新版本前建议重新安装一次_ 】
 
