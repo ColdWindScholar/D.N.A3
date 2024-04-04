@@ -125,7 +125,7 @@ def call(exe, kz='Y', out=0, shstate=False, sp=0):
     return ret.returncode
 
 
-class CoastTime(object):
+class CoastTime:
 
     def __init__(self):
         self.t = 0
@@ -1304,6 +1304,13 @@ def decompress_bin(infile, outdir, orzdir, flag='1', keep=1):
             decompress(infile)
 
 
+def appendf(msg, log):
+    if not os.path.isfile(log) and not os.path.exists(log):
+        open(log, 'tw', encoding='utf-8').close()
+    with open(log, 'w', newline='\n') as file:
+        print(msg, file=file)
+
+
 def decompress_win(infile_list):
     for fs in SUPPORT_FSS:
         if infile_list[fs]:
@@ -1618,7 +1625,6 @@ def download_zrom(flag=''):
                 sFilePath = str(ROM_DIR + rom)
                 if not os.path.isfile(sFilePath):
                     download_rom(sFilePath, url)
-
 
 
 def creat_project():
