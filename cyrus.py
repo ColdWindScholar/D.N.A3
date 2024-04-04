@@ -556,11 +556,10 @@ def patch_magisk(BOOTIMG):
                             except FileExistsError:
                                 os.remove(k)
                                 os.renames(v, k)
-
-                        fantasy_zip.close()
-                        call("magiskboot compress=xz magisk32 magisk32.xz")
-                        call("magiskboot compress=xz magisk64 magisk64.xz")
-                        patch_cmds = 'magiskboot cpio ramdisk.cpio "add 0750 init magiskinit" "mkdir 0750 overlay.d" "mkdir 0750 overlay.d/sbin" "add 0644 overlay.d/sbin/magisk32.xz magisk32.xz" '
+                fantasy_zip.close()
+                call("magiskboot compress=xz magisk32 magisk32.xz")
+                call("magiskboot compress=xz magisk64 magisk64.xz")
+                patch_cmds = 'magiskboot cpio ramdisk.cpio "add 0750 init magiskinit" "mkdir 0750 overlay.d" "mkdir 0750 overlay.d/sbin" "add 0644 overlay.d/sbin/magisk32.xz magisk32.xz" '
 
                 if is_64bit:
                     patch_cmds += '"add 0644 overlay.d/sbin/magisk64.xz magisk64.xz" '

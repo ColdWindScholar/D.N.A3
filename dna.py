@@ -12,5 +12,5 @@ def exception_handler(exception_type, exception, traceback):
 
 if __name__ == '__main__':
     multiprocessing.freeze_support()
-    sys.excepthook = exception_handler
+    #sys.excepthook = exception_handler
     cyrus.check_permissions()
