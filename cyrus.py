@@ -1545,10 +1545,9 @@ def download_zrom():
     url = input("> 输入zip直链: ")
     if url != "":
         rom = url.split("/")[-1]
-        if rom.split(".")[-1] == "zip":
-            sFilePath = str(ROM_DIR + rom)
-            if not os.path.isfile(sFilePath):
-                download_rom(sFilePath, url)
+        sFilePath = str(ROM_DIR + rom)
+        if not os.path.isfile(sFilePath):
+            download_rom(sFilePath, url)
 
 
 def creat_project():
