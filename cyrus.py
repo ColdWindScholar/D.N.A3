@@ -33,12 +33,6 @@ else:
     sys.stdout.write("\x1b]2;DNA-3\x07")
     sys.stdout.flush()
 os.system("cls" if os.name == "nt" else "clear")
-if os.name != 'nt':
-    import pwd
-
-    USER = pwd.getpwuid(os.getuid()).pw_name
-else:
-    USER = "mio"
 ASK = False
 IS_ARM64 = False
 IS_FIRST = 0
@@ -1434,10 +1428,9 @@ def extract_zrom(rom):
             if input() != '0':
                 fantasy_zip.extractall(SUB_DIR)
                 fantasy_zip.close()
-                if os.path.isfile(SUB_DIR + os.sep + 'run.sh') and os.name != "nt":
-                    os.system('chown -hR ' + USER + ':' + USER + ' ' + SUB_DIR)
-                    os.system('chmod -R a+rwX ' + SUB_DIR)
-                    os.system('chmod -R 777 ' + SUB_DIR)
+                if os.path.isfile(SUB_DIR + os.sep + 'run.sh'):
+                    if os.name == 'nt':
+                        change_permissions_recursive(SUB_DIR, 0o777)
                     print('\x1b[1;31m\n 安装完成 !!!\x1b[0m')
                 else:
                     rmdire(SUB_DIR)
@@ -1448,10 +1441,9 @@ def extract_zrom(rom):
                     rmdire(SUB_DIR)
                     fantasy_zip.extractall(SUB_DIR)
                     fantasy_zip.close()
-                    if os.path.isfile(SUB_DIR + os.sep + 'run.sh') and os.name != "nt":
-                        os.system('chown -hR ' + USER + ':' + USER + ' ' + SUB_DIR)
-                        os.system('chmod -R a+rwX ' + SUB_DIR)
-                        os.system('chmod -R 777 ' + SUB_DIR)
+                    if os.path.isfile(SUB_DIR + os.sep + 'run.sh'):
+                        if os.name == 'nt':
+                            change_permissions_recursive(SUB_DIR, 0o777)
                         print('\x1b[1;31m\n 安装完成 !!!\x1b[0m')
                     else:
                         rmdire(SUB_DIR)
