@@ -136,8 +136,7 @@ def DISPLAY(message, flag=1):
         3: "\x1b[1;34m",
         4: "\x1b[1;31m"
     }
-    message = f"[ {time.strftime('%H:%M:%S', time.localtime())} ]\t {message}"
-    print(f"{flags[flag]} {message} \x1b[0m")
+    print(f"{flags[flag]} [ {time.strftime('%H:%M:%S', time.localtime())} ]\t {message} \x1b[0m")
 
 
 def CHAR2NUM(chars):
