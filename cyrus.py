@@ -308,24 +308,26 @@ def env_setup():
         '分段DAT/IMG支持个数[15]': "UNPACK_SPLIT_DAT"}
     print("\n")
     print("> {0}设置文件{1}: {2}".format(GREEN, CLOSE, SETUP_JSON.replace(PWD_DIR, "")))
-    i=1
-    data1={}
+    i = 1
+    data1 = {}
     with open(SETUP_JSON, 'r', encoding='utf-8') as ss:
         data = json.load(ss)
-    for (name,value) in question_list.items():
-        print("> "+str(i)+".\t"+name+": "+data[value])
+    for (name, value) in question_list.items():
+        print("> " + str(i) + ".\t" + name + ": " + data[value])
         data1[str(i)] = name
-        i=i+1
-    while 1:
+        i = i + 1
+    while True:
         print("\n")
         sum = input("请输入你要更改的序列，输入00为返回：")
-        if sum in "00" "0":
+        if sum in ["00",   "0"]:
             return
+        if sum not in data1.keys():
+            continue
         hh = input(data1[sum] + "：")
         data[question_list[data1[sum]]] = hh
         validate_default_env_setup(data)
         with open(SETUP_JSON, 'w', encoding='utf-8') as ss:
-            json.dump(data, ss, ensure_ascii=False, indent=4) 
+            json.dump(data, ss, ensure_ascii=False, indent=4)
 
 
 def check_permissions():
@@ -1640,8 +1642,9 @@ def menu_once():
                     menu_once()
                 elif int(which) > 0:
                     if int(which) < len(dict0):
-                        if input("\x1b[0;31m> 是否删除 \x1b[0;34mNo.{} \x1b[0;31m工程: \x1b[0;32m{}\x1b[0;31m [0/1]:\x1b[0m ".format(
-                                which, os.path.basename(dict0[int(which)]))) == "1":
+                        if input(
+                                "\x1b[0;31m> 是否删除 \x1b[0;34mNo.{} \x1b[0;31m工程: \x1b[0;32m{}\x1b[0;31m [0/1]:\x1b[0m ".format(
+                                        which, os.path.basename(dict0[int(which)]))) == "1":
                             if os.path.isdir(dict0[int(which)]):
                                 rmdire(dict0[int(which)])
                                 if IS_ARM64:
@@ -1770,8 +1773,9 @@ def menu_modules():
                                 continue
                             if int(which) > 0:
                                 if int(which) < len(dict0):
-                                    if input("\x1b[0;31m> 是否删除 \x1b[0;34mNo.{} \x1b[0;31m插件: \x1b[0;32m{}\x1b[0;31m [0/1]:\x1b[0m ".format(
-                                            which, os.path.basename(dict0[int(which)]))) == "1":
+                                    if input(
+                                            "\x1b[0;31m> 是否删除 \x1b[0;34mNo.{} \x1b[0;31m插件: \x1b[0;32m{}\x1b[0;31m [0/1]:\x1b[0m ".format(
+                                                    which, os.path.basename(dict0[int(which)]))) == "1":
                                         if os.path.isdir(dict0[int(which)]):
                                             rmdire(dict0[int(which)])
                                             continue
