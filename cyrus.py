@@ -133,7 +133,7 @@ def DISPLAY(message, flag=1):
     time_now = time.strftime("%H:%M:%S", time.localtime())
     message = "[ {} ]\t {}".format(time_now, message)
     if flag == 1:
-        print("\x1b[1;33m" + message + "\x1b[0m")
+        print("\x1b[1;33m" + message + "\x1b[0m\n")
     elif flag == 4:
         print(("\x1b[1;36m" + message), end="\x1b[0m\n", flush=True)
     elif flag == 3:
