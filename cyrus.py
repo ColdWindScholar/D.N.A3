@@ -748,9 +748,6 @@ def repack_super():
         pass
 
 
-
-
-
 def walk_contexts(contexts):
     f3 = open(contexts, "r", encoding="utf-8")
     text_list = []
@@ -768,9 +765,7 @@ def walk_contexts(contexts):
 
     with open(contexts, "a+", encoding="utf-8") as f:
         for i in range(len(text_list)):
-            s = str(text_list[i])
-            s = s + "\n"
-            f.write(s)
+            f.write(str(text_list[i]) + "\n")
 
 
 def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
