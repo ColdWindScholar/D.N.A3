@@ -1629,10 +1629,8 @@ def menu_once():
                     menu_once()
                 elif int(which) > 0:
                     if int(which) < len(dict0):
-                        print(
-                            "\x1b[0;31m> 是否删除 \x1b[0;34mNo.{} \x1b[0;31m工程: \x1b[0;32m{}\x1b[0;31m [0/1]:\x1b[0m ".format(
-                                which, os.path.basename(dict0[int(which)])), end="")
-                        if input() == "1":
+                        if input("\x1b[0;31m> 是否删除 \x1b[0;34mNo.{} \x1b[0;31m工程: \x1b[0;32m{}\x1b[0;31m [0/1]:\x1b[0m ".format(
+                                which, os.path.basename(dict0[int(which)]))) == "1":
                             if os.path.isdir(dict0[int(which)]):
                                 rmdire(dict0[int(which)])
                                 if IS_ARM64:
@@ -1761,10 +1759,8 @@ def menu_modules():
                                 continue
                             if int(which) > 0:
                                 if int(which) < len(dict0):
-                                    print((
-                                        "\x1b[0;31m> 是否删除 \x1b[0;34mNo.{} \x1b[0;31m插件: \x1b[0;32m{}\x1b[0;31m [0/1]:\x1b[0m ".format(
-                                            which, os.path.basename(dict0[int(which)]))), end="")
-                                    if input() == "1":
+                                    if input("\x1b[0;31m> 是否删除 \x1b[0;34mNo.{} \x1b[0;31m插件: \x1b[0;32m{}\x1b[0;31m [0/1]:\x1b[0m ".format(
+                                            which, os.path.basename(dict0[int(which)]))) == "1":
                                         if os.path.isdir(dict0[int(which)]):
                                             rmdire(dict0[int(which)])
                                             continue
