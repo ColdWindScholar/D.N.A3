@@ -1609,10 +1609,9 @@ def creat_project():
             os.mkdir(project)
             menu_main(project)
         else:
-            print("\x1b[0;31m\n 工程目录< \x1b[0;32m{} \x1b[0;31m>已存在, 1秒后自动返回重新输入 ...\x1b[0m\n".format(
+            PAUSE("\x1b[0;31m\n 工程目录< \x1b[0;32m{} \x1b[0;31m>已存在, 回车返回 ...\x1b[0m\n".format(
                 str(project)))
             del project
-            time.sleep(0.3)
             creat_project()
     else:
         menu_once()
@@ -1799,7 +1798,7 @@ def RunModules(sub):
     Shell_Sub = sub + os.sep + "run.sh"
     if os.path.isfile(Shell_Sub):
         call(f"busybox bash {Shell_Sub} {DNA_MAIN_DIR}")
-    time.sleep(0.5)
+    PAUSE()
 
 
 def menu_main(project):
