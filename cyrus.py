@@ -239,7 +239,7 @@ def LOAD_SETUP_JSON():
             json.dump(default_magisk, g, indent=4)
 
 
-def set_default_env_setup(SETUP_MANIFEST):
+def set_default_env_setup(data):
     properties = {
         'IS_VAB': "1",
         'IS_DYNAMIC': "1",
@@ -260,9 +260,8 @@ def set_default_env_setup(SETUP_MANIFEST):
         'SUPER_SPARSE': "1",
         'UTC': "LIVE",
         'UNPACK_SPLIT_DAT': "15"}
-    for (property, value) in properties.items():
-        if property not in SETUP_MANIFEST:
-            SETUP_MANIFEST[property] = value
+    with open(SETUP_JSON, 'w', encoding='utf-8') as ss:
+        json.dump(properties, ss, ensure_ascii=False, indent=4)
 
 
 def validate_default_env_setup(SETUP_MANIFEST):
@@ -283,6 +282,10 @@ def validate_default_env_setup(SETUP_MANIFEST):
 
 
 def env_setup():
+    if os.name == 'nt':
+        os.system('cls')
+    else:
+        os.system('clear')
     question_list = {
         '安卓版本[12]': "ANDROID_SDK",
         '机型代号[alioth]': "DEVICE_CODE",
@@ -305,23 +308,31 @@ def env_setup():
         '分段DAT/IMG支持个数[15]': "UNPACK_SPLIT_DAT"}
     print("\n")
     print("> {0}设置文件{1}: {2}".format(GREEN, CLOSE, SETUP_JSON.replace(PWD_DIR, "")))
-    SETUP_MANIFEST = {}
-    for question in question_list:
-        answer = input("> " + question + ": ")
-        if answer:
-            SETUP_MANIFEST[question_list[question]] = answer
-        set_default_env_setup(SETUP_MANIFEST)
-        validate_default_env_setup(SETUP_MANIFEST)
-
-    with codecs.open(SETUP_JSON, "w", "utf-8") as f:
-        json.dump(SETUP_MANIFEST, f, indent=4)
+    i=1
+    data1={}
+    with open(SETUP_JSON, 'r', encoding='utf-8') as ss:
+        data = json.load(ss)
+    for (name,value) in question_list.items():
+        print("> "+str(i)+".\t"+name+": "+data[value])
+        data1[str(i)] = name
+        i=i+1
+    while 1:
+        print("\n")
+        sum = input("请输入你要更改的序列，输入00为返回：")
+        if sum in "00" "0":
+            return
+        hh = input(data1[sum] + "：")
+        data[question_list[data1[sum]]] = hh
+        validate_default_env_setup(data)
+        with open(SETUP_JSON, 'w', encoding='utf-8') as ss:
+            json.dump(data, ss, ensure_ascii=False, indent=4) 
 
 
 def check_permissions():
     if not os.path.isfile(SETUP_JSON):
         if not os.path.isdir(os.path.dirname(SETUP_JSON)):
             os.makedirs(os.path.dirname(SETUP_JSON))
-        env_setup()
+        set_default_env_setup(1)
     menu_once()
 
 
