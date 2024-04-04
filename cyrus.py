@@ -159,10 +159,9 @@ def GETDIRSIZE(ddir, max_=1.06, flag=1):
 
 
 def LOAD_IMAGE_JSON(dumpinfo, source_dir):
-    f = open(dumpinfo, "a+", encoding="utf-8")
-    f.seek(0)
-    info = eval(f.read())
-    f.close()
+    with open(dumpinfo, "a+", encoding="utf-8") as f:
+        f.seek(0)
+        info = json.load(f)
     inodes = CHAR2NUM(info["a"])
     block_size = CHAR2NUM(info["b"])
     per_group = CHAR2NUM(info["c"])
