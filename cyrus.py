@@ -1073,7 +1073,7 @@ def boot_utils(source, distance, flag=1):
     PAUSE()
 
 
-def run_imgextractor(source, distance, PASSWORD_DICT):
+def run_imgextractor(source, distance):
     try:
         imgextractor.ULTRAMAN().MONSTER(source, distance, PASSWORD_DICT)
     except:
@@ -1114,7 +1114,7 @@ def decompress_img(source, distance, keep=1):
             os.makedirs(DNA_CONF_DIR)
         if file_type == 'ext':
             with Console().status(f"[yellow]正在提取{os.path.basename(source)}[/]"):
-                run_imgextractor(source, distance, PASSWORD_DICT)
+                run_imgextractor(source, distance)
         else:
             while file_type == 'erofs':
                 image_size = os.path.getsize(source)
