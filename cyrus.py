@@ -779,7 +779,10 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
             e2fsdroid_a_cmd = "e2fsdroid -T {0} -C {1} -S {2} -f {3} -a /{4} -e {5}".format(
                 timestamp, fsconfig, contexts, source, label, distance)
         else:
-            size = fsize
+            try:
+                size = fsize
+            except:
+                size = GETDIRSIZE(source, 1.2)
             if int(SETUP_MANIFEST["ANDROID_SDK"]) <= 9:
                 read = "rw"
                 mkimage_cmd = "make_ext4fs -J -T {0} -S {1} -l {2} -L {3} -a /{3} {4} {5}".format(
