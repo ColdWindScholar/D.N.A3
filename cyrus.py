@@ -1744,7 +1744,7 @@ def menu_modules():
             elif int(choice) == 33:
                 extract_zrom(input("请输入插件路径："))
             elif int(choice) == 44:
-                if not len(dict0) > 1:
+                if len(dict0) > 1:
                     which = input("> 输入序号进行删除: ")
                     if which:
                         if not int(which) == 0:
