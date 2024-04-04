@@ -7,6 +7,7 @@ import sys
 import threading
 import time
 import zipfile
+from rich.console import Console
 
 if os.name == 'nt':
     import bz2
@@ -148,13 +149,8 @@ def main(filename, output_dir, partition=None):
         if partition is not None and name != partition:
             continue
         fname = os.path.join(output_dir, name)
-        start_time = time.time()
-        Task = threading.Thread(target=run, args=(fname, payload, p))
-        Task.start()
-        while Task.is_alive():
-            sys.stdout.write('\r' + '> 提取\t %s  %.2fs' % (name, time.time() - start_time))
-            sys.stdout.flush()
-            time.sleep(0.001)
+        with Console().status(f"[yellow]正在提取{name}[/]"):
+            run(fname, payload, p)
 
 
 def info(filename):
