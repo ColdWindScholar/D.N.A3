@@ -23,7 +23,6 @@ import devdex
 import extract_payload
 import img2sdat
 import imgextractor
-import miui
 import sdat2img
 import seekfd
 
@@ -1617,73 +1616,7 @@ def download_zrom(flag=''):
                 sFilePath = str(ROM_DIR + rom)
                 if not os.path.isfile(sFilePath):
                     download_rom(sFilePath, url)
-    print("[?]: Verificando su conexion a internet in 5s ...")
-    host = "https://xiaomirom.com/series/"
-    try:
-        req = requests.get(host, timeout=5)
-        if req.status_code == 200:
-            print("{}[!]: Pass ...{}".format(GREEN, CLOSE))
-    except:
-        PAUSE("{0}[x]:{1} Connect github.com err !!!{1}".format(RED, CLOSE))
-        return None
-    else:
-        device_code = SETUP_MANIFEST["DEVICE_CODE"]
-        DEVICE_JSON = "{}local/set/{}.json".format(PWD_DIR, device_code)
-        if os.path.isfile(DEVICE_JSON):
-            with codecs.open(DEVICE_JSON, "r", encoding="utf-8") as manifest_file:
-                manifest = json.load(manifest_file)
-            default_manifest = {'name': "D.N.A",
-                                'region': "CN",
-                                'mode': "recovery",
-                                'type': "develop"}
-            for (property, value) in default_manifest.items():
-                if property not in manifest:
-                    manifest[property] = value
 
-            if manifest["region"].upper() not in ('CN', 'TW', 'EN', 'RU', 'EU', 'ID',
-                                                  'IN', 'TR', 'SG', 'JP'):
-                sys.exit("Invalid [region] - must be one of <CN/TW/EN/RU/EU/ID/IN/TR/SG/JP>")
-            if manifest["mode"].lower() not in ('recovery', 'fastboot'):
-                sys.exit("Invalid [mode] - must be one of <recovery/fastboot>")
-            if manifest["type"].lower() not in ('develop', 'stable'):
-                sys.exit("Invalid [type] - must be one of <develop/stable>")
-
-            links_dict = miui.get_model_link_table()
-            timenow = datetime.datetime.now().timetuple()
-            today = str(timenow.tm_year)[2:] + "." + str(timenow.tm_mon) + "." + str(timenow.tm_mday)
-            if 220000 > int(time.strftime("%H%M%S")):
-                today = str(timenow.tm_year)[2:] + "." + str(timenow.tm_mon) + "." + str(timenow.tm_mday - 1)
-            device_name = manifest["name"]
-            if device_code in links_dict.keys():
-                device_region = manifest["region"]
-                device_mode = manifest["mode"]
-                device_type = manifest["type"]
-                version = manifest["version"]
-                print("\n> {0}机型配置文件{1}: {2}".format(GREEN, CLOSE, DEVICE_JSON.replace(PWD_DIR, "")))
-                if not version:
-                    version = input("> 输入版本号 [{}]: ".format(today))
-                    if not version or not re.search("\\w", version):
-                        version = today
-                echo_info = "{0} | {1} | {2} | {3} | {4}".format(device_name, device_region, device_mode, device_type,
-                                                                 version)
-                print(echo_info)
-                xiaomirom_url = links_dict[device_code][device_region]
-                miui_links_dict = miui.get_rom_link(xiaomirom_url, version)
-                miui_links_list = miui_links_dict[device_mode][device_type]
-                if len(miui_links_list) > 0:
-                    print("{1}".format(version, miui_links_list[0]))
-                    down = input("> 是否下载 [1/0]: ")
-                    if down == "0":
-                        return
-                    rom = miui_links_list[0].split("/")[-1]
-                    if rom.split(".")[-1] == "zip":
-                        sFilePath = str(ROM_DIR + rom)
-                        if not os.path.isfile(sFilePath):
-                            download_rom(sFilePath, miui_links_list[0])
-                        else:
-                            PAUSE("{0}Rom Existed !{1}".format(RED, CLOSE))
-                else:
-                    PAUSE("{0}{1}{2}:  None".format(RED, CLOSE, version))
 
 
 def creat_project():
