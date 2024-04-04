@@ -212,15 +212,6 @@ def LOAD_SETUP_JSON():
                 newline='\n') as f:
             f.write(
                 "product/app/PhotoTable\nsystem/system/app/BasicDreams\nsystem/system/data-app/Youpin\nsystem_ext/priv-app/EmergencyInfo\nvendor/app/MiGameService\n")
-
-    if not os.path.isfile("{}local/set/{}.json".format(PWD_DIR, SETUP_MANIFEST["DEVICE_CODE"])):
-        default_device = {'name': "Xiaomi/Redmi",
-                          'region': "CN",
-                          'mode': "recovery",
-                          'type': "develop",
-                          'version': ""}
-        with codecs.open("{}local/set/{}.json".format(PWD_DIR, SETUP_MANIFEST["DEVICE_CODE"]), "w", "utf-8") as f:
-            json.dump(default_device, f, indent=4)
     if not os.path.isfile(MAGISK_JSON):
         default_magisk = {'CLASS': "alpha",
                           'KEEPVERITY': "true",
