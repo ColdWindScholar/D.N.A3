@@ -1616,7 +1616,7 @@ def download_zrom(flag=''):
                 print("\n> {0}机型配置文件{1}: {2}".format(GREEN, CLOSE, DEVICE_JSON.replace(PWD_DIR, "")))
                 if not version:
                     version = input("> 输入版本号 [{}]: ".format(today))
-                    if not version or re.search("\\w", version) == False:
+                    if not version or not re.search("\\w", version):
                         version = today
                 echo_info = "{0} | {1} | {2} | {3} | {4}".format(device_name, device_region, device_mode, device_type,
                                                                  version)
@@ -1692,9 +1692,9 @@ def menu_once():
                     menu_once()
                 elif int(which) > 0:
                     if int(which) < len(dict0):
-                        print((
+                        print(
                             "\x1b[0;31m> 是否删除 \x1b[0;34mNo.{} \x1b[0;31m工程: \x1b[0;32m{}\x1b[0;31m [0/1]:\x1b[0m ".format(
-                                which, os.path.basename(dict0[int(which)]))), end="")
+                                which, os.path.basename(dict0[int(which)])), end="")
                         if input() == "1":
                             if os.path.isdir(dict0[int(which)]):
                                 rmdire(dict0[int(which)])
