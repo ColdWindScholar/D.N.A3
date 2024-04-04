@@ -1,0 +1,1 @@
+根据Magisk的类型【stable/alpha/canary】作为文件夹名称，里面放入如[Magisk-xxxxxxx-(24102).apk]的命名格式，通常Magisk官方发布的命名格式就是这样子

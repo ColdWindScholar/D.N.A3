@@ -1,0 +1,10 @@
+{
+    "CLASS" : "alpha",              # 面具版本种类<stable/alpha/canary>
+    "KEEPVERITY" : "false",          # 通常不动
+    "KEEPFORCEENCRYPT" : "false",    # 通常不动
+    "PATCHVBMETAFLAG" : "false",    # 通常不动
+    "TARGET" : "arm",              # 系统架构<arm/x86>
+    "IS_64BIT" : "true"            # 系统64位true, 32位false
+}
+
+# 此文件为配置说明，不可直接用做配置文件!

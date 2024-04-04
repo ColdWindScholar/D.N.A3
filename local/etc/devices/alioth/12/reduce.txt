@@ -1,0 +1,11 @@
+#精简列表自行编辑
+product/app/PhotoTable
+product/data-app/BaiduIME
+product/data-app/com.iflytek.inputmethod.miui
+system/system/app/BasicDreams
+system/system/data-app/MIShop
+system/system/priv-app/UserDictionaryProvider
+system/verity_key
+system_ext/priv-app/EmergencyInfo
+vendor/app/MiGameService
+vendor/data-app/MiGalleryLockscreen

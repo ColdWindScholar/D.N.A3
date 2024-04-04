@@ -1,0 +1,21 @@
+{
+    "IS_VAB": "1",
+    "IS_DYNAMIC": "1",
+    "ANDROID_SDK": "12",
+    "DEVICE_CODE": "alioth",
+    "AUTHOR_INFO": "DNA",
+    "REPACK_EROFS_IMG": "0",
+    "REPACK_TO_RW": "0",
+    "RESIZE_IMG": "0",
+    "RESIZE_EROFSIMG": "0",
+    "REPACK_SPARSE_IMG": "0",
+    "REPACK_BR_LEVEL": "3",
+    "SUPER_SIZE": "9126805504",
+    "GROUP_SIZE_A": "9122611200",
+    "GROUP_SIZE_B": "9122611200",
+    "GROUP_NAME": "qti_dynamic_partitions",
+    "SUPER_SECTOR": "2048",
+    "SUPER_SPARSE": "1",
+    "UTC": "LIVE",
+    "UNPACK_SPLIT_DAT": "15"
+}
