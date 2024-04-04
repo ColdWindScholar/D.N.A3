@@ -1840,22 +1840,18 @@ def menu_main(project):
                     decompress_bin(infile, outdir, orzdir, choose)
             elif int(option) == 2:
                 infile = glob.glob(DNA_TEMP_DIR + '*.br')
-                if input('> 是否开启静默 [0/1]: ') == '1':
-                    ASK = False
+                ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 decompress(infile, int(option))
             elif int(option) == 3:
                 infile = glob.glob(DNA_TEMP_DIR + '*.dat')
-                if input('> 是否开启静默 [0/1]: ') == '1':
-                    ASK = False
+                ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 decompress(infile, int(option))
                 infile = glob.glob(DNA_TEMP_DIR + '*.img')
-                if input('> 是否开启静默 [0/1]: ') == '1':
-                    ASK = False
+                ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 decompress(infile, int(option))
             elif int(option) == 4:
                 infile = glob.glob(DNA_TEMP_DIR + '*.img')
-                if input('> 是否开启静默 [0/1]: ') == '1':
-                    ASK = False
+                ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 decompress(infile, int(option))
             elif int(option) == 5:
                 infile = glob.glob(DNA_TEMP_DIR + '*.win[0-9][0-9][0-9]')
@@ -1864,8 +1860,7 @@ def menu_main(project):
                 for i in glob.glob(DNA_TEMP_DIR + '*.win'):
                     infile.append(i)
                 infile = list(set(sorted(infile)))
-                if input('> 是否开启静默 [0/1]: ') == '1':
-                    ASK = False
+                ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 decompress_win(infile)
                 PAUSE()
             elif int(option) == 6:
@@ -1875,15 +1870,14 @@ def menu_main(project):
             elif int(option) == 8:
                 infile = glob.glob(DNA_CONF_DIR + '*_contexts.txt')
                 infile_kernel = glob.glob(DNA_CONF_DIR + '*_kernel.txt')
-                if input('> 是否开启静默 [0/1]: ') == '1':
-                    ASK = False
+                ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 for file in infile_kernel:
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
                     source = DNA_MAIN_DIR + f_basename
                     if os.path.isdir(source):
                         if ASK:
                             DISPLAY(f'是否合成: {f_basename}.img [1/0]: ')
-                            if input() == '0':
+                            if input() != '1':
                                 continue
                         boot_utils(source, DNA_DIST_DIR, 2)
                         continue
@@ -1907,13 +1901,12 @@ def menu_main(project):
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                             if ASK:
                                 DISPLAY(f'是否合成: {f_basename}.img [1/0]: ')
-                                if input() == '0':
+                                if input() != '1':
                                     continue
                             recompress(source, fsconfig, contexts, infojson, int(option))
             elif int(option) == 9:
                 infile = glob.glob(DNA_CONF_DIR + '*_contexts.txt')
-                if input('> 是否开启静默 [0/1]: ') == '1':
-                    ASK = False
+                ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 for file in infile:
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
                     source = DNA_MAIN_DIR + f_basename
@@ -1934,7 +1927,7 @@ def menu_main(project):
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                             if ASK:
                                 DISPLAY('是否合成: {f_basename}.img [1/0]: '.format(f_basename=f_basename))
-                                if input() == '0':
+                                if input() != '1':
                                     continue
                             recompress(source, fsconfig, contexts, infojson, int(option))
                 source = DNA_MAIN_DIR + f_basename
@@ -1961,8 +1954,7 @@ def menu_main(project):
                 infile = glob.glob(DNA_CONF_DIR + '*_contexts.txt')
                 if len(infile) > 0:
                     pause = True
-                if input('> 是否开启静默 [0/1]: ') == '1':
-                    ASK = False
+                ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 for file in infile:
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
                     source = DNA_MAIN_DIR + f_basename
