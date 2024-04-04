@@ -282,10 +282,7 @@ def validate_default_env_setup(SETUP_MANIFEST):
 
 
 def env_setup():
-    if os.name == 'nt':
-        os.system('cls')
-    else:
-        os.system('clear')
+    os.system('cls' if os.name == 'nt' else "clear")
     question_list = {
         '安卓版本[12]': "ANDROID_SDK",
         '机型代号[alioth]': "DEVICE_CODE",
@@ -306,8 +303,7 @@ def env_setup():
         '动态分区扇区大小[2048]': "SUPER_SECTOR",
         '自定义UTC时间戳[live]': "UTC",
         '分段DAT/IMG支持个数[15]': "UNPACK_SPLIT_DAT"}
-    print("\n")
-    print("> {0}设置文件{1}: {2}".format(GREEN, CLOSE, SETUP_JSON.replace(PWD_DIR, "")))
+    print("\n> {0}设置文件{1}: {2}".format(GREEN, CLOSE, SETUP_JSON.replace(PWD_DIR, "")))
     i = 1
     data1 = {}
     with open(SETUP_JSON, 'r', encoding='utf-8') as ss:
