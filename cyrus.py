@@ -285,7 +285,7 @@ def validate_default_env_setup(SETUP_MANIFEST):
 
     if SETUP_MANIFEST["RESIZE_EROFSIMG"] not in ('1', '2', '0'):
         sys.exit("Invalid [RESIZE_EROFSIMG] - must be one of <1/2/0>")
-    if not re.match("[\\d]{1,2}", SETUP_MANIFEST["ANDROID_SDK"]) or int(SETUP_MANIFEST["ANDROID_SDK"]) < 5:
+    if not re.match("\\d{1,2}", SETUP_MANIFEST["ANDROID_SDK"]) or int(SETUP_MANIFEST["ANDROID_SDK"]) < 5:
         sys.exit("Invalid [ANDROID_SDK : {}] - must be one of <5+>".format(SETUP_MANIFEST["ANDROID_SDK"]))
     if not re.match("[0-9]", SETUP_MANIFEST["REPACK_BR_LEVEL"]):
         sys.exit("Invalid [{}] - must be one of <0-9>".format(SETUP_MANIFEST["REPACK_BR_LEVEL"]))
@@ -393,18 +393,6 @@ def kill_avb(project):
                 tf.write(details)
 
 
-def kill_avbkey(project):
-    rule = "^fstab.*?"
-    fstab = find_file(project, rule)
-    if len(fstab) > 0:
-        for tab in fstab:
-            print("> 解除AVB加密: " + tab)
-            with open(tab, "r") as sf:
-                details = sf.read()
-            details = re.sub(",avb_keys=.*", "", details)
-            with open(tab, "w") as tf:
-                tf.write(details)
-
 
 def kill_dm(project):
     rule = "^fstab.*?"
@@ -479,9 +467,9 @@ def patch_magisk(BOOTIMG):
         'PATCHVBMETAFLAG': "false",
         'TARGET': "arm",
         'IS_64BIT': "true"}
-    for (property, value) in default_manifest.items():
-        if property not in MAGISK_MANIFEST:
-            MAGISK_MANIFEST[property] = value
+    for (property_, value) in default_manifest.items():
+        if property_ not in MAGISK_MANIFEST:
+            MAGISK_MANIFEST[property_] = value
 
     for k in ('KEEPVERITY', 'KEEPFORCEENCRYPT', 'PATCHVBMETAFLAG', 'IS_64BIT'):
         if MAGISK_MANIFEST[k] not in ('true', 'false'):
