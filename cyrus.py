@@ -1842,27 +1842,21 @@ def menu_main(project):
                     decompress_bin(infile, outdir, orzdir, choose)
             elif int(option) == 2:
                 infile = glob.glob(DNA_TEMP_DIR + '*.br')
-
-                BECOME_SILENT = input('> 是否开启静默 [0/1]: ')
-                if BECOME_SILENT == '1':
+                if input('> 是否开启静默 [0/1]: ') == '1':
                     ASK = False
                 decompress(infile, int(option))
             elif int(option) == 3:
                 infile = glob.glob(DNA_TEMP_DIR + '*.dat')
-
-                BECOME_SILENT = input('> 是否开启静默 [0/1]: ')
-                if BECOME_SILENT == '1':
+                if input('> 是否开启静默 [0/1]: ') == '1':
                     ASK = False
                 decompress(infile, int(option))
                 infile = glob.glob(DNA_TEMP_DIR + '*.img')
-                BECOME_SILENT = input('> 是否开启静默 [0/1]: ')
-                if BECOME_SILENT == '1':
+                if input('> 是否开启静默 [0/1]: ') == '1':
                     ASK = False
                 decompress(infile, int(option))
             elif int(option) == 4:
                 infile = glob.glob(DNA_TEMP_DIR + '*.img')
-                BECOME_SILENT = input('> 是否开启静默 [0/1]: ')
-                if BECOME_SILENT == '1':
+                if input('> 是否开启静默 [0/1]: ') == '1':
                     ASK = False
                 decompress(infile, int(option))
             elif int(option) == 5:
@@ -1872,8 +1866,7 @@ def menu_main(project):
                 for i in glob.glob(DNA_TEMP_DIR + '*.win'):
                     infile.append(i)
                 infile = list(set(sorted(infile)))
-                BECOME_SILENT = input('> 是否开启静默 [0/1]: ')
-                if BECOME_SILENT == '1':
+                if input('> 是否开启静默 [0/1]: ') == '1':
                     ASK = False
                 decompress_win(infile)
                 PAUSE()
@@ -1884,8 +1877,7 @@ def menu_main(project):
             elif int(option) == 8:
                 infile = glob.glob(DNA_CONF_DIR + '*_contexts.txt')
                 infile_kernel = glob.glob(DNA_CONF_DIR + '*_kernel.txt')
-                BECOME_SILENT = input('> 是否开启静默 [0/1]: ')
-                if BECOME_SILENT == '1':
+                if input('> 是否开启静默 [0/1]: ') == '1':
                     ASK = False
                 for file in infile_kernel:
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
@@ -1922,8 +1914,7 @@ def menu_main(project):
                             recompress(source, fsconfig, contexts, infojson, int(option))
             elif int(option) == 9:
                 infile = glob.glob(DNA_CONF_DIR + '*_contexts.txt')
-                BECOME_SILENT = input('> 是否开启静默 [0/1]: ')
-                if BECOME_SILENT == '1':
+                if input('> 是否开启静默 [0/1]: ') == '1':
                     ASK = False
                 for file in infile:
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
@@ -1972,8 +1963,7 @@ def menu_main(project):
                 infile = glob.glob(DNA_CONF_DIR + '*_contexts.txt')
                 if len(infile) > 0:
                     pause = True
-                BECOME_SILENT = input('> 是否开启静默 [0/1]: ')
-                if BECOME_SILENT == '1':
+                if input('> 是否开启静默 [0/1]: ') == '1':
                     ASK = False
                 for file in infile:
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
