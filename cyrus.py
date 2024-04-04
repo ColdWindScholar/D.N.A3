@@ -768,29 +768,23 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
             mount_point = "/"
     if SETUP_MANIFEST["REPACK_EROFS_IMG"] == "0":
         fs_variant = "ext4"
+        block_size = 4096
+        blocks = math.ceil(int(size) / int(block_size))
         if SETUP_MANIFEST["REPACK_TO_RW"] == "1" and SETUP_MANIFEST["IS_DYNAMIC"] == "1":
-            RESIZE2RW = True
             read = "rw"
-            block_size = 4096
-            blocks = math.ceil(int(size) / int(block_size))
+            RESIZE2RW = True
             mkimage_cmd = f"make_ext4fs -J -T {timestamp} -S {contexts} -l {size} -L {label} -a /{label} {distance} {source}"
-            mke2fs_a_cmd = "mke2fs -O ^has_journal,^metadata_csum,extent,huge_file,^flex_bg,^64bit,uninit_bg,dir_nlink,extra_isize -t {} -b {} -L {} -I 256 -M {} -m 0 -q -F {} {}".format(
-                fs_variant, block_size, label, mount_point, distance, blocks)
-            e2fsdroid_a_cmd = "e2fsdroid -T {0} -C {1} -S {2} -f {3} -a /{4} -e {5}".format(
-                timestamp, fsconfig, contexts, source, label, distance)
         else:
-            size = fsize
             if int(SETUP_MANIFEST["ANDROID_SDK"]) <= 9:
-                read = "rw"
                 mkimage_cmd = "make_ext4fs -J -T {0} -S {1} -l {2} -L {3} -a /{3} {4} {5}".format(
                     timestamp, contexts, size, label, distance, source)
             else:
                 mkimage_cmd = "make_ext4fs -T {0} -S {1} -l {2} -L {3} -a /{3} {4} {5}".format(
                     timestamp, contexts, size, label, distance, source)
-            mke2fs_a_cmd = "mke2fs -O ^has_journal,^metadata_csum,extent,huge_file,^flex_bg,^64bit,uninit_bg,dir_nlink,extra_isize -t {} -b {} -L {} -I 256 -N {} -M {} -m 0 -g {} -q -F {} {}".format(
-                fs_variant, block_size, label, inodes, mount_point, per_group, distance, blocks)
-            e2fsdroid_a_cmd = "e2fsdroid -T {0} -C {1} -S {2} -f {3} -a /{4} -e -s {5}".format(
-                timestamp, fsconfig, contexts, source, label, distance)
+        mke2fs_a_cmd = "mke2fs -O ^has_journal,^metadata_csum,extent,huge_file,^flex_bg,^64bit,uninit_bg,dir_nlink,extra_isize -t {} -b {} -L {} -I 256 -M {} -m 0 -q -F {} {}".format(
+            fs_variant, block_size, label, mount_point, distance, blocks)
+        e2fsdroid_a_cmd = "e2fsdroid -T {0} -C {1} -S {2} -f {3} -a /{4} -e -s {5}".format(
+            timestamp, fsconfig, contexts, source, label, distance)
     else:
         fs_variant = "erofs"
         mkerofs_cmd = "mkfs.erofs "
