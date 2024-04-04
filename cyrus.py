@@ -1297,10 +1297,12 @@ def decompress_win(infile_list):
         if seekfd.gettype(i) in ['erofs', 'ext', 'super', 'boot', 'vendor_boot']:
             decompress_img(i, DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0])
         elif tarfile.is_tarfile(i):
+            PAUSE(f"此功能存在问题， 请手动解包tar， {i}")
+            continue
             with tarfile.open(i, 'r') as tar:
                 for n in tar.getmembers():
                     print(f"正在提取:{n.name}")
-                    tar.extract(n, DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0])
+                    tar.extract(n, path=(DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0]))
             i = os.path.basename(i).rsplit('.', 1)[0]
             fsconfig_0 = []
             contexts_0 = []
