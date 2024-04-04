@@ -12,8 +12,7 @@ import subprocess
 import sys
 import time
 import zipfile
-
-import easygui
+from easygui import fileopenbox
 import requests
 from rich.console import Console
 from tqdm import tqdm
@@ -1555,7 +1554,7 @@ def choose_zrom(flag=0):
         os.system('clear')
     if flag == 1:
         print('\x1b[0;33m> 选择固件:\x1b[0m')
-        sFilePath = easygui.fileopenbox(msg='选择一个固件', default='*.zip')
+        sFilePath = fileopenbox(msg='选择一个固件', default='*.zip')
 
         if sFilePath is not None:
             extract_zrom(sFilePath)
