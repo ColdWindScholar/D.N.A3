@@ -19,6 +19,7 @@ from tqdm import tqdm
 
 import devdex
 import extract_payload
+import fspatch
 import img2sdat
 import imgextractor
 import sdat2img
@@ -393,7 +394,6 @@ def kill_avb(project):
                 tf.write(details)
 
 
-
 def kill_dm(project):
     rule = "^fstab.*?"
     fstab = find_file(project, rule)
@@ -748,23 +748,7 @@ def repack_super():
         pass
 
 
-def walk_add_fsconfig(source, fsconfig):
-    target_dir_lists = sorted(find_file(source, " ", 4))
-    fs_configs_lists = sorted(find_file(fsconfig, " ", 5))
-    for line in target_dir_lists:
-        line2 = line.replace(DNA_MAIN_DIR, "").replace(os.sep, "/")
-        if line2 not in fs_configs_lists:
-            if os.path.isdir(line):
-                target_addon = line2 + " 0 0 0755"
-            elif os.path.isfile(line):
-                if "system/xbin" in line2 or "system/bin" in line2 or "vendor/bin" in line2 or "system/bin" in line2 or "sbin" in line2:
-                    target_addon = line2 + " 0 0 0755"
-                else:
-                    target_addon = line2 + " 0 0 0644"
-            else:
-                target_addon = line2 + " 0 0 0644"
-            with open(fsconfig, "a") as new_fs_configs:
-                new_fs_configs.write(str(target_addon + "\n"))
+
 
 
 def walk_contexts(contexts):
@@ -796,7 +780,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
     distance = DNA_DIST_DIR + label + ".img"
     if os.path.isfile(distance):
         os.remove(distance)
-    walk_add_fsconfig(source, fsconfig)
+    fspatch.main(source, fsconfig)
     walk_contexts(fsconfig)
     walk_contexts(contexts)
     source = source.replace("\\", '/')
