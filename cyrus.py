@@ -1297,13 +1297,10 @@ def decompress_win(infile_list):
         if seekfd.gettype(i) in ['erofs', 'ext', 'super', 'boot', 'vendor_boot']:
             decompress_img(i, DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0])
         elif tarfile.is_tarfile(i):
-            PAUSE(f"此功能存在问题， 请手动解包tar， {i}")
-            # 无论如何指定路径， 总是会提取到/ 我想 这应该是一个BUG
-            continue
             with tarfile.open(i, 'r') as tar:
                 for n in tar.getmembers():
                     print(f"正在提取:{n.name}")
-                    tar.extract(n, path=(DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0]))
+                    tar.extract(n, path=(DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0]), filter='tar')
             i = os.path.basename(i).rsplit('.', 1)[0]
             fsconfig_0 = []
             contexts_0 = []
