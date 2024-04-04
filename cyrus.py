@@ -1759,8 +1759,6 @@ def menu_more(project):
         if not option.isdigit():
             PAUSE("> 输入序号数字")
             continue
-        if not int(option) == 88:
-            sys.exit()
         if int(option) == 0:
             break
         elif int(option) == 1:
