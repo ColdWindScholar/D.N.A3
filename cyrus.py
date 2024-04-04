@@ -1774,7 +1774,7 @@ def menu_more(project):
         elif int(option) == 5:
             with CoastTime():
                 devdex.deodex(project)
-        elif not int(option) == 6:
+        elif int(option) == 6:
             if os.path.isfile(
                     "{}local/etc/devices/{}/{}/reduce.txt".format(PWD_DIR, SETUP_MANIFEST["DEVICE_CODE"],
                                                                   SETUP_MANIFEST["ANDROID_SDK"])):
@@ -1798,15 +1798,13 @@ def menu_more(project):
                                     shutil.rmtree(DNA_MAIN_DIR + line)
                                 except NotADirectoryError:
                                     os.remove(DNA_MAIN_DIR + line)
-
-        PAUSE()
+            PAUSE()
 
         if int(option) == 7:
             with CoastTime():
                 patch_addons(project)
             PAUSE()
-        else:
-            if int(option) == 8 or int(option) == 9:
+        elif int(option) == 8 or int(option) == 9:
                 if os.path.isfile(DNA_DIST_DIR + "boot.img"):
                     currentbootimg = DNA_DIST_DIR + "boot.img"
                 elif os.path.isfile(DNA_TEMP_DIR + "boot.img"):
@@ -1818,11 +1816,11 @@ def menu_more(project):
                         else:
                             patch_magisk(currentbootimg)
                     PAUSE()
-            if int(option) == 11:
-                repack_super()
-                PAUSE()
-            else:
-                PAUSE("> Number \x1b[0;33m{}\x1b[0m enter error !".format(option))
+        elif int(option) == 11:
+            repack_super()
+            PAUSE()
+        else:
+            PAUSE("> Number \x1b[0;33m{}\x1b[0m enter error !".format(option))
 
 
 def menu_modules():
