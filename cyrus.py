@@ -654,11 +654,10 @@ def repack_super():
                     if os.path.isfile(new_img_a):
                         os.remove(img_a)
                         img_a = new_img_a
-
-            image_size = imgextractor.ULTRAMAN().LEMON(img_a)
-            group_size_a += int(image_size)
-            argvs += '--partition {0}_a:readonly:{1}:{2}_a --image {0}_a={3} --partition {0}_b:readonly:0:{2}_b '.format(
-                i, image_size, SETUP_MANIFEST['GROUP_NAME'], img_a)
+                        image_size = imgextractor.ULTRAMAN().LEMON(img_a)
+                        group_size_a += int(image_size)
+                        argvs += '--partition {0}_a:readonly:{1}:{2}_a --image {0}_a={3} --partition {0}_b:readonly:0:{2}_b '.format(
+                            i, image_size, SETUP_MANIFEST['GROUP_NAME'], img_a)
     else:
         argvs += '--metadata-slots 2 '
         for i in parts:
@@ -667,26 +666,25 @@ def repack_super():
                 img_a = DNA_DIST_DIR + i + '.img'
                 if os.path.isfile(DNA_DIST_DIR + i + '_a.img'):
                     img_a = DNA_DIST_DIR + i + '_a.img'
-            file_type_a = seekfd.gettype(img_a)
-            file_type_b = seekfd.gettype(img_b)
-            if file_type_a == 'sparse':
-                new_img_a = imgextractor.ULTRAMAN().APPLE(img_a)
-                if os.path.isfile(new_img_a):
-                    os.remove(img_a)
-                    img_a = new_img_a
+                file_type_a = seekfd.gettype(img_a)
+                file_type_b = seekfd.gettype(img_b)
+                if file_type_a == 'sparse':
+                    new_img_a = imgextractor.ULTRAMAN().APPLE(img_a)
+                    if os.path.isfile(new_img_a):
+                        os.remove(img_a)
+                        img_a = new_img_a
+                if file_type_b == 'sparse':
+                    new_img_b = imgextractor.ULTRAMAN().APPLE(img_b)
+                    if os.path.isfile(new_img_b):
+                        os.remove(img_b)
+                        img_b = new_img_b
+                image_size_a = imgextractor.ULTRAMAN().LEMON(img_a)
+                group_size_a += int(image_size_a)
+                image_size_b = imgextractor.ULTRAMAN().LEMON(img_b)
+                group_size_b += int(image_size_b)
+                argvs += '--partition {0}_a:readonly:{1}:{2}_a --image {0}_a={3} --partition {0}_b:readonly:{4}:{2}_b --image {0}_b={5} '.format(
+                    i, image_size_a, SETUP_MANIFEST['GROUP_NAME'], img_a, image_size_b, img_b)
 
-            if file_type_b == 'sparse':
-                new_img_b = imgextractor.ULTRAMAN().APPLE(img_b)
-                if os.path.isfile(new_img_b):
-                    os.remove(img_b)
-                    img_b = new_img_b
-
-            image_size_a = imgextractor.ULTRAMAN().LEMON(img_a)
-            group_size_a += int(image_size_a)
-            image_size_b = imgextractor.ULTRAMAN().LEMON(img_b)
-            group_size_b += int(image_size_b)
-            argvs += '--partition {0}_a:readonly:{1}:{2}_a --image {0}_a={3} --partition {0}_b:readonly:{4}:{2}_b --image {0}_b={5} '.format(
-                i, image_size_a, SETUP_MANIFEST['GROUP_NAME'], img_a, image_size_b, img_b)
     if group_size_a == 0:
         PAUSE('> 未发现002_DNA文件夹下存在可用镜像文件')
         return None
@@ -712,12 +710,11 @@ def repack_super():
     else:
         PAUSE('out of size !')
         return None
-    argvs += '--group {0}_a:{1} --group {0}_b:{2} --output {3} 2> {4}lpmake_log.txt'.format(
+    argvs += '--group {0}_a:{1} --group {0}_b:{2} --output {3} '.format(
         SETUP_MANIFEST['GROUP_NAME'],
         str(group_size_a),
         str(group_size_b),
-        DNA_DIST_DIR + 'super.img',
-        DNA_DIST_DIR)
+        DNA_DIST_DIR + 'super.img')
     printinform2 = '重新合成: super.img <Size:{}|Vab:{}|Sparse:{}>'.format(SETUP_MANIFEST['SUPER_SIZE'],
                                                                            SETUP_MANIFEST['IS_VAB'],
                                                                            SETUP_MANIFEST['SUPER_SPARSE'])
