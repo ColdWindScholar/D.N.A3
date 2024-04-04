@@ -111,7 +111,7 @@
 
 8.   **不要放在含有中文名文件夹下运行，不要选择带有空格的文件进行解包，工程文件夹不得有空格或其他特殊符号 ！！！** 
 
-9.  更新说明: 在proot ubuntu下删除原 DNA文件夹（记得提前备份DNA文件夹内的重要文件/插件），重新【 _`git clone https://gitee.com/sharpeter/DNA.git --depth 1`_  】
+9.  更新说明: 在proot ubuntu下删除原 DNA文件夹（记得提前备份DNA文件夹内的重要文件/插件），重新【 _`git clone https://github.com/ColdWindScholar/D.N.A3 --depth 1`_  】
 
 10.   **动态分区必须打包成原官方卡刷包格式[zip]（即打包成.new.dat.br或.new.dat，同时必须使用工程文件夹下的dynamic_partitions_op_list，一块压缩成zip卡刷包），不允许单刷.img** 
 
@@ -136,5 +136,5 @@
 
 3.   **如果由于用户利用root权限对工具中的工程目录进行操作导致的数据丢失、损毁，本人不承担任何责任 ！！！**
 
-####  [TIK4.0](https://github.com/ColdWindScholar/TIK) 
+####  [D.N.A3](https://github.com/ColdWindScholar/D.N.A3) 
 #### ColdWindScholar(3590361911@qq.com).All rights reserved.
