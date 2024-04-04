@@ -2008,8 +2008,8 @@ def menu_main(project):
                                     if input() != '1':
                                         continue
                                 recompress(source, fsconfig, contexts, infojson, int(option))
-                    else:
-                        PAUSE('\x1b[0;33m{option}\x1b[0m enter error !')
-                    if pause:
-                        PAUSE()
+            else:
+                PAUSE('\x1b[0;33m{option}\x1b[0m enter error !')
+            if pause:
+                PAUSE()
     menu_main(project)
