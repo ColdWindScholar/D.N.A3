@@ -637,9 +637,7 @@ def repack_super():
         parts = []
         for file in infile:
             parts.append(os.path.basename(file).rsplit('_', 1)[0])
-    with open(DNA_DIST_DIR + "alivable_super_parts.txt", "w") as f:
-        f.write(format(parts))
-    (group_size_a, group_size_b) = (0, 0)
+    group_size_a, group_size_b = 0, 0
     argvs = 'lpmake --metadata-size 65536 --super-name super --device super:{}:{} '.format(SETUP_MANIFEST['SUPER_SIZE'],
                                                                                            str(int(SETUP_MANIFEST[
                                                                                                        'SUPER_SECTOR']) * 512))
@@ -654,10 +652,10 @@ def repack_super():
                     if os.path.isfile(new_img_a):
                         os.remove(img_a)
                         img_a = new_img_a
-                        image_size = imgextractor.ULTRAMAN().LEMON(img_a)
-                        group_size_a += int(image_size)
-                        argvs += '--partition {0}_a:readonly:{1}:{2}_a --image {0}_a={3} --partition {0}_b:readonly:0:{2}_b '.format(
-                            i, image_size, SETUP_MANIFEST['GROUP_NAME'], img_a)
+                image_size = imgextractor.ULTRAMAN().LEMON(img_a)
+                group_size_a += int(image_size)
+                argvs += '--partition {0}_a:readonly:{1}:{2}_a --image {0}_a={3} --partition {0}_b:readonly:0:{2}_b '.format(
+                    i, image_size, SETUP_MANIFEST['GROUP_NAME'], img_a)
     else:
         argvs += '--metadata-slots 2 '
         for i in parts:
