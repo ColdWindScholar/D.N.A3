@@ -92,7 +92,7 @@ def main(TRANSFER_LIST_FILE, NEW_DATA_FILE, OUTPUT_IMAGE_FILE):
                 begin = block[0]
                 end = block[1]
                 block_count = end - begin
-                print('Copying {} blocks into position {}...'.format(block_count, begin))
+                print('\rCopying {} blocks into position {}...'.format(block_count, begin), end='')
 
                 # Position output file
                 output_img.seek(begin * BLOCK_SIZE)
