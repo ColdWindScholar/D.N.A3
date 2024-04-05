@@ -288,7 +288,7 @@ def env_setup():
         '分段DAT/IMG支持个数[15]': "UNPACK_SPLIT_DAT"}
     while True:
         os.system('cls' if os.name == 'nt' else "clear")
-        print("\n> {0}设置文件{1}: {2}".format(GREEN, CLOSE, SETUP_JSON.replace(PWD_DIR, "")))
+        print(f"\n> {GREEN}设置文件{CLOSE}: {SETUP_JSON.replace(PWD_DIR, '')}")
         i = 1
         data1 = {}
         with open(SETUP_JSON, 'r', encoding='utf-8') as ss:
@@ -1620,7 +1620,7 @@ def menu_more(project):
         print("\x1b[0;36m  09> 修补boot.img @magisk    \x1b[0m")
         print("\x1b[0;33m  11> 合成super.img    \x1b[0m\n")
         print("-------------------------------------------------------")
-        option = input("> {0}输入序号{1} >> ".format(RED, CLOSE))
+        option = input(f"> {RED}输入序号{CLOSE} >> ")
         if not option.isdigit():
             PAUSE("> 输入序号数字")
             continue
@@ -1741,7 +1741,7 @@ def menu_main(project):
     print('\x1b[0;35m\t  08> 合成[img]          09> 合成[dat]\x1b[0m\n')
     print('\x1b[0;34m\t  10> 合成[bro]          88> 退出[bye]\x1b[0m\n')
     print('-------------------------------------------------------')
-    option = input('> {0}输入序号{1} >> '.format(RED, CLOSE))
+    option = input(f'> {RED}输入序号{CLOSE} >> ')
 
     if option:
         if not option.isdigit():
@@ -1761,7 +1761,7 @@ def menu_main(project):
                 else:
                     outdir = DNA_TEMP_DIR
                     orzdir = DNA_TEMP_DIR + 'orz' + os.sep
-                    choose = input('> {0}选择提取方式:  [0]全盘提取  [1]指定镜像{1} >> '.format(RED, CLOSE))
+                    choose = input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> ')
                     decompress_bin(infile, outdir, orzdir, choose)
             elif int(option) == 2:
                 ASK = input('> 是否开启静默 [0/1]: ') != '1'
