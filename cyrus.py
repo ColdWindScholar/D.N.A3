@@ -427,7 +427,7 @@ def patch_twrp(BOOTIMG):
         if os.path.isdir(f"{V.DNA_MAIN_DIR}bootimg"):
             rmdire(f"{V.DNA_MAIN_DIR}bootimg")
     else:
-        PAUSE(
+        input(
             f"> 未发现local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/ramdisk.cpio文件")
 
 
