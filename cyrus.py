@@ -1399,7 +1399,7 @@ def extract_zrom(rom):
     else:
         able = 5
         infile = []
-        print('> 解压缩: ' + os.path.basename(rom))
+        print(f'> 解压缩: {os.path.basename(rom)}')
         envelop_project(project)
         fantasy_zip.extractall(DNA_TEMP_DIR)
         fantasy_zip.close()
