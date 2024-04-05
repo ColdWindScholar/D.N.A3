@@ -526,9 +526,7 @@ def patch_magisk(BOOTIMG):
                     patch_cmds += '"add 0644 overlay.d/sbin/magisk64.xz magisk64.xz" '
                 patch_cmds += '"patch" "backup ramdisk.cpio.orig" "mkdir 000 .backup" "add 000 .backup/.magisk config"'
                 call(patch_cmds)
-                files_to_delete = ['ramdisk.cpio.orig', 'config', 'magisk*.xz', 'magiskinit', 'magisk*']
-
-                for file_pattern in files_to_delete:
+                for file_pattern in ['ramdisk.cpio.orig', 'config', 'magisk*.xz', 'magiskinit', 'magisk*']:
                     matching_files = glob.glob(file_pattern)
                     for file_to_delete in matching_files:
                         try:
@@ -545,7 +543,7 @@ def patch_magisk(BOOTIMG):
                     call("magiskboot hexpatch kernel 77616E745F696E697472616D6673 736B69705F696E697472616D6673")
                     call("magiskboot hexpatch kernel 747269705F696E697472616D6673 736B69705F696E697472616D6673")
                     print("- Repacking boot image")
-                    call("magiskboot repack {}".format(BOOTIMG))
+                    call(f"magiskboot repack {BOOTIMG}")
 
                 if os.path.isfile("new-boot.img"):
                     print("+ Done")
