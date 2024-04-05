@@ -1,5 +1,5 @@
 from glob import glob
-import hashlib
+from hashlib import sha1
 import json
 import os
 import platform
@@ -470,16 +470,16 @@ def patch_magisk(BOOTIMG):
         if os.path.isfile("kernel"):
             if os.path.isfile("ramdisk.cpio"):
 
-                sha1 = hashlib.sha1()
+                sha1_ = sha1()
                 with open(BOOTIMG, "rb") as f:
                     while True:
                         fileData = f.read(2048)
                         if not fileData:
                             break
                         else:
-                            sha1.update(fileData)
+                            sha1_.update(fileData)
 
-                SHA1 = sha1.digest().hex()
+                SHA1 = sha1_.digest().hex()
                 with open(BOOTIMG, 'rb') as source_file:
                     with open('stock_boot.img', 'wb') as dest_file:
                         shutil.copyfileobj(source_file, dest_file)
