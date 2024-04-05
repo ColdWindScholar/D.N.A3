@@ -346,8 +346,7 @@ def find_file(path, rule, flag=1):
 
     elif flag == 5:
         with open(path, "r") as f:
-            for l in f:
-                finds.append(l.split()[0])
+            return [i.split()[0] for i in f]
 
     return finds
 
