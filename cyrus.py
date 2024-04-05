@@ -1547,12 +1547,9 @@ def creat_project():
     global project
     os.system("cls" if os.name == "nt" else "clear")
     print("\x1b[1;31m> 新建工程:\x1b[0m\n")
-    CREAT_NAME = input("  输入名称【不能有空格、特殊符号】: DNA_")
+    CREAT_NAME = input("  输入名称【不能有空格、特殊符号】: DNA_").strip().rstrip("\\").replace(" ", "_")
     if CREAT_NAME:
-        path = CREAT_NAME.strip()
-        path = path.rstrip("\\")
-        CC_NAME = path.replace(" ", "_")
-        project = "DNA_" + CC_NAME
+        project = "DNA_" + CREAT_NAME
         if not os.path.isdir(project):
             os.mkdir(project)
             menu_main(project)
