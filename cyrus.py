@@ -686,7 +686,6 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
     read = "ro"
     RESIZE2RW = False
     fsize = None
-    SPARSE = (V.SETUP_MANIFEST["REPACK_SPARSE_IMG"] == "1")
     if dumpinfo:
         (fsize, dsize, inodes, block_size, blocks, per_group, mount_point) = LOAD_IMAGE_JSON(dumpinfo, source)
         size = dsize
@@ -804,7 +803,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                         line = f"resize {label}_a {renew_size}\n"
                     f_w.write(line)
 
-        if flag > 8:
+        if flag > 8 or (V.SETUP_MANIFEST["REPACK_SPARSE_IMG"] == "1"):
             DISPLAY("开始转换: sparse format ...")
             call(f"img2simg {distance} {distance.rsplit('.', 1)[0] + '_sparse.img'}")
             if os.path.exists(distance):
