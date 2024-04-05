@@ -71,7 +71,6 @@ class global_value(object):
             '0': "00"}
         self.PASSWORD_DICT_REVERSE = {v: k for k, v in self.PASSWORD_DICT.items()}
 
-
     def __getattr__(self, item):
         try:
             return getattr(self, item)
@@ -79,7 +78,7 @@ class global_value(object):
             return "None"
 
 
-value = global_value()
+V = global_value()
 
 
 def change_permissions_recursive(path, mode):
@@ -96,7 +95,7 @@ if os.path.isdir(BIN_PATH):
     if os.name == 'posix':
         change_permissions_recursive(BIN_PATH, 0o777)
 
-    for prog in value.programs:
+    for prog in V.programs:
         if not shutil.which(prog):
             sys.exit(f"[x] Not found: {prog}\n[i] Please install {prog} \n   Or add <{prog}> to {BIN_PATH}")
 else:
@@ -152,7 +151,7 @@ def DISPLAY(message, flag=1, end='\n'):
 
 
 def CHAR2NUM(chars):
-    return "".join([value.PASSWORD_DICT_REVERSE[r] for r in re.sub("(?<=\\w)(?=(?:\\w\\w)+$)", " ", chars).split()])
+    return "".join([V.PASSWORD_DICT_REVERSE[r] for r in re.sub("(?<=\\w)(?=(?:\\w\\w)+$)", " ", chars).split()])
 
 
 def GETDIRSIZE(ddir, max_=1.06, flag=1):
@@ -394,11 +393,11 @@ def patch_twrp(BOOTIMG):
     if os.path.isfile(
             f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/ramdisk.cpio") and os.path.isfile(
         BOOTIMG):
-        if os.path.isdir(f"{DNA_MAIN_DIR}bootimg"):
-            rmdire(f"{DNA_MAIN_DIR}bootimg")
-        os.makedirs(DNA_MAIN_DIR + "bootimg")
+        if os.path.isdir(f"{V.DNA_MAIN_DIR}bootimg"):
+            rmdire(f"{V.DNA_MAIN_DIR}bootimg")
+        os.makedirs(V.DNA_MAIN_DIR + "bootimg")
         print("- Unpacking boot image")
-        os.chdir(DNA_MAIN_DIR + "bootimg")
+        os.chdir(V.DNA_MAIN_DIR + "bootimg")
         call(f"magiskboot unpack {BOOTIMG}")
         if os.path.isfile("kernel"):
             if os.path.isfile("ramdisk.cpio"):
@@ -419,17 +418,17 @@ def patch_twrp(BOOTIMG):
 
                 if os.path.isfile("new-boot.img"):
                     print("+ Done")
-                    if not os.path.isdir(DNA_DIST_DIR):
-                        os.mkdir(DNA_DIST_DIR)
-                    new_boot_img_name = f"{os.path.basename(BOOTIMG).split('.')[0]}{os.path.basename(DNA_DIST_DIR)}_twrp.img"
-                    os.rename("new-boot.img", os.path.join(DNA_DIST_DIR, new_boot_img_name))
+                    if not os.path.isdir(V.DNA_DIST_DIR):
+                        os.mkdir(V.DNA_DIST_DIR)
+                    new_boot_img_name = f"{os.path.basename(BOOTIMG).split('.')[0]}{os.path.basename(V.DNA_DIST_DIR)}_twrp.img"
+                    os.rename("new-boot.img", os.path.join(V.DNA_DIST_DIR, new_boot_img_name))
                     os.chdir(PWD_DIR)
                     add_magisk = input("> 是否继续添加Magisk [1/0]: ")
                     if add_magisk != "0":
-                        patch_magisk(f"{DNA_DIST_DIR}{os.path.basename(BOOTIMG).split('.')[0]}_twrp.img")
+                        patch_magisk(f"{V.DNA_DIST_DIR}{os.path.basename(BOOTIMG).split('.')[0]}_twrp.img")
         os.chdir(PWD_DIR)
-        if os.path.isdir(f"{DNA_MAIN_DIR}bootimg"):
-            rmdire(f"{DNA_MAIN_DIR}bootimg")
+        if os.path.isdir(f"{V.DNA_MAIN_DIR}bootimg"):
+            rmdire(f"{V.DNA_MAIN_DIR}bootimg")
     else:
         PAUSE(
             f"> 未发现local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/ramdisk.cpio文件")
@@ -465,11 +464,11 @@ def patch_magisk(BOOTIMG):
         PAUSE(f"> 未发现local/etc/magisk/{MAGISK_MANIFEST['CLASS']}/Magisk-*.apk文件")
         return
     if os.path.isfile(BOOTIMG):
-        if os.path.isdir(f"{DNA_MAIN_DIR}bootimg"):
-            rmdire(f"{DNA_MAIN_DIR}bootimg")
-        os.makedirs(DNA_MAIN_DIR + "bootimg")
+        if os.path.isdir(f"{value.DNA_MAIN_DIR}bootimg"):
+            rmdire(f"{value.DNA_MAIN_DIR}bootimg")
+        os.makedirs(value.DNA_MAIN_DIR + "bootimg")
         print("- Unpacking boot image")
-        os.chdir(DNA_MAIN_DIR + "bootimg")
+        os.chdir(value.DNA_MAIN_DIR + "bootimg")
         call(f"magiskboot unpack {BOOTIMG}")
         if os.path.isfile("kernel"):
             if os.path.isfile("ramdisk.cpio"):
@@ -555,28 +554,30 @@ def patch_magisk(BOOTIMG):
 
                 if os.path.isfile("new-boot.img"):
                     print("+ Done")
-                    if not os.path.isdir(DNA_DIST_DIR):
-                        os.mkdir(DNA_DIST_DIR)
+                    if not os.path.isdir(value.DNA_DIST_DIR):
+                        os.mkdir(value.DNA_DIST_DIR)
                     new_boot_img_name = os.path.basename(BOOTIMG).split(".")[0] + "_magisk.img"
-                    destination_path = os.path.join(DNA_DIST_DIR, new_boot_img_name)
+                    destination_path = os.path.join(value.DNA_DIST_DIR, new_boot_img_name)
                     shutil.move("new-boot.img", destination_path)
-                    if os.path.isdir(DNA_MAIN_DIR + "system" + os.sep + "system"):
+                    if os.path.isdir(value.DNA_MAIN_DIR + "system" + os.sep + "system"):
                         try:
                             os.makedirs(
-                                DNA_MAIN_DIR + "system" + os.sep + "system" + os.sep + "data-app" + os.sep + "Magisk")
+                                value.DNA_MAIN_DIR + "system" + os.sep + "system" + os.sep + "data-app" + os.sep + "Magisk")
                         except:
                             pass
                         else:
-                            destination_path = os.path.join(DNA_MAIN_DIR, 'system', 'system', 'data-app', 'Magisk',
+                            destination_path = os.path.join(value.DNA_MAIN_DIR, 'system', 'system', 'data-app',
+                                                            'Magisk',
                                                             'Magisk.apk')
                             shutil.copy(MAGISK_FILE, destination_path)
-                    elif os.path.isdir(DNA_MAIN_DIR + "vendor"):
-                        os.makedirs(DNA_MAIN_DIR + "vendor" + os.sep + "data-app" + os.sep + "Magisk")
-                        destination_path = os.path.join(DNA_MAIN_DIR, 'vendor', 'data-app', 'Magisk', 'Magisk.apk')
+                    elif os.path.isdir(value.DNA_MAIN_DIR + "vendor"):
+                        os.makedirs(value.DNA_MAIN_DIR + "vendor" + os.sep + "data-app" + os.sep + "Magisk")
+                        destination_path = os.path.join(value.DNA_MAIN_DIR, 'vendor', 'data-app', 'Magisk',
+                                                        'Magisk.apk')
                         shutil.copy(MAGISK_FILE, destination_path)
             os.chdir(PWD_DIR)
-            if os.path.isdir(f"{DNA_MAIN_DIR}bootimg"):
-                rmdire(f"{DNA_MAIN_DIR}bootimg")
+            if os.path.isdir(f"{value.DNA_MAIN_DIR}bootimg"):
+                rmdire(f"{value.DNA_MAIN_DIR}bootimg")
 
 
 def patch_addons():
@@ -584,7 +585,7 @@ def patch_addons():
         DISPLAY(f"复制 default/{SETUP_MANIFEST['ANDROID_SDK']}/* ...")
         try:
             shutil.copytree(os.path.join(PWD_DIR, "local", "etc", "devices", "default", SETUP_MANIFEST["ANDROID_SDK"],
-                                         "addons"), DNA_MAIN_DIR, dirs_exist_ok=True)
+                                         "addons"), V.DNA_MAIN_DIR, dirs_exist_ok=True)
         except Exception as e:
             print("Error copying files:", e)
     if os.path.isdir(
@@ -592,7 +593,7 @@ def patch_addons():
         DISPLAY(f"复制 {SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/* ...")
         source_dir = os.path.join(PWD_DIR, "local", "etc", "devices", SETUP_MANIFEST["DEVICE_CODE"],
                                   SETUP_MANIFEST["ANDROID_SDK"], "addons")
-        destination_dir = os.path.join(DNA_MAIN_DIR)
+        destination_dir = os.path.join(V.DNA_MAIN_DIR)
 
         try:
             shutil.copytree(source_dir, destination_dir, dirs_exist_ok=True)
@@ -601,7 +602,7 @@ def patch_addons():
 
 
 def repack_super():
-    infile = glob.glob(DNA_CONF_DIR + '*_contexts.txt')
+    infile = glob.glob(V.DNA_CONF_DIR + '*_contexts.txt')
     if len(infile) <= 0:
         parts = [
             'system',
@@ -618,8 +619,8 @@ def repack_super():
     if SETUP_MANIFEST['IS_VAB'] == '1':
         argvs += '--metadata-slots 3 --virtual-ab -F '
         for i in parts:
-            if os.path.isfile(DNA_DIST_DIR + i + '.img'):
-                img_a = DNA_DIST_DIR + i + '.img'
+            if os.path.isfile(V.DNA_DIST_DIR + i + '.img'):
+                img_a = V.DNA_DIST_DIR + i + '.img'
                 file_type = seekfd.gettype(img_a)
                 if file_type == 'sparse':
                     new_img_a = imgextractor.ULTRAMAN().APPLE(img_a)
@@ -632,11 +633,11 @@ def repack_super():
     else:
         argvs += '--metadata-slots 2 '
         for i in parts:
-            if os.path.isfile(DNA_DIST_DIR + i + '_b.img'):
-                img_b = DNA_DIST_DIR + i + '_b.img'
-                img_a = DNA_DIST_DIR + i + '.img'
-                if os.path.isfile(DNA_DIST_DIR + i + '_a.img'):
-                    img_a = DNA_DIST_DIR + i + '_a.img'
+            if os.path.isfile(V.DNA_DIST_DIR + i + '_b.img'):
+                img_b = V.DNA_DIST_DIR + i + '_b.img'
+                img_a = V.DNA_DIST_DIR + i + '.img'
+                if os.path.isfile(V.DNA_DIST_DIR + i + '_a.img'):
+                    img_a = V.DNA_DIST_DIR + i + '_a.img'
                 file_type_a = seekfd.gettype(img_a)
                 file_type_b = seekfd.gettype(img_b)
                 if file_type_a == 'sparse':
@@ -674,7 +675,7 @@ def repack_super():
     if int(group_size_b) <= half_size:
         group_size_b = half_size
 
-    argvs += f'--group {SETUP_MANIFEST["GROUP_NAME"]}_a:{group_size_a} --group {SETUP_MANIFEST["GROUP_NAME"]}_b:{group_size_b} --output {DNA_DIST_DIR + "super.img"} '
+    argvs += f'--group {SETUP_MANIFEST["GROUP_NAME"]}_a:{group_size_a} --group {SETUP_MANIFEST["GROUP_NAME"]}_b:{group_size_b} --output {V.DNA_DIST_DIR + "super.img"} '
     printinform2 = f'重新合成: super.img <Size:{SETUP_MANIFEST["SUPER_SIZE"]}|Vab:{SETUP_MANIFEST["IS_VAB"]}|Sparse:{SETUP_MANIFEST["SUPER_SPARSE"]}>'
     DISPLAY(printinform2)
 
@@ -682,11 +683,11 @@ def repack_super():
         call(argvs)
 
     try:
-        if os.path.isfile(os.path.join(DNA_DIST_DIR, 'super.img')):
+        if os.path.isfile(os.path.join(V.DNA_DIST_DIR, 'super.img')):
             for i in parts:
                 for slot in ('_a', '_b', ''):
-                    if os.path.isfile(os.path.join(DNA_DIST_DIR, i + slot + '.img')):
-                        os.remove(os.path.join(DNA_DIST_DIR, i + slot + '.img'))
+                    if os.path.isfile(os.path.join(V.DNA_DIST_DIR, i + slot + '.img')):
+                        os.remove(os.path.join(V.DNA_DIST_DIR, i + slot + '.img'))
     except:
         pass
 
@@ -710,9 +711,9 @@ def walk_contexts(contexts):
 
 def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
     label = os.path.basename(source)
-    if not os.path.isdir(DNA_DIST_DIR):
-        os.makedirs(DNA_DIST_DIR)
-    distance = DNA_DIST_DIR + label + ".img"
+    if not os.path.isdir(V.DNA_DIST_DIR):
+        os.makedirs(V.DNA_DIST_DIR)
+    distance = V.DNA_DIST_DIR + label + ".img"
     if os.path.isfile(distance):
         os.remove(distance)
     fspatch.main(source, fsconfig)
@@ -807,8 +808,8 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                     if SETUP_MANIFEST["REPACK_EROFS_IMG"] == "0":
                         if SETUP_MANIFEST["REPACK_TO_RW"] == "1":
                             os.system(f"resize2fs -M {distance}")
-        op_list = DNA_TEMP_DIR + "dynamic_partitions_op_list"
-        new_op_list = DNA_DIST_DIR + "dynamic_partitions_op_list"
+        op_list = V.DNA_TEMP_DIR + "dynamic_partitions_op_list"
+        new_op_list = V.DNA_DIST_DIR + "dynamic_partitions_op_list"
         if os.path.isfile(op_list) or os.path.isfile(new_op_list):
             if not os.path.isfile(new_op_list):
                 shutil.copyfile(op_list, new_op_list)
@@ -859,8 +860,8 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                     print("Error moving file:", e)
                 if flag > 8:
                     DISPLAY(f"重新生成: {label}.new.dat ...", 3)
-                    img2sdat.main(distance, DNA_DIST_DIR, 4, label)
-                    newdat = DNA_DIST_DIR + label + ".new.dat"
+                    img2sdat.main(distance, V.DNA_DIST_DIR, 4, label)
+                    newdat = V.DNA_DIST_DIR + label + ".new.dat"
                     if os.path.isfile(newdat):
                         print(" Done")
                         os.remove(distance)
@@ -1011,9 +1012,9 @@ def decompress_img(source, distance, keep=1):
             shutil.rmtree(distance)
         os.makedirs(distance)
         boot_utils(source, distance)
-        if not os.path.isdir(DNA_CONF_DIR):
-            os.makedirs(DNA_CONF_DIR)
-        boot_info = DNA_CONF_DIR + os.path.basename(distance) + '_kernel.txt'
+        if not os.path.isdir(V.DNA_CONF_DIR):
+            os.makedirs(V.DNA_CONF_DIR)
+        boot_info = V.DNA_CONF_DIR + os.path.basename(distance) + '_kernel.txt'
         bootjson = {'name': os.path.basename(source)}
         with codecs.open(boot_info, 'w', 'utf-8') as f:
             json.dump(bootjson, f, indent=4)
@@ -1028,19 +1029,19 @@ def decompress_img(source, distance, keep=1):
     if file_type in ['ext', 'erofs', 'super']:
         if file_type != 'ext':
             DISPLAY(f'正在分解: {os.path.basename(source)} <{file_type}>', 3)
-        if not os.path.isdir(DNA_CONF_DIR):
-            os.makedirs(DNA_CONF_DIR)
+        if not os.path.isdir(V.DNA_CONF_DIR):
+            os.makedirs(V.DNA_CONF_DIR)
         if file_type == 'ext':
             with Console().status(f"[yellow]正在提取{os.path.basename(source)}[/]"):
                 try:
-                    imgextractor.ULTRAMAN().MONSTER(source, distance, value.PASSWORD_DICT)
+                    imgextractor.ULTRAMAN().MONSTER(source, distance, V.PASSWORD_DICT)
                 except:
                     shutil.rmtree(distance)
                     os.unlink(source)
         else:
             if file_type == 'erofs':
                 image_size = os.path.getsize(source)
-                with open(DNA_CONF_DIR + os.path.basename(distance) + '_size.txt', 'w') as sf:
+                with open(V.DNA_CONF_DIR + os.path.basename(distance) + '_size.txt', 'w') as sf:
                     sf.write(str(image_size))
                 if 'unsparse' in os.path.basename(source):
                     try:
@@ -1048,48 +1049,52 @@ def decompress_img(source, distance, keep=1):
                     except Exception as e:
                         print("Error moving file:", e)
                     source = source.replace('.unsparse', '')
-                dump_erofs_cmd = f'extract.erofs -i {source.replace(os.sep, "/")} -o {DNA_MAIN_DIR} -x'
+                dump_erofs_cmd = f'extract.erofs -i {source.replace(os.sep, "/")} -o {V.DNA_MAIN_DIR} -x'
                 call(dump_erofs_cmd)
             elif file_type == 'super':
-                lpunpack_cmd = f'lpunpack {source} {DNA_TEMP_DIR}'
+                lpunpack_cmd = f'lpunpack {source} {V.DNA_TEMP_DIR}'
                 call(lpunpack_cmd)
-                for img in glob.glob(DNA_TEMP_DIR + '*_b.img'):
+                for img in glob.glob(V.DNA_TEMP_DIR + '*_b.img'):
                     if not SETUP_MANIFEST['IS_VAB'] == '1' or os.path.getsize(img) == 0:
                         os.remove(img)
                     else:
-                        new_distance = DNA_MAIN_DIR + os.path.basename(img).rsplit('.', 1)[0]
+                        new_distance = V.DNA_MAIN_DIR + os.path.basename(img).rsplit('.', 1)[0]
                         decompress_img(img, new_distance, keep=0)
                 else:
-                    for img in glob.glob(DNA_TEMP_DIR + '*_a.img'):
+                    for img in glob.glob(V.DNA_TEMP_DIR + '*_a.img'):
                         new_source = img.rsplit('_', 1)[0] + '.img'
                         try:
                             os.rename(img, new_source)
                         except:
                             pass
-                        new_distance = DNA_MAIN_DIR + os.path.basename(new_source).rsplit('.', 1)[0]
+                        new_distance = V.DNA_MAIN_DIR + os.path.basename(new_source).rsplit('.', 1)[0]
                         decompress_img(new_source, new_distance, keep=0)
             else:
                 print(F'> Pass, not support fs_type [{file_type}]')
-            distance = DNA_MAIN_DIR + os.path.basename(source).replace('.unsparse.img', '').replace('.img', '')
+            distance = V.DNA_MAIN_DIR + os.path.basename(source).replace('.unsparse.img', '').replace('.img', '')
             if os.path.isdir(distance):
-                if os.path.isdir(DNA_MAIN_DIR + 'config'):
-                    contexts = DNA_MAIN_DIR + 'config' + os.sep + os.path.basename(source).replace('.unsparse.img',
-                                                                                                   '').replace('.img',
-                                                                                                               '') + '_file_contexts'
-                    fsconfig = DNA_MAIN_DIR + 'config' + os.sep + os.path.basename(source).replace('.unsparse.img',
-                                                                                                   '').replace('.img',
-                                                                                                               '') + '_fs_config'
+                if os.path.isdir(V.DNA_MAIN_DIR + 'config'):
+                    contexts = V.DNA_MAIN_DIR + 'config' + os.sep + os.path.basename(source).replace(
+                        '.unsparse.img',
+                        '').replace('.img',
+                                    '') + '_file_contexts'
+                    fsconfig = V.DNA_MAIN_DIR + 'config' + os.sep + os.path.basename(source).replace(
+                        '.unsparse.img',
+                        '').replace('.img',
+                                    '') + '_fs_config'
                     if os.path.isfile(contexts) and os.path.isfile(fsconfig):
-                        new_contexts = DNA_CONF_DIR + os.path.basename(source).replace('.unsparse.img', '').replace(
+                        new_contexts = V.DNA_CONF_DIR + os.path.basename(source).replace('.unsparse.img',
+                                                                                             '').replace(
                             '.img', '') + '_contexts.txt'
-                        new_fsconfig = DNA_CONF_DIR + os.path.basename(source).replace('.unsparse.img', '').replace(
+                        new_fsconfig = V.DNA_CONF_DIR + os.path.basename(source).replace('.unsparse.img',
+                                                                                             '').replace(
                             '.img', '') + '_fsconfig.txt'
                         shutil.copy(contexts, new_contexts)
                         shutil.copy(fsconfig, new_fsconfig)
-                        shutil.rmtree(DNA_MAIN_DIR + 'config')
+                        shutil.rmtree(V.DNA_MAIN_DIR + 'config')
                     else:
-                        if os.path.isdir(DNA_MAIN_DIR + 'config'):
-                            shutil.rmtree(DNA_MAIN_DIR + 'config')
+                        if os.path.isdir(V.DNA_MAIN_DIR + 'config'):
+                            shutil.rmtree(V.DNA_MAIN_DIR + 'config')
 
         if os.path.isdir(distance):
             print('\x1b[1;32m %ds Done\x1b[0m' % (time.time() - sTime))
@@ -1133,7 +1138,7 @@ def decompress_dat(transfer, source, distance, keep=0):
             keep = 0
         else:
             keep = 0
-        decompress_img(distance, DNA_MAIN_DIR + os.path.basename(distance).split(".")[0], keep)
+        decompress_img(distance, V.DNA_MAIN_DIR + os.path.basename(distance).split(".")[0], keep)
     else:
         print("\x1b[1;31m [Failed]\x1b[0m")
 
@@ -1201,17 +1206,17 @@ def decompress_win(infile_list):
                 pass
     parts = list(set(parts))
     for i in parts:
-        if not os.path.isdir(DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0]):
-            os.makedirs(DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0])
+        if not os.path.isdir(V.DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0]):
+            os.makedirs(V.DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0])
         if not os.path.exists(i):
             continue
         if seekfd.gettype(i) in ['erofs', 'ext', 'super', 'boot', 'vendor_boot']:
-            decompress_img(i, DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0])
+            decompress_img(i, V.DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0])
         elif tarfile.is_tarfile(i):
             with tarfile.open(i, 'r') as tar:
                 for n in tar.getmembers():
                     print(f"正在提取:{n.name}")
-                    tar.extract(n, path=(DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0]), filter='tar')
+                    tar.extract(n, path=(V.DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0]), filter='tar')
             i = os.path.basename(i).rsplit('.', 1)[0]
             fsconfig_0 = []
             contexts_0 = []
@@ -1259,7 +1264,7 @@ def decompress(infile, flag=4):
                     continue
                 else:
                     transfer = None
-            if value.ASK:
+            if V.ASK:
                 DISPLAY(f'是否分解: {os.path.basename(part)} [1/0]: ', 2, '')
                 if input() != '1':
                     continue
@@ -1274,41 +1279,37 @@ def decompress(infile, flag=4):
             continue
         if seekfd.gettype(part) not in ('ext', 'sparse', 'erofs', 'super', 'boot', 'vendor_boot'):
             continue
-        if value.ASK:
+        if V.ASK:
             DISPLAY(f'是否分解: {os.path.basename(part)} [1/0]: ', 2, '')
             if input() == '1':
-                decompress_img(part, DNA_MAIN_DIR + os.path.basename(part).rsplit('.', 1)[0])
+                decompress_img(part, V.DNA_MAIN_DIR + os.path.basename(part).rsplit('.', 1)[0])
 
 
 def envelop_project(project):
-    global DNA_CONF_DIR
-    global DNA_DIST_DIR
-    global DNA_MAIN_DIR
-    global DNA_TEMP_DIR
-    DNA_MAIN_DIR = PWD_DIR + project + os.sep
-    DNA_TEMP_DIR = DNA_MAIN_DIR + "001_DNA" + os.sep
-    DNA_CONF_DIR = DNA_MAIN_DIR + "000_DNA" + os.sep
-    DNA_DIST_DIR = DNA_MAIN_DIR + "002_DNA" + os.sep
+    V.DNA_MAIN_DIR = PWD_DIR + project + os.sep
+    V.DNA_TEMP_DIR = V.DNA_MAIN_DIR + "001_DNA" + os.sep
+    V.DNA_CONF_DIR = V.DNA_MAIN_DIR + "000_DNA" + os.sep
+    V.DNA_DIST_DIR = V.DNA_MAIN_DIR + "002_DNA" + os.sep
     if IS_ARM64:
-        DNA_TEMP_DIR = ROM_DIR + "D.N.A" + os.sep + project + os.sep + "001_DNA" + os.sep
-        DNA_DIST_DIR = ROM_DIR + "D.N.A" + os.sep + project + os.sep + "002_DNA" + os.sep
-    if not os.path.isdir(DNA_TEMP_DIR):
-        os.makedirs(DNA_TEMP_DIR)
-    if not os.path.isdir(DNA_TEMP_DIR):
-        os.makedirs(DNA_MAIN_DIR)
-    if not os.path.isdir(DNA_MAIN_DIR):
-        os.makedirs(DNA_MAIN_DIR)
-    if not os.path.isfile(DNA_CONF_DIR + "file_contexts"):
-        if os.path.isdir(DNA_CONF_DIR):
-            contexts_files = find_file(DNA_MAIN_DIR, "^[a-z].*?_file_contexts$")
+        V.DNA_TEMP_DIR = ROM_DIR + "D.N.A" + os.sep + project + os.sep + "001_DNA" + os.sep
+        V.DNA_DIST_DIR = ROM_DIR + "D.N.A" + os.sep + project + os.sep + "002_DNA" + os.sep
+    if not os.path.isdir(V.DNA_TEMP_DIR):
+        os.makedirs(V.DNA_TEMP_DIR)
+    if not os.path.isdir(V.DNA_TEMP_DIR):
+        os.makedirs(V.DNA_MAIN_DIR)
+    if not os.path.isdir(V.DNA_MAIN_DIR):
+        os.makedirs(V.DNA_MAIN_DIR)
+    if not os.path.isfile(V.DNA_CONF_DIR + "file_contexts"):
+        if os.path.isdir(V.DNA_CONF_DIR):
+            contexts_files = find_file(V.DNA_MAIN_DIR, "^[a-z].*?_file_contexts$")
             if len(contexts_files) > 0:
-                with open(DNA_CONF_DIR + "file_contexts", "w", encoding='utf-8', newline="\n") as f:
+                with open(V.DNA_CONF_DIR + "file_contexts", "w", encoding='utf-8', newline="\n") as f:
                     for text in contexts_files:
                         with open(text, "r", encoding='utf-8') as f_r:
                             f.write(f_r.read())
 
-                if os.path.isfile(DNA_CONF_DIR + "file_contexts"):
-                    with open(DNA_CONF_DIR + "file_contexts", "w", encoding='utf-8', newline="\n") as f:
+                if os.path.isfile(V.DNA_CONF_DIR + "file_contexts"):
+                    with open(V.DNA_CONF_DIR + "file_contexts", "w", encoding='utf-8', newline="\n") as f:
                         f.write("/firmware(/.*)?         u:object_r:firmware_file:s0\n")
                         f.write("/bt_firmware(/.*)?      u:object_r:bt_firmware_file:s0\n")
                         f.write("/persist(/.*)?          u:object_r:mnt_vendor_file:s0\n")
@@ -1319,8 +1320,8 @@ def envelop_project(project):
                                   "cpefs", "modem", "module_hashes", "pds", "tombstones", "avb", "op_odm", "addon.d",
                                   "factory", "oneplus(/.*)?"]:
                             f.write(f"/{i}                    u:object_r:rootfs:s0\n")
-    if os.path.isfile(DNA_CONF_DIR + "file_contexts"):
-        walk_contexts(DNA_CONF_DIR + "file_contexts")
+    if os.path.isfile(V.DNA_CONF_DIR + "file_contexts"):
+        walk_contexts(V.DNA_CONF_DIR + "file_contexts")
 
 
 def extract_zrom(rom):
@@ -1334,10 +1335,11 @@ def extract_zrom(rom):
     if 'payload.bin' in zip_lists:
         print(f'> 解压缩: {os.path.basename(rom)}')
         envelop_project(project)
-        infile = fantasy_zip.extract('payload.bin', DNA_TEMP_DIR)
+        infile = fantasy_zip.extract('payload.bin', V.DNA_TEMP_DIR)
         fantasy_zip.close()
-        if os.path.isfile(DNA_TEMP_DIR + 'payload.bin'):
-            decompress_bin(infile, DNA_TEMP_DIR, input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> '))
+        if os.path.isfile(V.DNA_TEMP_DIR + 'payload.bin'):
+            decompress_bin(infile, V.DNA_TEMP_DIR,
+                           input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> '))
             menu_main(project)
     elif 'run.sh' in zip_lists:
         if not os.path.isdir(MOD_DIR):
@@ -1374,21 +1376,21 @@ def extract_zrom(rom):
         infile = []
         print(f'> 解压缩: {os.path.basename(rom)}')
         envelop_project(project)
-        fantasy_zip.extractall(DNA_TEMP_DIR)
+        fantasy_zip.extractall(V.DNA_TEMP_DIR)
         fantasy_zip.close()
         if [part_name for part_name in sorted(zip_lists) if part_name.endswith(".new.dat.br")]:
-            infile = glob.glob(DNA_TEMP_DIR + '*.br')
+            infile = glob.glob(V.DNA_TEMP_DIR + '*.br')
             able = 2
         elif [part_name for part_name in zip_lists if part_name.endswith(".new.dat")]:
-            infile = glob.glob(DNA_TEMP_DIR + '*.dat')
+            infile = glob.glob(V.DNA_TEMP_DIR + '*.dat')
             able = 3
         elif [part_name for part_name in zip_lists if part_name.endswith(".img")]:
-            infile = glob.glob(DNA_TEMP_DIR + '*.img')
+            infile = glob.glob(V.DNA_TEMP_DIR + '*.img')
             able = 4
         if not infile:
             PAUSE('> 仅支持含有payload.bin/*.new.dat/*.new.dat.br/*.img的zip固件')
         else:
-            value.ASK = True
+            V.ASK = True
             decompress(infile, able)
         menu_main(project)
 
@@ -1613,12 +1615,12 @@ def menu_more(project):
                     line = line.replace("/", os.sep).strip("\n")
                     if line:
                         if not line.startswith("#"):
-                            if os.path.exists(DNA_MAIN_DIR + line):
+                            if os.path.exists(V.DNA_MAIN_DIR + line):
                                 print(line)
                                 try:
-                                    shutil.rmtree(DNA_MAIN_DIR + line)
+                                    shutil.rmtree(V.DNA_MAIN_DIR + line)
                                 except NotADirectoryError:
-                                    os.remove(DNA_MAIN_DIR + line)
+                                    os.remove(V.DNA_MAIN_DIR + line)
             PAUSE()
 
         elif int(option) == 7:
@@ -1626,10 +1628,10 @@ def menu_more(project):
                 patch_addons()
             PAUSE()
         elif int(option) in [8, 9]:
-            if os.path.isfile(DNA_DIST_DIR + "boot.img"):
-                currentbootimg = DNA_DIST_DIR + "boot.img"
-            elif os.path.isfile(DNA_TEMP_DIR + "boot.img"):
-                currentbootimg = DNA_TEMP_DIR + "boot.img"
+            if os.path.isfile(V.DNA_DIST_DIR + "boot.img"):
+                currentbootimg = V.DNA_DIST_DIR + "boot.img"
+            elif os.path.isfile(V.DNA_TEMP_DIR + "boot.img"):
+                currentbootimg = V.DNA_TEMP_DIR + "boot.img"
             if os.path.isfile(currentbootimg):
                 with CoastTime():
                     if int(option) == 8:
@@ -1685,13 +1687,13 @@ def RunModules(sub):
     print(f"\x1b[1;31m> 执行插件:\x1b[0m {os.path.basename(sub)}\n")
     Shell_Sub = sub + os.sep + "run.sh"
     if os.path.isfile(Shell_Sub):
-        call(f"busybox bash {Shell_Sub} {DNA_MAIN_DIR}")
+        call(f"busybox bash {Shell_Sub} {V.DNA_MAIN_DIR}")
     PAUSE()
 
 
 def menu_main(project):
     envelop_project(project)
-    value.ASK = True
+    V.ASK = True
     os.system('cls' if os.name == 'nt' else 'clear')
     print(f'\x1b[1;36m> 当前工程: \x1b[0m{project}')
     print('-------------------------------------------------------\n')
@@ -1716,33 +1718,33 @@ def menu_main(project):
             elif int(option) == 0:
                 menu_once()
             elif int(option) == 1:
-                infile = DNA_TEMP_DIR + 'payload.bin'
+                infile = V.DNA_TEMP_DIR + 'payload.bin'
                 if not os.path.exists(infile):
                     PAUSE("未发现Payload.Bin")
                 else:
-                    decompress_bin(infile, DNA_TEMP_DIR,
+                    decompress_bin(infile, V.DNA_TEMP_DIR,
                                    input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> '))
             elif int(option) == 2:
-                value.ASK = input('> 是否开启静默 [0/1]: ') != '1'
-                decompress(glob.glob(DNA_TEMP_DIR + '*.br'), int(option))
+                V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                decompress(glob.glob(V.DNA_TEMP_DIR + '*.br'), int(option))
             elif int(option) == 3:
-                infile = glob.glob(DNA_TEMP_DIR + '*.dat')
-                value.ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                infile = glob.glob(V.DNA_TEMP_DIR + '*.dat')
+                V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 decompress(infile, int(option))
-                infile = glob.glob(DNA_TEMP_DIR + '*.img')
-                value.ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                infile = glob.glob(V.DNA_TEMP_DIR + '*.img')
+                V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 decompress(infile, int(option))
             elif int(option) == 4:
-                value.ASK = input('> 是否开启静默 [0/1]: ') != '1'
-                decompress(glob.glob(DNA_TEMP_DIR + '*.img'), int(option))
+                V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                decompress(glob.glob(V.DNA_TEMP_DIR + '*.img'), int(option))
             elif int(option) == 5:
-                infile = glob.glob(DNA_TEMP_DIR + '*.win[0-9][0-9][0-9]')
-                for i in glob.glob(DNA_TEMP_DIR + '*.win*'):
+                infile = glob.glob(V.DNA_TEMP_DIR + '*.win[0-9][0-9][0-9]')
+                for i in glob.glob(V.DNA_TEMP_DIR + '*.win*'):
                     infile.append(i)
-                for i in glob.glob(DNA_TEMP_DIR + '*.win'):
+                for i in glob.glob(V.DNA_TEMP_DIR + '*.win'):
                     infile.append(i)
                 infile = list(set(sorted(infile)))
-                value.ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 decompress_win(infile)
                 PAUSE()
             elif int(option) == 6:
@@ -1750,25 +1752,25 @@ def menu_main(project):
             elif int(option) == 7:
                 menu_modules()
             elif int(option) == 8:
-                infile = glob.glob(DNA_CONF_DIR + '*_contexts.txt')
-                infile_kernel = glob.glob(DNA_CONF_DIR + '*_kernel.txt')
-                value.ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                infile = glob.glob(V.DNA_CONF_DIR + '*_contexts.txt')
+                infile_kernel = glob.glob(V.DNA_CONF_DIR + '*_kernel.txt')
+                V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 for file in infile_kernel:
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
-                    source = DNA_MAIN_DIR + f_basename
+                    source = V.DNA_MAIN_DIR + f_basename
                     if os.path.isdir(source):
-                        if value.ASK:
+                        if V.ASK:
                             DISPLAY(f'是否合成: {f_basename}.img [1/0]: ', end='')
                             if input() != '1':
                                 continue
-                        boot_utils(source, DNA_DIST_DIR, 2)
+                        boot_utils(source, V.DNA_DIST_DIR, 2)
                 for file in infile:
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
-                    source = DNA_MAIN_DIR + f_basename
+                    source = V.DNA_MAIN_DIR + f_basename
                     if os.path.isdir(source):
-                        fsconfig = DNA_CONF_DIR + f_basename + '_fsconfig.txt'
-                        contexts = DNA_CONF_DIR + f_basename + '_contexts.txt'
-                        infojson = DNA_CONF_DIR + f_basename + '_info.txt'
+                        fsconfig = V.DNA_CONF_DIR + f_basename + '_fsconfig.txt'
+                        contexts = V.DNA_CONF_DIR + f_basename + '_contexts.txt'
+                        infojson = V.DNA_CONF_DIR + f_basename + '_info.txt'
                         if not os.path.isfile(infojson):
                             infojson = None
                         if SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and SETUP_MANIFEST['REPACK_TO_RW'] == '1':
@@ -1780,21 +1782,21 @@ def menu_main(project):
                                 SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
                                 SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
-                            if value.ASK:
+                            if V.ASK:
                                 DISPLAY(f'是否合成: {f_basename}.img [1/0]: ', end='')
                                 if input() != '1':
                                     continue
                             recompress(source, fsconfig, contexts, infojson, int(option))
             elif int(option) == 9:
-                infile = glob.glob(DNA_CONF_DIR + '*_contexts.txt')
-                value.ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                infile = glob.glob(V.DNA_CONF_DIR + '*_contexts.txt')
+                V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 for file in infile:
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
-                    source = DNA_MAIN_DIR + f_basename
+                    source = V.DNA_MAIN_DIR + f_basename
                     if os.path.isdir(source):
-                        fsconfig = DNA_CONF_DIR + f_basename + '_fsconfig.txt'
-                        contexts = DNA_CONF_DIR + f_basename + '_contexts.txt'
-                        infojson = DNA_CONF_DIR + f_basename + '_info.txt'
+                        fsconfig = V.DNA_CONF_DIR + f_basename + '_fsconfig.txt'
+                        contexts = V.DNA_CONF_DIR + f_basename + '_contexts.txt'
+                        infojson = V.DNA_CONF_DIR + f_basename + '_info.txt'
                         if not os.path.isfile(infojson):
                             infojson = None
                         if SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and SETUP_MANIFEST['REPACK_TO_RW'] == '1':
@@ -1806,21 +1808,21 @@ def menu_main(project):
                                 SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
                                 SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
-                            if value.ASK:
+                            if V.ASK:
                                 DISPLAY(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
                                 if input() != '1':
                                     continue
                             recompress(source, fsconfig, contexts, infojson, int(option))
             elif int(option) == 10:
-                infile = glob.glob(DNA_CONF_DIR + '*_contexts.txt')
-                value.ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                infile = glob.glob(V.DNA_CONF_DIR + '*_contexts.txt')
+                V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 for file in infile:
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
-                    source = DNA_MAIN_DIR + f_basename
+                    source = V.DNA_MAIN_DIR + f_basename
                     if os.path.isdir(source):
-                        fsconfig = DNA_CONF_DIR + f_basename + '_fsconfig.txt'
-                        contexts = DNA_CONF_DIR + f_basename + '_contexts.txt'
-                        infojson = DNA_CONF_DIR + f_basename + '_info.txt'
+                        fsconfig = V.DNA_CONF_DIR + f_basename + '_fsconfig.txt'
+                        contexts = V.DNA_CONF_DIR + f_basename + '_contexts.txt'
+                        infojson = V.DNA_CONF_DIR + f_basename + '_info.txt'
                         if not os.path.isfile(infojson):
                             infojson = None
                         if SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and SETUP_MANIFEST['REPACK_TO_RW'] == '1':
@@ -1832,18 +1834,18 @@ def menu_main(project):
                                 SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
                                 SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
-                            if value.ASK:
+                            if V.ASK:
                                 DISPLAY(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
                                 if input() != '1':
                                     continue
                             recompress(source, fsconfig, contexts, infojson, 9)
                     for file in infile:
                         f_basename = os.path.basename(file).rsplit('_', 1)[0]
-                        source = DNA_MAIN_DIR + f_basename
+                        source = V.DNA_MAIN_DIR + f_basename
                         if os.path.isdir(source):
-                            fsconfig = DNA_CONF_DIR + f_basename + '_fsconfig.txt'
-                            contexts = DNA_CONF_DIR + f_basename + '_contexts.txt'
-                            infojson = DNA_CONF_DIR + f_basename + '_info.txt'
+                            fsconfig = V.DNA_CONF_DIR + f_basename + '_fsconfig.txt'
+                            contexts = V.DNA_CONF_DIR + f_basename + '_contexts.txt'
+                            infojson = V.DNA_CONF_DIR + f_basename + '_info.txt'
                             if not os.path.isfile(infojson):
                                 infojson = None
                             if SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and SETUP_MANIFEST['REPACK_TO_RW'] == '1':
@@ -1855,7 +1857,7 @@ def menu_main(project):
                                     SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
                                     SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                             if os.path.isfile(contexts) and os.path.isfile(fsconfig):
-                                if value.ASK:
+                                if V.ASK:
                                     DISPLAY(f'是否合成: {f_basename}.new.dat.br [1/0]: ', end='')
                                     if input() != '1':
                                         continue
