@@ -484,12 +484,9 @@ def patch_magisk(BOOTIMG):
                 CONFIGS = "KEEPVERITY={}\nKEEPFORCEENCRYPT={}\nPATCHVBMETAFLAG={}\n".format(
                     MAGISK_MANIFEST["KEEPVERITY"], MAGISK_MANIFEST["KEEPFORCEENCRYPT"],
                     MAGISK_MANIFEST["PATCHVBMETAFLAG"])
-                if os.path.isfile("recovery_dtbo"):
-                    CONFIGS += "RECOVERYMODE=true\n"
-                else:
-                    CONFIGS += "RECOVERYMODE=false\n"
+                CONFIGS += f"RECOVERYMODE={str(os.path.isfile('recovery_dtbo')).lower()}\n"
                 if SHA1:
-                    CONFIGS += "SHA1={}".format(SHA1)
+                    CONFIGS += f"SHA1={SHA1}"
                 with open("config", "w", newline="\n") as cn:
                     cn.write(CONFIGS)
                 is_64bit = MAGISK_MANIFEST["IS_64BIT"] == "true"
