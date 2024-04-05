@@ -1090,7 +1090,8 @@ def decompress_img(source, distance, keep=1):
                         source.replace(os.sep, '/'),
                         DNA_MAIN_DIR)
                 call(dump_erofs_cmd)
-
+            else:
+                print('> Pass, not support fs_type [{}]'.format(file_type))
             distance = DNA_MAIN_DIR + os.path.basename(source).replace('.unsparse.img', '').replace('.img', '')
             if os.path.isdir(distance):
                 if os.path.isdir(DNA_MAIN_DIR + 'config'):
@@ -1131,7 +1132,6 @@ def decompress_img(source, distance, keep=1):
                                         new_distance = DNA_MAIN_DIR + os.path.basename(new_source).rsplit('.', 1)[0]
                                         decompress_img(new_source, new_distance, keep=0)
 
-                print('> Pass, not support fs_type [{}]'.format(file_type))
         if os.path.isdir(distance):
             if file_type != "ext":
                 tTime = time.time() - sTime
