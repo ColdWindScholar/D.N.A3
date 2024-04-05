@@ -130,12 +130,7 @@ def PAUSE(info='> 任意键继续'):
 
 
 def DISPLAY(message, flag=1, end='\n'):
-    flags = {
-        1: "3",
-        2: "6",
-        3: "4",
-        4: "1"
-    }
+    flags = {1: "3", 2: "6", 3: "4", 4: "1"}
     print(f"\x1b[1;3{flags[flag]}m [ {time.strftime('%H:%M:%S', time.localtime())} ]\t {message} \x1b[0m", end=end)
 
 
@@ -381,7 +376,7 @@ def kill_dm(project):
 def patch_twrp(BOOTIMG):
     if os.path.isfile(
             f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/ramdisk.cpio") and os.path.isfile(
-            BOOTIMG):
+        BOOTIMG):
         if os.path.isdir(f"{DNA_MAIN_DIR}bootimg"):
             rmdire(f"{DNA_MAIN_DIR}bootimg")
         os.makedirs(DNA_MAIN_DIR + "bootimg")
