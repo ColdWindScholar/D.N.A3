@@ -1609,12 +1609,10 @@ def menu_main(project):
                 V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 decompress(glob(V.DNA_TEMP_DIR + '*.br'), int(option))
             elif int(option) == 3:
-                infile = glob(V.DNA_TEMP_DIR + '*.dat')
                 V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
-                decompress(infile, int(option))
-                infile = glob(V.DNA_TEMP_DIR + '*.img')
+                decompress(glob(V.DNA_TEMP_DIR + '*.dat'), int(option))
                 V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
-                decompress(infile, int(option))
+                decompress(glob(V.DNA_TEMP_DIR + '*.img'), int(option))
             elif int(option) == 4:
                 V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 decompress(glob(V.DNA_TEMP_DIR + '*.img'), int(option))
@@ -1624,9 +1622,8 @@ def menu_main(project):
                     infile.append(i)
                 for i in glob(V.DNA_TEMP_DIR + '*.win'):
                     infile.append(i)
-                infile = list(set(sorted(infile)))
                 V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
-                decompress_win(infile)
+                decompress_win(list(set(sorted(infile))))
                 input('> 任意键继续')
             elif int(option) == 6:
                 menu_more(project)
