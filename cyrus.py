@@ -751,6 +751,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
     timestamp = str(int(time.time())) if SETUP_MANIFEST["UTC"].lower() == "live" else SETUP_MANIFEST["UTC"]
     read = "ro"
     RESIZE2RW = False
+    fsize = None
     SPARSE = (SETUP_MANIFEST["REPACK_SPARSE_IMG"] == "1")
     if dumpinfo:
         (fsize, dsize, inodes, block_size, blocks, per_group, mount_point) = LOAD_IMAGE_JSON(dumpinfo, source)
@@ -764,7 +765,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
             mount_point = "/"
     if SETUP_MANIFEST["REPACK_EROFS_IMG"] == "0":
         fs_variant = "ext4"
-        if SETUP_MANIFEST["REPACK_TO_RW"] == "1" and SETUP_MANIFEST["IS_DYNAMIC"] == "1":
+        if (SETUP_MANIFEST["REPACK_TO_RW"] == "1" and SETUP_MANIFEST["IS_DYNAMIC"] == "1")  or not fsize:
             RESIZE2RW = True
             read = "rw"
             block_size = 4096
