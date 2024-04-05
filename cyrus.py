@@ -191,12 +191,12 @@ def LOAD_SETUP_JSON():
     validate_default_env_setup(SETUP_MANIFEST)
     with codecs.open(SETUP_JSON, "w", "utf-8") as f:
         json.dump(SETUP_MANIFEST, f, indent=4)
-    if not os.path.isdir("{}local/etc/devices/{}/{}/addons".format(PWD_DIR, SETUP_MANIFEST["DEVICE_CODE"],
-                                                                   SETUP_MANIFEST["ANDROID_SDK"])):
-        os.makedirs("{}local/etc/devices/{}/{}/addons".format(PWD_DIR, SETUP_MANIFEST["DEVICE_CODE"],
-                                                              SETUP_MANIFEST["ANDROID_SDK"]))
-    if not os.path.isfile("{}local/etc/devices/{}/{}/ramdisk.cpio".format(PWD_DIR, SETUP_MANIFEST["DEVICE_CODE"],
-                                                                          SETUP_MANIFEST["ANDROID_SDK"])):
+    if not os.path.isdir(
+            f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/addons"):
+        os.makedirs(
+            f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/addons")
+    if not os.path.isfile(
+            f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/ramdisk.cpio"):
         file_path = os.path.join(PWD_DIR, "local", "etc", "devices", SETUP_MANIFEST["DEVICE_CODE"],
                                  SETUP_MANIFEST["ANDROID_SDK"], "ramdisk.cpio.txt")
 
@@ -204,10 +204,11 @@ def LOAD_SETUP_JSON():
             open(file_path, 'w').close()
         except Exception:
             pass
-    if not os.path.isfile("{}local/etc/devices/{}/{}/reduce.txt".format(PWD_DIR, SETUP_MANIFEST["DEVICE_CODE"],
-                                                                        SETUP_MANIFEST["ANDROID_SDK"])):
-        with open("{}local/etc/devices/{}/{}/reduce.txt".format(
-                PWD_DIR, SETUP_MANIFEST["DEVICE_CODE"], SETUP_MANIFEST["ANDROID_SDK"]), "w", encoding='utf-8',
+    if not os.path.isfile(
+            f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"):
+        with open(
+                f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt",
+                "w", encoding='utf-8',
                 newline='\n') as f:
             f.write(
                 "product/app/PhotoTable\nsystem/system/app/BasicDreams\nsystem/system/data-app/Youpin\nsystem_ext/priv-app/EmergencyInfo\nvendor/app/MiGameService\n")
@@ -251,12 +252,12 @@ def validate_default_env_setup(SETUP_MANIFEST):
     for k in ('IS_VAB', 'IS_DYNAMIC', 'REPACK_EROFS_IMG', 'REPACK_SPARSE_IMG', 'REPACK_TO_RW',
               'SUPER_SPARSE', 'RESIZE_IMG'):
         if SETUP_MANIFEST[k] not in ('1', '0'):
-            sys.exit("Invalid [{}] - must be one of <1/0>".format(k))
+            sys.exit(f"Invalid [{k}] - must be one of <1/0>")
 
     if SETUP_MANIFEST["RESIZE_EROFSIMG"] not in ('1', '2', '0'):
         sys.exit("Invalid [RESIZE_EROFSIMG] - must be one of <1/2/0>")
     if not re.match("\\d{1,2}", SETUP_MANIFEST["ANDROID_SDK"]) or int(SETUP_MANIFEST["ANDROID_SDK"]) < 5:
-        sys.exit("Invalid [ANDROID_SDK : {}] - must be one of <5+>".format(SETUP_MANIFEST["ANDROID_SDK"]))
+        sys.exit(f"Invalid [ANDROID_SDK : {SETUP_MANIFEST['ANDROID_SDK']}] - must be one of <5+>")
     if not re.match("[0-9]", SETUP_MANIFEST["REPACK_BR_LEVEL"]):
         sys.exit("Invalid [{}] - must be one of <0-9>".format(SETUP_MANIFEST["REPACK_BR_LEVEL"]))
     if not re.match("\\d{1,3}", SETUP_MANIFEST["UNPACK_SPLIT_DAT"]):
@@ -548,7 +549,7 @@ def patch_magisk(BOOTIMG):
                             print(f"Error deleting {file_to_delete}: {e}")
                 for dt in ('dtb', 'kernel_dtb', 'extra'):
                     if os.path.isfile(dt):
-                        print("- Patch fstab in {}".format(dt))
+                        print(f"- Patch fstab in {dt}")
                         call("magiskboot dtb {} patch".format(dt))
                     call(
                         "magiskboot hexpatch kernel 736B69705F696E697472616D667300 77616E745F696E697472616D667300")
@@ -805,7 +806,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
     elif SETUP_MANIFEST["RESIZE_EROFSIMG"] == "2":
         printinform += "|lz4"
     DISPLAY(printinform)
-    DISPLAY("重新合成: {}.img ...".format(label), 4)
+    DISPLAY(f"重新合成: {label}.img ...", 4)
 
     if SETUP_MANIFEST["REPACK_EROFS_IMG"] == "1":
         if call(mkerofs_cmd) != 0:
@@ -828,15 +829,15 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
     if os.path.isfile(distance):
         print(" Done")
         if RESIZE2RW and os.name == 'posix':
-            os.system("e2fsck -E unshare_blocks {}".format(distance))
+            os.system(f"e2fsck -E unshare_blocks {distance}")
             new_size = os.path.getsize(distance)
             if dumpinfo:
                 if int(new_size) > int(fsize):
-                    os.system("resize2fs -M {}".format(distance))
+                    os.system(f"resize2fs -M {distance}")
                 if SETUP_MANIFEST["RESIZE_IMG"] == "1":
                     if SETUP_MANIFEST["REPACK_EROFS_IMG"] == "0":
                         if SETUP_MANIFEST["REPACK_TO_RW"] == "1":
-                            os.system("resize2fs -M {}".format(distance))
+                            os.system(f"resize2fs -M {distance}")
         op_list = DNA_TEMP_DIR + "dynamic_partitions_op_list"
         new_op_list = DNA_DIST_DIR + "dynamic_partitions_op_list"
         if os.path.isfile(op_list) or os.path.isfile(new_op_list):
@@ -889,7 +890,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                 except Exception as e:
                     print("Error moving file:", e)
                 if flag > 8:
-                    DISPLAY("重新生成: {}.new.dat ...".format(label), 3)
+                    DISPLAY(f"重新生成: {label}.new.dat ...", 3)
                     img2sdat.main(distance, DNA_DIST_DIR, 4, label)
                     newdat = DNA_DIST_DIR + label + ".new.dat"
                     if os.path.isfile(newdat):
@@ -897,9 +898,9 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                         os.remove(distance)
                         if flag == 10:
                             level = SETUP_MANIFEST["REPACK_BR_LEVEL"]
-                            DISPLAY("重新生成: {}.new.dat.br {} ...".format(label, level), 3)
+                            DISPLAY(f"重新生成: {label}.new.dat.br | Level={level} ...", 3)
                             newdat_brotli = newdat + ".br"
-                            call("brotli -{}jfo {} {}".format(level, newdat_brotli, newdat))
+                            call(f"brotli -{level}jfo {newdat_brotli} {newdat}")
                             print(" Done" if os.path.isfile(newdat_brotli) else " Failed")
                     else:
                         print(" Failed")
@@ -1024,10 +1025,10 @@ def boot_utils(source, distance, flag=1):
     if not os.path.isdir(distance):
         os.makedirs(distance)
     if flag == 1:
-        DISPLAY("正在分解: {}".format(os.path.basename(source)))
+        DISPLAY(f"正在分解: {os.path.basename(source)}")
         unpackboot(source, distance)
     elif flag == 2:
-        DISPLAY("重新合成: {}.img".format(os.path.basename(source)))
+        DISPLAY(f"重新合成: {os.path.basename(source)}.img")
         dboot(source, distance)
     PAUSE()
 
@@ -1045,12 +1046,12 @@ def decompress_img(source, distance, keep=1):
         if not os.path.isdir(DNA_CONF_DIR):
             os.makedirs(DNA_CONF_DIR)
         boot_info = DNA_CONF_DIR + os.path.basename(distance) + '_kernel.txt'
-        bootjson = {'name': '{}'.format(os.path.basename(source))}
+        bootjson = {'name': os.path.basename(source)}
         with codecs.open(boot_info, 'w', 'utf-8') as f:
             json.dump(bootjson, f, indent=4)
 
     elif file_type == 'sparse':
-        DISPLAY('正在转换: Unsparse Format [{}] ...'.format(os.path.basename(source)))
+        DISPLAY(f'正在转换: Unsparse Format [{os.path.basename(source)}] ...')
         new_source = imgextractor.ULTRAMAN().APPLE(source)
         if os.path.isfile(new_source):
             if keep == 0:
@@ -1058,7 +1059,7 @@ def decompress_img(source, distance, keep=1):
             decompress_img(new_source, distance)
     if file_type in ['ext', 'erofs', 'super']:
         if file_type != 'ext':
-            DISPLAY('正在分解: {} <{}>'.format(os.path.basename(source), file_type), 3)
+            DISPLAY(f'正在分解: {os.path.basename(source)} <{file_type}>', 3)
         if not os.path.isdir(DNA_CONF_DIR):
             os.makedirs(DNA_CONF_DIR)
         if file_type == 'ext':
@@ -1079,12 +1080,10 @@ def decompress_img(source, distance, keep=1):
                     except Exception as e:
                         print("Error moving file:", e)
                     source = source.replace('.unsparse', '')
-                dump_erofs_cmd = 'extract.erofs -i {} -o {} -x'.format(
-                    source.replace(os.sep, '/'),
-                    DNA_MAIN_DIR)
+                dump_erofs_cmd = f'extract.erofs -i {source.replace(os.sep, "/")} -o {DNA_MAIN_DIR} -x'
                 call(dump_erofs_cmd)
             elif file_type == 'super':
-                lpunpack_cmd = 'lpunpack {} {}'.format(source, DNA_TEMP_DIR)
+                lpunpack_cmd = f'lpunpack {source} {DNA_TEMP_DIR}'
                 call(lpunpack_cmd)
                 for img in glob.glob(DNA_TEMP_DIR + '*_b.img'):
                     if not SETUP_MANIFEST['IS_VAB'] == '1' or os.path.getsize(img) == 0:
@@ -1102,7 +1101,7 @@ def decompress_img(source, distance, keep=1):
                         new_distance = DNA_MAIN_DIR + os.path.basename(new_source).rsplit('.', 1)[0]
                         decompress_img(new_source, new_distance, keep=0)
             else:
-                print('> Pass, not support fs_type [{}]'.format(file_type))
+                print(F'> Pass, not support fs_type [{file_type}]')
             distance = DNA_MAIN_DIR + os.path.basename(source).replace('.unsparse.img', '').replace('.img', '')
             if os.path.isdir(distance):
                 if os.path.isdir(DNA_MAIN_DIR + 'config'):
@@ -1144,7 +1143,7 @@ def decompress_dat(transfer, source, distance, keep=0):
     sTime = time.time()
     if os.path.isfile(source + ".1"):
         max = SETUP_MANIFEST["UNPACK_SPLIT_DAT"]
-        DISPLAY("合并: {}.1~{} ...".format(os.path.basename(source), max))
+        DISPLAY(f"合并: {os.path.basename(source)}.1~{max} ...")
         with open(source, "ab") as f:
             for i in range(1, int(max)):
                 if os.path.exists("{}.{}".format(source, i)):
@@ -1155,7 +1154,7 @@ def decompress_dat(transfer, source, distance, keep=0):
                     except:
                         pass
 
-    DISPLAY(f"正在分解: {os.path.basename(source) } ...", 3)
+    DISPLAY(f"正在分解: {os.path.basename(source)} ...", 3)
     sdat2img.main(transfer, source, distance)
     if os.path.isfile(distance):
         tTime = time.time() - sTime
@@ -1178,7 +1177,7 @@ def decompress_dat(transfer, source, distance, keep=0):
 def decompress_bro(transfer, source, distance, keep=0):
     sTime = time.time()
     DISPLAY(f"正在分解: {os.path.basename(source)} ...", 3)
-    call("brotli -df {} -o {}".format(source, distance))
+    call(f"brotli -df {source} -o {distance}")
     if os.path.isfile(distance):
         print("\x1b[1;32m [%ds]\x1b[0m" % (time.time() - sTime))
         if keep == 0:
@@ -1268,7 +1267,7 @@ def decompress_win(infile_list):
                 contexts_0.sort()
                 SAR = False
                 for c in contexts_0:
-                    if re.search("{}/system/build\\.prop ".format(i), c):
+                    if re.search(f"{i}/system/build\\.prop ", c):
                         SAR = True
                         break
                 if SAR:
@@ -1299,7 +1298,7 @@ def decompress(infile, flag=4):
                 else:
                     transfer = None
             if ASK:
-                DISPLAY('是否分解: {} [1/0]: '.format(os.path.basename(part)), 2, '')
+                DISPLAY(f'是否分解: {os.path.basename(part)} [1/0]: ', 2, '')
                 if input() != '1':
                     continue
             if flag == 2:
@@ -1314,7 +1313,7 @@ def decompress(infile, flag=4):
         if seekfd.gettype(part) not in ('ext', 'sparse', 'erofs', 'super', 'boot', 'vendor_boot'):
             continue
         if ASK:
-            DISPLAY('是否分解: {} [1/0]: '.format(os.path.basename(part)), 2, '')
+            DISPLAY(f'是否分解: {os.path.basename(part)} [1/0]: ', 2, '')
             if input() == '1':
                 decompress_img(part, DNA_MAIN_DIR + os.path.basename(part).rsplit('.', 1)[0])
 
@@ -1462,14 +1461,12 @@ def lists_project(dTitle, sPath, flag):
                     dict0[i] = obj
 
     e = 1
-    print("-------------------------------------------------------")
-    print()
+    print("-------------------------------------------------------\n")
     for (key, value) in dict0.items():
-        print("  \x1b[0;3{}m[{}]\x1b[0m - \x1b[0;3{}m{}\x1b[0m".format(e, key, e + 4, os.path.basename(value)))
+        print(f"  \x1b[0;3{e}m[{key}]\x1b[0m - \x1b[0;3{e + 4}m{os.path.basename(value)}\x1b[0m")
         e = 2
 
-    print()
-    print("-------------------------------------------------------")
+    print("\n-------------------------------------------------------")
     if flag == 0:
         print("\x1b[0;35m  [33] - 解压      [44] - 删除\n  [77] - 设置      [66] - 下载\n  [88] - 退出  \x1b[0m\n")
 
@@ -1588,8 +1585,7 @@ def menu_once():
                 elif int(which) > 0:
                     if int(which) < len(dict0):
                         if input(
-                                "\x1b[0;31m> 是否删除 \x1b[0;34mNo.{} \x1b[0;31m工程: \x1b[0;32m{}\x1b[0;31m [0/1]:\x1b[0m ".format(
-                                    which, os.path.basename(dict0[int(which)]))) == "1":
+                                f"\x1b[0;31m> 是否删除 \x1b[0;34mNo.{which} \x1b[0;31m工程: \x1b[0;32m{os.path.basename(dict0[int(which)])}\x1b[0;31m [0/1]:\x1b[0m ") == "1":
                             if os.path.isdir(dict0[int(which)]):
                                 rmdire(dict0[int(which)])
                                 if IS_ARM64:
@@ -1597,7 +1593,7 @@ def menu_once():
                                         PAUSE("> 请自主判断删除内置存储 {}".format(
                                             ROM_DIR + "D.N.A" + os.sep + dict0[int(which)]))
                                 menu_once()
-                    PAUSE("> Number {} Error !".format(which))
+                    PAUSE(f"> Number {which} Error !")
         elif int(choice) == 66:
             download_zrom()
         elif int(choice) == 77:
@@ -1612,13 +1608,13 @@ def menu_once():
                 menu_main(project)
                 break
             else:
-                PAUSE("> Number \x1b[0;33m{}\x1b[0m enter error !".format(choice))
+                PAUSE(f"> Number \x1b[0;33m{choice}\x1b[0m enter error !")
 
 
 def menu_more(project):
     while True:
         os.system("cls" if os.name == "nt" else "clear")
-        print("\x1b[1;36m> 当前工程: \x1b[0m{}".format(project))
+        print(f"\x1b[1;36m> 当前工程: \x1b[0m{project}")
         print("-------------------------------------------------------\n")
         print("\x1b[0;31m  00> 返回上级    \x1b[0m")
         print("\x1b[0;32m  01> 去除AVB    \x1b[0m")
@@ -1649,15 +1645,11 @@ def menu_more(project):
                 devdex.deodex(project)
         elif int(option) == 6:
             if os.path.isfile(
-                    "{}local/etc/devices/{}/{}/reduce.txt".format(PWD_DIR, SETUP_MANIFEST["DEVICE_CODE"],
-                                                                  SETUP_MANIFEST["ANDROID_SDK"])):
-                REDUCE_CONF = "{}local/etc/devices/{}/{}/reduce.txt".format(PWD_DIR,
-                                                                            SETUP_MANIFEST["DEVICE_CODE"],
-                                                                            SETUP_MANIFEST["ANDROID_SDK"])
+                    f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"):
+                REDUCE_CONF = f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"
             elif os.path.isfile(
-                    "{}local/etc/devices/default/{}/reduce.txt".format(PWD_DIR, SETUP_MANIFEST["ANDROID_SDK"])):
-                REDUCE_CONF = "{}local/etc/devices/default/{}/reduce.txt".format(PWD_DIR,
-                                                                                 SETUP_MANIFEST["ANDROID_SDK"])
+                    f"{PWD_DIR}local/etc/devices/default/{SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"):
+                REDUCE_CONF = f"{PWD_DIR}local/etc/devices/default/{SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"
             else:
                 PAUSE("精简列表<reduce.txt>丢失！")
             with CoastTime():
@@ -1693,7 +1685,7 @@ def menu_more(project):
             repack_super()
             PAUSE()
         else:
-            PAUSE("> Number \x1b[0;33m{}\x1b[0m enter error !".format(option))
+            PAUSE(f"> Number \x1b[0;33m{option}\x1b[0m enter error !")
 
 
 def menu_modules():
@@ -1719,12 +1711,11 @@ def menu_modules():
                             if int(which) > 0:
                                 if int(which) < len(dict0):
                                     if input(
-                                            "\x1b[0;31m> 是否删除 \x1b[0;34mNo.{} \x1b[0;31m插件: \x1b[0;32m{}\x1b[0;31m [0/1]:\x1b[0m ".format(
-                                                which, os.path.basename(dict0[int(which)]))) == "1":
+                                            f"\x1b[0;31m> 是否删除 \x1b[0;34mNo.{which} \x1b[0;31m插件: \x1b[0;32m{os.path.basename(dict0[int(which)])}\x1b[0;31m [0/1]:\x1b[0m ") == "1":
                                         if os.path.isdir(dict0[int(which)]):
                                             rmdire(dict0[int(which)])
                                             continue
-                                        PAUSE("> Number {} Error !".format(which))
+                                        PAUSE(f"> Number {which} Error !")
             elif int(choice) == 0:
                 return
             if 0 < int(choice) < len(dict0):
@@ -1747,7 +1738,7 @@ def menu_main(project):
     envelop_project(project)
     ASK = True
     os.system('cls' if os.name == 'nt' else 'clear')
-    print('\x1b[1;36m> 当前工程: \x1b[0m{}'.format(project))
+    print(f'\x1b[1;36m> 当前工程: \x1b[0m{project}')
     print('-------------------------------------------------------\n')
     print('\x1b[0;31m\t  00> 选择[etc]          01> 分解[bin]\x1b[0m\n')
     print('\x1b[0;32m\t  02> 分解[bro]          03> 分解[dat]\x1b[0m\n')
@@ -1889,7 +1880,7 @@ def menu_main(project):
                                 SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                             if ASK:
-                                DISPLAY('是否合成: {}.new.dat [1/0]: '.format(f_basename), end='')
+                                DISPLAY(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
                                 if input() != '1':
                                     continue
                             recompress(source, fsconfig, contexts, infojson, 9)
