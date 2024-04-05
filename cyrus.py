@@ -1395,31 +1395,30 @@ def extract_zrom(rom):
 
 
 def lists_project(dTitle, sPath, flag):
-    global dict0
     i = 0
-    dict0 = {i: dTitle}
+    V.dict0 = {i: dTitle}
     if flag == 0:
         for obj in glob.glob(sPath):
             if os.path.isdir(obj):
                 i += 1
-                dict0[i] = obj
+                V.dict0[i] = obj
 
     elif flag == 1:
         for obj in glob.glob(sPath):
             if os.path.isfile(obj):
                 i += 1
-                dict0[i] = obj
+                V.dict0[i] = obj
 
     elif flag == 2:
         for obj in glob.glob(sPath):
             if os.path.isdir(obj):
                 if os.path.isfile(obj + os.sep + "run.sh"):
                     i += 1
-                    dict0[i] = obj
+                    V.dict0[i] = obj
 
     e = 1
     print("-------------------------------------------------------\n")
-    for (key, value) in dict0.items():
+    for (key, value) in V.dict0.items():
         print(f"  \x1b[0;3{e}m[{key}]\x1b[0m - \x1b[0;3{e + 4}m{os.path.basename(value)}\x1b[0m")
         e = 2
 
