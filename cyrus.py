@@ -66,10 +66,6 @@ class global_value(object):
                          "mke2fs", "e2fsdroid", "mkfs.erofs", "lpmake", "lpunpack", "extract.erofs", "magiskboot"]
         if os.name == 'nt':
             self.programs = []
-        self.PASSWORD_DICT = {
-            '1': "FC", '2': "0A", '3': "EF", '4': "0D", '5': "C9", '6': "8A", '7': "B3", '8': "AD", '9': "04",
-            '0': "00"}
-        self.PASSWORD_DICT_REVERSE = {v: k for k, v in self.PASSWORD_DICT.items()}
 
     def __getattr__(self, item):
         try:
@@ -150,8 +146,6 @@ def DISPLAY(message, flag=1, end='\n'):
     print(f"\x1b[1;3{flags[flag]}m [ {time.strftime('%H:%M:%S', time.localtime())} ]\t {message} \x1b[0m", end=end)
 
 
-def CHAR2NUM(chars):
-    return "".join([V.PASSWORD_DICT_REVERSE[r] for r in re.sub("(?<=\\w)(?=(?:\\w\\w)+$)", " ", chars).split()])
 
 
 def GETDIRSIZE(ddir, max_=1.06, flag=1):
@@ -173,9 +167,9 @@ def LOAD_IMAGE_JSON(dumpinfo, source_dir):
     with open(dumpinfo, "a+", encoding="utf-8") as f:
         f.seek(0)
         info = json.load(f)
-    inodes = CHAR2NUM(info["a"])
-    block_size = CHAR2NUM(info["b"])
-    per_group = CHAR2NUM(info["c"])
+    inodes = info["a"]
+    block_size = info["b"]
+    per_group = info["c"]
     mount_point = info["d"]
     if mount_point != "/":
         mount_point = "/" + mount_point
@@ -1033,7 +1027,7 @@ def decompress_img(source, distance, keep=1):
         if file_type == 'ext':
             with Console().status(f"[yellow]正在提取{os.path.basename(source)}[/]"):
                 try:
-                    imgextractor.ULTRAMAN().MONSTER(source, distance, V.PASSWORD_DICT)
+                    imgextractor.ULTRAMAN().MONSTER(source, distance)
                 except:
                     shutil.rmtree(distance)
                     os.unlink(source)

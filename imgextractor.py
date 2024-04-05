@@ -162,8 +162,7 @@ class ULTRAMAN(object):
         except:
             pass
 
-    def MONSTER(self, target, output_dir, pwd_dict):
-        self.PWD_DICT = pwd_dict
+    def MONSTER(self, target, output_dir):
         self.BASE_DIR = os.path.realpath(os.path.dirname(target)) + os.sep
         self.EXTRACT_DIR = os.path.realpath(os.path.dirname(output_dir)) + os.sep + self.__file_name(
             os.path.basename(output_dir))
@@ -260,13 +259,7 @@ class ULTRAMAN(object):
         dna_info = CONFIGS_DIR + self.FileName + '_info.txt'
         partition_size = os.path.getsize(self.OUTPUT_IMAGE_FILE)
 
-        def changeNumToChar(numbers=None, toSmallChar=None):
-            nums = []
-            for num in str(numbers):
-                nums.append(self.PWD_DICT[num])
-            if toSmallChar:
-                nums = nums.lower()
-            return ''.join(nums)
+
 
         BLOCKSIZE = 1024
         LE32 = '<L'
@@ -274,11 +267,11 @@ class ULTRAMAN(object):
             filesystem.seek(BLOCKSIZE)
             superblock = filesystem.read(BLOCKSIZE)
         inode_count = struct.unpack_from(LE32, superblock, 0)[0]
-        inode_count = changeNumToChar(inode_count)
+        inode_count = inode_count
         block_size = 1024 << struct.unpack_from(LE32, superblock, 24)[0]
-        block_size = changeNumToChar(block_size)
+        block_size = block_size
         per_group = struct.unpack_from(LE32, superblock, 32)[0]
-        per_group = changeNumToChar(per_group)
+        per_group = per_group
         label_raw = superblock[120:136]
         label = ''.join((chr(c) for c in label_raw))
         manifest = {'a': '{}'.format(inode_count),
