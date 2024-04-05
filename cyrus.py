@@ -770,8 +770,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
             block_size = 4096
             blocks = math.ceil(int(size) / int(block_size))
             mkimage_cmd = f"make_ext4fs -J -T {timestamp} -S {contexts} -l {size} -L {label} -a /{label} {distance} {source}"
-            mke2fs_a_cmd = "mke2fs -O ^has_journal,^metadata_csum,extent,huge_file,^flex_bg,^64bit,uninit_bg,dir_nlink,extra_isize -t {} -b {} -L {} -I 256 -M {} -m 0 -q -F {} {}".format(
-                fs_variant, block_size, label, mount_point, distance, blocks)
+            mke2fs_a_cmd = f"mke2fs -O ^has_journal,^metadata_csum,extent,huge_file,^flex_bg,^64bit,uninit_bg,dir_nlink,extra_isize -t {fs_variant} -b {block_size} -L {label} -I 256 -M {mount_point} -m 0 -q -F {distance} {blocks}"
             e2fsdroid_a_cmd = "e2fsdroid -T {0} -C {1} -S {2} -f {3} -a /{4} -e {5}".format(
                 timestamp, fsconfig, contexts, source, label, distance)
         else:
@@ -783,8 +782,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
             else:
                 mkimage_cmd = "make_ext4fs -T {0} -S {1} -l {2} -L {3} -a /{3} {4} {5}".format(
                     timestamp, contexts, size, label, distance, source)
-            mke2fs_a_cmd = "mke2fs -O ^has_journal,^metadata_csum,extent,huge_file,^flex_bg,^64bit,uninit_bg,dir_nlink,extra_isize -t {} -b {} -L {} -I 256 -N {} -M {} -m 0 -g {} -q -F {} {}".format(
-                fs_variant, block_size, label, inodes, mount_point, per_group, distance, blocks)
+            mke2fs_a_cmd = f"mke2fs -O ^has_journal,^metadata_csum,extent,huge_file,^flex_bg,^64bit,uninit_bg,dir_nlink,extra_isize -t {fs_variant} -b {block_size} -L {label} -I 256 -N {inodes} -M {mount_point} -m 0 -g {per_group} -q -F {distance} {blocks}"
             e2fsdroid_a_cmd = "e2fsdroid -T {0} -C {1} -S {2} -f {3} -a /{4} -e -s {5}".format(
                 timestamp, fsconfig, contexts, source, label, distance)
     else:
