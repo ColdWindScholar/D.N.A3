@@ -443,14 +443,14 @@ def patch_magisk(BOOTIMG):
 
     for k in ('KEEPVERITY', 'KEEPFORCEENCRYPT', 'PATCHVBMETAFLAG', 'IS_64BIT'):
         if MAGISK_MANIFEST[k] not in ('true', 'false'):
-            sys.exit("Invalid [{}] - must be one of <true/false>".format(k))
+            sys.exit(f"Invalid [{k}] - must be one of <true/false>")
 
     if MAGISK_MANIFEST["CLASS"].lower() not in ('stable', 'alpha', 'canary'):
         sys.exit("Invalid [CLASS] - must be one of <stable/alpha/canary>")
     if MAGISK_MANIFEST["TARGET"] not in ('arm', 'arm64', 'armeabi-v7a', 'arm64-v8a',
                                          'x86', 'x86_64'):
         sys.exit("Invalid [TARGET] - must be one of <arm/x86>")
-    MAGISK_FILES = glob.glob("{}local/etc/magisk/{}/Magisk-*.apk".format(PWD_DIR, MAGISK_MANIFEST["CLASS"]))
+    MAGISK_FILES = glob.glob(f"{PWD_DIR}local/etc/magisk/{MAGISK_MANIFEST['CLASS']}/Magisk-*.apk")
     if len(MAGISK_FILES) <= 0:
         PAUSE("> 未发现local/etc/magisk/{}/Magisk-*.apk文件".format(MAGISK_MANIFEST["CLASS"]))
         return
