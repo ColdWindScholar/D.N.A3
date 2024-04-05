@@ -973,10 +973,6 @@ def dboot(infile, dist):
                 os.remove(os.path.join(dist, os.path.basename(infile) + ".img"))
             os.rename(infile + os.sep + "new-boot.img", os.path.join(dist, os.path.basename(infile) + ".img"))
         os.chdir(or_dir)
-        try:
-            rmdire(infile)
-        except (Exception, BaseException):
-            print("删除错误...")
         print("Pack Successful...")
 
 
