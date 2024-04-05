@@ -654,11 +654,8 @@ def repack_super():
 
 
 def walk_contexts(contexts):
-    text_list = []
     with open(contexts, "r", encoding="utf-8") as f3:
-        for x in f3.readlines():
-            if x not in text_list:
-                text_list.append(x)
+        text_list = list(set(f3.readlines()))
     if os.path.isfile(contexts):
         os.remove(contexts)
     with open(contexts, "a+", encoding="utf-8") as f:
