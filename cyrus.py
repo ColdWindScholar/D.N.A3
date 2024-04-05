@@ -1417,10 +1417,7 @@ def menu_once():
         if int(choice) == 88:
             sys.exit()
         elif int(choice) == 33:
-            if os.name == "nt":
-                choose_zrom(1)
-            else:
-                choose_zrom()
+            choose_zrom(int(os.name == "nt"))
         elif int(choice) == 44:
             if V.dict0:
                 which = input("> 输入序号进行删除: ")
