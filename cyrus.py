@@ -1632,7 +1632,6 @@ def menu_main(project):
     print('\x1b[0;34m\t  10> 合成[bro]          88> 退出[bye]\x1b[0m\n')
     print('-------------------------------------------------------')
     option = input(f'> {RED}输入序号{CLOSE} >> ')
-
     if option:
         if not option.isdigit():
             input('> 输入序号数字')
