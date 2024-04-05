@@ -753,9 +753,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
         timestamp = SETUP_MANIFEST["UTC"]
     read = "ro"
     RESIZE2RW = False
-    SPARSE = False
-    if SETUP_MANIFEST["REPACK_SPARSE_IMG"] == "1":
-        SPARSE = True
+    SPARSE = (SETUP_MANIFEST["REPACK_SPARSE_IMG"] == "1")
     if dumpinfo:
         (fsize, dsize, inodes, block_size, blocks, per_group, mount_point) = LOAD_IMAGE_JSON(dumpinfo, source)
         size = dsize
