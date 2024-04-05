@@ -1839,7 +1839,6 @@ def menu_main(project):
                             if input() != '1':
                                 continue
                         boot_utils(source, DNA_DIST_DIR, 2)
-                        continue
                 for file in infile:
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
                     source = DNA_MAIN_DIR + f_basename
