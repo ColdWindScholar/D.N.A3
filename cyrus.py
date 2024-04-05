@@ -863,7 +863,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
             else:
                 for partition in ('system', 'system_ext', 'product', 'vendor', 'odm'):
                     for slot in ('_a', '_b'):
-                        CONTENT += "resize {0}{1} 4294967296\n".format(partition, slot)
+                        CONTENT += f"resize {partition}{slot} 4294967296\n"
 
             with open(new_op_list, "w", encoding="UTF-8", newline="\n") as ST:
                 ST.write(CONTENT)
