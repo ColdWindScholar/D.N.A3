@@ -194,30 +194,29 @@ def LOAD_IMAGE_JSON(dumpinfo, source_dir):
 
 
 def LOAD_SETUP_JSON():
-    global SETUP_MANIFEST
     with codecs.open(SETUP_JSON, "r", "utf-8") as manifest_file:
-        SETUP_MANIFEST = json.load(manifest_file)
+        V.SETUP_MANIFEST = json.load(manifest_file)
     set_default_env_setup()
-    validate_default_env_setup(SETUP_MANIFEST)
+    validate_default_env_setup(V.SETUP_MANIFEST)
     with codecs.open(SETUP_JSON, "w", "utf-8") as f:
-        json.dump(SETUP_MANIFEST, f, indent=4)
+        json.dump(V.SETUP_MANIFEST, f, indent=4)
     if not os.path.isdir(
-            f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/addons"):
+            f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/addons"):
         os.makedirs(
-            f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/addons")
+            f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/addons")
     if not os.path.isfile(
-            f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/ramdisk.cpio"):
-        file_path = os.path.join(PWD_DIR, "local", "etc", "devices", SETUP_MANIFEST["DEVICE_CODE"],
-                                 SETUP_MANIFEST["ANDROID_SDK"], "ramdisk.cpio.txt")
+            f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/ramdisk.cpio"):
+        file_path = os.path.join(PWD_DIR, "local", "etc", "devices", V.SETUP_MANIFEST["DEVICE_CODE"],
+                                 V.SETUP_MANIFEST["ANDROID_SDK"], "ramdisk.cpio.txt")
 
         try:
             open(file_path, 'w').close()
         except Exception:
             pass
     if not os.path.isfile(
-            f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"):
+            f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"):
         with open(
-                f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt",
+                f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt",
                 "w", encoding='utf-8',
                 newline='\n') as f:
             f.write(
@@ -391,7 +390,7 @@ def kill_dm(project):
 
 def patch_twrp(BOOTIMG):
     if os.path.isfile(
-            f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/ramdisk.cpio") and os.path.isfile(
+            f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/ramdisk.cpio") and os.path.isfile(
         BOOTIMG):
         if os.path.isdir(f"{V.DNA_MAIN_DIR}bootimg"):
             rmdire(f"{V.DNA_MAIN_DIR}bootimg")
@@ -401,9 +400,9 @@ def patch_twrp(BOOTIMG):
         call(f"magiskboot unpack {BOOTIMG}")
         if os.path.isfile("kernel"):
             if os.path.isfile("ramdisk.cpio"):
-                print(f"- Replace ramdisk twrp@{SETUP_MANIFEST['ANDROID_SDK']}")
+                print(f"- Replace ramdisk twrp@{V.SETUP_MANIFEST['ANDROID_SDK']}")
                 shutil.copy(
-                    f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/ramdisk.cpio",
+                    f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/ramdisk.cpio",
                     os.path.join(os.path.abspath("."), "ramdisk.cpio"))
                 for dt in ('dtb', 'kernel_dtb', 'extra'):
                     if os.path.isfile(dt):
@@ -431,7 +430,7 @@ def patch_twrp(BOOTIMG):
             rmdire(f"{V.DNA_MAIN_DIR}bootimg")
     else:
         PAUSE(
-            f"> 未发现local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/ramdisk.cpio文件")
+            f"> 未发现local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/ramdisk.cpio文件")
 
 
 def patch_magisk(BOOTIMG):
@@ -464,11 +463,11 @@ def patch_magisk(BOOTIMG):
         PAUSE(f"> 未发现local/etc/magisk/{MAGISK_MANIFEST['CLASS']}/Magisk-*.apk文件")
         return
     if os.path.isfile(BOOTIMG):
-        if os.path.isdir(f"{value.DNA_MAIN_DIR}bootimg"):
-            rmdire(f"{value.DNA_MAIN_DIR}bootimg")
-        os.makedirs(value.DNA_MAIN_DIR + "bootimg")
+        if os.path.isdir(f"{V.DNA_MAIN_DIR}bootimg"):
+            rmdire(f"{V.DNA_MAIN_DIR}bootimg")
+        os.makedirs(V.DNA_MAIN_DIR + "bootimg")
         print("- Unpacking boot image")
-        os.chdir(value.DNA_MAIN_DIR + "bootimg")
+        os.chdir(V.DNA_MAIN_DIR + "bootimg")
         call(f"magiskboot unpack {BOOTIMG}")
         if os.path.isfile("kernel"):
             if os.path.isfile("ramdisk.cpio"):
@@ -554,45 +553,45 @@ def patch_magisk(BOOTIMG):
 
                 if os.path.isfile("new-boot.img"):
                     print("+ Done")
-                    if not os.path.isdir(value.DNA_DIST_DIR):
-                        os.mkdir(value.DNA_DIST_DIR)
+                    if not os.path.isdir(V.DNA_DIST_DIR):
+                        os.mkdir(V.DNA_DIST_DIR)
                     new_boot_img_name = os.path.basename(BOOTIMG).split(".")[0] + "_magisk.img"
-                    destination_path = os.path.join(value.DNA_DIST_DIR, new_boot_img_name)
+                    destination_path = os.path.join(V.DNA_DIST_DIR, new_boot_img_name)
                     shutil.move("new-boot.img", destination_path)
-                    if os.path.isdir(value.DNA_MAIN_DIR + "system" + os.sep + "system"):
+                    if os.path.isdir(V.DNA_MAIN_DIR + "system" + os.sep + "system"):
                         try:
                             os.makedirs(
-                                value.DNA_MAIN_DIR + "system" + os.sep + "system" + os.sep + "data-app" + os.sep + "Magisk")
+                                V.DNA_MAIN_DIR + "system" + os.sep + "system" + os.sep + "data-app" + os.sep + "Magisk")
                         except:
                             pass
                         else:
-                            destination_path = os.path.join(value.DNA_MAIN_DIR, 'system', 'system', 'data-app',
+                            destination_path = os.path.join(V.DNA_MAIN_DIR, 'system', 'system', 'data-app',
                                                             'Magisk',
                                                             'Magisk.apk')
                             shutil.copy(MAGISK_FILE, destination_path)
-                    elif os.path.isdir(value.DNA_MAIN_DIR + "vendor"):
-                        os.makedirs(value.DNA_MAIN_DIR + "vendor" + os.sep + "data-app" + os.sep + "Magisk")
-                        destination_path = os.path.join(value.DNA_MAIN_DIR, 'vendor', 'data-app', 'Magisk',
+                    elif os.path.isdir(V.DNA_MAIN_DIR + "vendor"):
+                        os.makedirs(V.DNA_MAIN_DIR + "vendor" + os.sep + "data-app" + os.sep + "Magisk")
+                        destination_path = os.path.join(V.DNA_MAIN_DIR, 'vendor', 'data-app', 'Magisk',
                                                         'Magisk.apk')
                         shutil.copy(MAGISK_FILE, destination_path)
             os.chdir(PWD_DIR)
-            if os.path.isdir(f"{value.DNA_MAIN_DIR}bootimg"):
-                rmdire(f"{value.DNA_MAIN_DIR}bootimg")
+            if os.path.isdir(f"{V.DNA_MAIN_DIR}bootimg"):
+                rmdire(f"{V.DNA_MAIN_DIR}bootimg")
 
 
 def patch_addons():
-    if os.path.isdir(f"{PWD_DIR}local/etc/devices/default/{SETUP_MANIFEST['ANDROID_SDK']}/addons"):
-        DISPLAY(f"复制 default/{SETUP_MANIFEST['ANDROID_SDK']}/* ...")
+    if os.path.isdir(f"{PWD_DIR}local/etc/devices/default/{V.SETUP_MANIFEST['ANDROID_SDK']}/addons"):
+        DISPLAY(f"复制 default/{V.SETUP_MANIFEST['ANDROID_SDK']}/* ...")
         try:
-            shutil.copytree(os.path.join(PWD_DIR, "local", "etc", "devices", "default", SETUP_MANIFEST["ANDROID_SDK"],
+            shutil.copytree(os.path.join(PWD_DIR, "local", "etc", "devices", "default", V.SETUP_MANIFEST["ANDROID_SDK"],
                                          "addons"), V.DNA_MAIN_DIR, dirs_exist_ok=True)
         except Exception as e:
             print("Error copying files:", e)
     if os.path.isdir(
-            f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/addons"):
-        DISPLAY(f"复制 {SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/* ...")
-        source_dir = os.path.join(PWD_DIR, "local", "etc", "devices", SETUP_MANIFEST["DEVICE_CODE"],
-                                  SETUP_MANIFEST["ANDROID_SDK"], "addons")
+            f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/addons"):
+        DISPLAY(f"复制 {V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/* ...")
+        source_dir = os.path.join(PWD_DIR, "local", "etc", "devices", V.SETUP_MANIFEST["DEVICE_CODE"],
+                                  V.SETUP_MANIFEST["ANDROID_SDK"], "addons")
         destination_dir = os.path.join(V.DNA_MAIN_DIR)
 
         try:
@@ -615,8 +614,8 @@ def repack_super():
         for file in infile:
             parts.append(os.path.basename(file).rsplit('_', 1)[0])
     group_size_a, group_size_b = 0, 0
-    argvs = f'lpmake --metadata-size 65536 --super-name super --device super:{SETUP_MANIFEST["SUPER_SIZE"]}:{int(SETUP_MANIFEST["SUPER_SECTOR"]) * 512} '
-    if SETUP_MANIFEST['IS_VAB'] == '1':
+    argvs = f'lpmake --metadata-size 65536 --super-name super --device super:{V.SETUP_MANIFEST["SUPER_SIZE"]}:{int(V.SETUP_MANIFEST["SUPER_SECTOR"]) * 512} '
+    if V.SETUP_MANIFEST['IS_VAB'] == '1':
         argvs += '--metadata-slots 3 --virtual-ab -F '
         for i in parts:
             if os.path.isfile(V.DNA_DIST_DIR + i + '.img'):
@@ -629,7 +628,7 @@ def repack_super():
                         img_a = new_img_a
                 image_size = imgextractor.ULTRAMAN().LEMON(img_a)
                 group_size_a += int(image_size)
-                argvs += f'--partition {i}_a:readonly:{image_size}:{SETUP_MANIFEST["GROUP_NAME"]}_a --image {i}_a={img_a} --partition {i}_b:readonly:0:{SETUP_MANIFEST["GROUP_NAME"]}_b '
+                argvs += f'--partition {i}_a:readonly:{image_size}:{V.SETUP_MANIFEST["GROUP_NAME"]}_a --image {i}_a={img_a} --partition {i}_b:readonly:0:{V.SETUP_MANIFEST["GROUP_NAME"]}_b '
     else:
         argvs += '--metadata-slots 2 '
         for i in parts:
@@ -654,29 +653,29 @@ def repack_super():
                 group_size_a += int(image_size_a)
                 image_size_b = imgextractor.ULTRAMAN().LEMON(img_b)
                 group_size_b += int(image_size_b)
-                argvs += f'--partition {i}_a:readonly:{image_size_a}:{SETUP_MANIFEST["GROUP_NAME"]}_a --image {i}_a={img_a} --partition {i}_b:readonly:{image_size_b}:{SETUP_MANIFEST["GROUP_NAME"]}_b --image {i}_b={img_b} '
+                argvs += f'--partition {i}_a:readonly:{image_size_a}:{V.SETUP_MANIFEST["GROUP_NAME"]}_a --image {i}_a={img_a} --partition {i}_b:readonly:{image_size_b}:{V.SETUP_MANIFEST["GROUP_NAME"]}_b --image {i}_b={img_b} '
 
     if group_size_a == 0:
         PAUSE('> 未发现002_DNA文件夹下存在可用镜像文件')
         return None
-    if SETUP_MANIFEST['SUPER_SPARSE'] == '1':
+    if V.SETUP_MANIFEST['SUPER_SPARSE'] == '1':
         argvs += '--sparse '
-    if SETUP_MANIFEST['IS_VAB'] == '1':
-        reserve_size = int(SETUP_MANIFEST['SUPER_SECTOR']) * 1024
-        half_size = int(SETUP_MANIFEST['SUPER_SIZE']) - reserve_size
+    if V.SETUP_MANIFEST['IS_VAB'] == '1':
+        reserve_size = int(V.SETUP_MANIFEST['SUPER_SECTOR']) * 1024
+        half_size = int(V.SETUP_MANIFEST['SUPER_SIZE']) - reserve_size
         if int(group_size_a) <= half_size:
             group_size_a = str(half_size)
             group_size_b = str(half_size)
 
-    half_size = int(SETUP_MANIFEST['SUPER_SIZE']) / 2
+    half_size = int(V.SETUP_MANIFEST['SUPER_SIZE']) / 2
     if int(group_size_a) <= half_size:
         group_size_a = half_size
 
     if int(group_size_b) <= half_size:
         group_size_b = half_size
 
-    argvs += f'--group {SETUP_MANIFEST["GROUP_NAME"]}_a:{group_size_a} --group {SETUP_MANIFEST["GROUP_NAME"]}_b:{group_size_b} --output {V.DNA_DIST_DIR + "super.img"} '
-    printinform2 = f'重新合成: super.img <Size:{SETUP_MANIFEST["SUPER_SIZE"]}|Vab:{SETUP_MANIFEST["IS_VAB"]}|Sparse:{SETUP_MANIFEST["SUPER_SPARSE"]}>'
+    argvs += f'--group {V.SETUP_MANIFEST["GROUP_NAME"]}_a:{group_size_a} --group {V.SETUP_MANIFEST["GROUP_NAME"]}_b:{group_size_b} --output {V.DNA_DIST_DIR + "super.img"} '
+    printinform2 = f'重新合成: super.img <Size:{V.SETUP_MANIFEST["SUPER_SIZE"]}|Vab:{V.SETUP_MANIFEST["IS_VAB"]}|Sparse:{V.SETUP_MANIFEST["SUPER_SPARSE"]}>'
     DISPLAY(printinform2)
 
     with CoastTime():
@@ -721,11 +720,11 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
     walk_contexts(contexts)
     if os.name == 'nt':
         source = source.replace("\\", '/')
-    timestamp = str(int(time.time())) if SETUP_MANIFEST["UTC"].lower() == "live" else SETUP_MANIFEST["UTC"]
+    timestamp = str(int(time.time())) if V.SETUP_MANIFEST["UTC"].lower() == "live" else V.SETUP_MANIFEST["UTC"]
     read = "ro"
     RESIZE2RW = False
     fsize = None
-    SPARSE = (SETUP_MANIFEST["REPACK_SPARSE_IMG"] == "1")
+    SPARSE = (V.SETUP_MANIFEST["REPACK_SPARSE_IMG"] == "1")
     if dumpinfo:
         (fsize, dsize, inodes, block_size, blocks, per_group, mount_point) = LOAD_IMAGE_JSON(dumpinfo, source)
         size = dsize
@@ -736,9 +735,9 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
         mount_point = "/" + label
         if os.path.isfile(source + os.sep + "system" + os.sep + "build.prop"):
             mount_point = "/"
-    if SETUP_MANIFEST["REPACK_EROFS_IMG"] == "0":
+    if V.SETUP_MANIFEST["REPACK_EROFS_IMG"] == "0":
         fs_variant = "ext4"
-        if (SETUP_MANIFEST["REPACK_TO_RW"] == "1" and SETUP_MANIFEST["IS_DYNAMIC"] == "1") or not fsize:
+        if (V.SETUP_MANIFEST["REPACK_TO_RW"] == "1" and V.SETUP_MANIFEST["IS_DYNAMIC"] == "1") or not fsize:
             RESIZE2RW = True
             read = "rw"
             block_size = 4096
@@ -748,7 +747,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
             e2fsdroid_a_cmd = f"e2fsdroid -T {timestamp} -C {fsconfig} -S {contexts} -f {source} -a /{label} -e {distance}"
         else:
             size = fsize
-            if int(SETUP_MANIFEST["ANDROID_SDK"]) <= 9:
+            if int(V.SETUP_MANIFEST["ANDROID_SDK"]) <= 9:
                 read = "rw"
                 mkimage_cmd = f"make_ext4fs -J -T {timestamp} -S {contexts} -C {fsconfig} -l {size} -L {label} -a /{label} {distance} {source}"
             else:
@@ -760,31 +759,31 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
         mkerofs_cmd = "mkfs.erofs "
         if not re.match("5.3", platform.uname().release):
             mkerofs_cmd += "-E legacy-compress "
-        if SETUP_MANIFEST["RESIZE_EROFSIMG"] == "1":
+        if V.SETUP_MANIFEST["RESIZE_EROFSIMG"] == "1":
             mkerofs_cmd += "-zlz4hc "
-        elif SETUP_MANIFEST["RESIZE_EROFSIMG"] == "2":
+        elif V.SETUP_MANIFEST["RESIZE_EROFSIMG"] == "2":
             mkerofs_cmd += "-zlz4 "
         mkerofs_cmd += f"-T{timestamp} --mount-point=/{label} --fs-config-file={fsconfig} --file-contexts={contexts} {distance} {source}"
-    printinform = f"Size:{size}|FsT:{fs_variant}|FsR:{read}|Sparse:{SETUP_MANIFEST['REPACK_SPARSE_IMG']}"
-    if SETUP_MANIFEST["REPACK_EROFS_IMG"] == "0":
-        if SETUP_MANIFEST["RESIZE_IMG"] == "1" and SETUP_MANIFEST["REPACK_TO_RW"] == "1":
+    printinform = f"Size:{size}|FsT:{fs_variant}|FsR:{read}|Sparse:{V.SETUP_MANIFEST['REPACK_SPARSE_IMG']}"
+    if V.SETUP_MANIFEST["REPACK_EROFS_IMG"] == "0":
+        if V.SETUP_MANIFEST["RESIZE_IMG"] == "1" and V.SETUP_MANIFEST["REPACK_TO_RW"] == "1":
             printinform += "|Resize:1"
         else:
             printinform += "|Resize:0"
-    elif SETUP_MANIFEST["RESIZE_EROFSIMG"] == "1":
+    elif V.SETUP_MANIFEST["RESIZE_EROFSIMG"] == "1":
         printinform += "|lz4hc"
-    elif SETUP_MANIFEST["RESIZE_EROFSIMG"] == "2":
+    elif V.SETUP_MANIFEST["RESIZE_EROFSIMG"] == "2":
         printinform += "|lz4"
     DISPLAY(printinform)
     DISPLAY(f"重新合成: {label}.img ...", 4)
 
-    if SETUP_MANIFEST["REPACK_EROFS_IMG"] == "1":
+    if V.SETUP_MANIFEST["REPACK_EROFS_IMG"] == "1":
         if call(mkerofs_cmd) != 0:
             try:
                 os.remove(distance)
             except:
                 pass
-    elif int(SETUP_MANIFEST["ANDROID_SDK"]) <= 9:
+    elif int(V.SETUP_MANIFEST["ANDROID_SDK"]) <= 9:
         call(mkimage_cmd)
     else:
         call(mke2fs_a_cmd)
@@ -804,9 +803,9 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
             if dumpinfo:
                 if int(new_size) > int(fsize):
                     os.system(f"resize2fs -M {distance}")
-                if SETUP_MANIFEST["RESIZE_IMG"] == "1":
-                    if SETUP_MANIFEST["REPACK_EROFS_IMG"] == "0":
-                        if SETUP_MANIFEST["REPACK_TO_RW"] == "1":
+                if V.SETUP_MANIFEST["RESIZE_IMG"] == "1":
+                    if V.SETUP_MANIFEST["REPACK_EROFS_IMG"] == "0":
+                        if V.SETUP_MANIFEST["REPACK_TO_RW"] == "1":
                             os.system(f"resize2fs -M {distance}")
         op_list = V.DNA_TEMP_DIR + "dynamic_partitions_op_list"
         new_op_list = V.DNA_DIST_DIR + "dynamic_partitions_op_list"
@@ -816,13 +815,13 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
         else:
             CONTENT = "remove_all_groups\n"
             for slot in ('_a', '_b'):
-                CONTENT += f"add_group qti_dynamic_partitions{slot} {SETUP_MANIFEST['GROUP_SIZE' + slot.upper()]}\n"
+                CONTENT += f"add_group qti_dynamic_partitions{slot} {V.SETUP_MANIFEST['GROUP_SIZE' + slot.upper()]}\n"
 
             for partition in ('system', 'system_ext', 'product', 'vendor', 'odm'):
                 for slot in ('_a', '_b'):
                     CONTENT += f"add {partition}{slot} qti_dynamic_partitions{slot}\n"
 
-            if SETUP_MANIFEST["IS_VAB"] == "1":
+            if V.SETUP_MANIFEST["IS_VAB"] == "1":
                 for partition in ('system_a', 'system_ext_a', 'product_a', 'vendor_a',
                                   'odm_a'):
                     CONTENT += f"resize {partition} 4294967296\n"
@@ -866,7 +865,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                         print(" Done")
                         os.remove(distance)
                         if flag == 10:
-                            level = SETUP_MANIFEST["REPACK_BR_LEVEL"]
+                            level = V.SETUP_MANIFEST["REPACK_BR_LEVEL"]
                             DISPLAY(f"重新生成: {label}.new.dat.br | Level={level} ...", 3)
                             newdat_brotli = newdat + ".br"
                             call(f"brotli -{level}jfo {newdat_brotli} {newdat}")
@@ -1055,7 +1054,7 @@ def decompress_img(source, distance, keep=1):
                 lpunpack_cmd = f'lpunpack {source} {V.DNA_TEMP_DIR}'
                 call(lpunpack_cmd)
                 for img in glob.glob(V.DNA_TEMP_DIR + '*_b.img'):
-                    if not SETUP_MANIFEST['IS_VAB'] == '1' or os.path.getsize(img) == 0:
+                    if not V.SETUP_MANIFEST['IS_VAB'] == '1' or os.path.getsize(img) == 0:
                         os.remove(img)
                     else:
                         new_distance = V.DNA_MAIN_DIR + os.path.basename(img).rsplit('.', 1)[0]
@@ -1111,7 +1110,7 @@ def decompress_img(source, distance, keep=1):
 def decompress_dat(transfer, source, distance, keep=0):
     sTime = time.time()
     if os.path.isfile(source + ".1"):
-        max = SETUP_MANIFEST["UNPACK_SPLIT_DAT"]
+        max = V.SETUP_MANIFEST["UNPACK_SPLIT_DAT"]
         DISPLAY(f"合并: {os.path.basename(source)}.1~{max} ...")
         with open(source, "ab") as f:
             for i in range(1, int(max)):
@@ -1603,11 +1602,11 @@ def menu_more(project):
                 devdex.deodex(project)
         elif int(option) == 6:
             if os.path.isfile(
-                    f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"):
-                REDUCE_CONF = f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"
+                    f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"):
+                REDUCE_CONF = f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"
             elif os.path.isfile(
-                    f"{PWD_DIR}local/etc/devices/default/{SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"):
-                REDUCE_CONF = f"{PWD_DIR}local/etc/devices/default/{SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"
+                    f"{PWD_DIR}local/etc/devices/default/{V.SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"):
+                REDUCE_CONF = f"{PWD_DIR}local/etc/devices/default/{V.SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"
             else:
                 PAUSE("精简列表<reduce.txt>丢失！")
             with CoastTime():
@@ -1773,14 +1772,14 @@ def menu_main(project):
                         infojson = V.DNA_CONF_DIR + f_basename + '_info.txt'
                         if not os.path.isfile(infojson):
                             infojson = None
-                        if SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and SETUP_MANIFEST['REPACK_TO_RW'] == '1':
-                            if SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
-                                SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
-                                SETUP_MANIFEST['REPACK_TO_RW'] = '1'
-                        elif SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and SETUP_MANIFEST['REPACK_TO_RW'] == '0':
-                            if SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
-                                SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
-                                SETUP_MANIFEST['REPACK_TO_RW'] = '0'
+                        if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '1':
+                            if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
+                                V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
+                                V.SETUP_MANIFEST['REPACK_TO_RW'] = '1'
+                        elif V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '0':
+                            if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
+                                V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
+                                V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                             if V.ASK:
                                 DISPLAY(f'是否合成: {f_basename}.img [1/0]: ', end='')
@@ -1799,14 +1798,14 @@ def menu_main(project):
                         infojson = V.DNA_CONF_DIR + f_basename + '_info.txt'
                         if not os.path.isfile(infojson):
                             infojson = None
-                        if SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and SETUP_MANIFEST['REPACK_TO_RW'] == '1':
-                            if SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
-                                SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
-                                SETUP_MANIFEST['REPACK_TO_RW'] = '1'
-                        elif SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and SETUP_MANIFEST['REPACK_TO_RW'] == '0':
-                            if SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
-                                SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
-                                SETUP_MANIFEST['REPACK_TO_RW'] = '0'
+                        if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '1':
+                            if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
+                                V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
+                                V.SETUP_MANIFEST['REPACK_TO_RW'] = '1'
+                        elif V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '0':
+                            if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
+                                V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
+                                V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                             if V.ASK:
                                 DISPLAY(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
@@ -1825,14 +1824,14 @@ def menu_main(project):
                         infojson = V.DNA_CONF_DIR + f_basename + '_info.txt'
                         if not os.path.isfile(infojson):
                             infojson = None
-                        if SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and SETUP_MANIFEST['REPACK_TO_RW'] == '1':
-                            if SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
-                                SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
-                                SETUP_MANIFEST['REPACK_TO_RW'] = '1'
-                        elif SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and SETUP_MANIFEST['REPACK_TO_RW'] == '0':
-                            if SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
-                                SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
-                                SETUP_MANIFEST['REPACK_TO_RW'] = '0'
+                        if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '1':
+                            if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
+                                V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
+                                V.SETUP_MANIFEST['REPACK_TO_RW'] = '1'
+                        elif V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '0':
+                            if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
+                                V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
+                                V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                             if V.ASK:
                                 DISPLAY(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
@@ -1848,14 +1847,14 @@ def menu_main(project):
                             infojson = V.DNA_CONF_DIR + f_basename + '_info.txt'
                             if not os.path.isfile(infojson):
                                 infojson = None
-                            if SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and SETUP_MANIFEST['REPACK_TO_RW'] == '1':
-                                if SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
-                                    SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
-                                    SETUP_MANIFEST['REPACK_TO_RW'] = '1'
-                            elif SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and SETUP_MANIFEST['REPACK_TO_RW'] == '0':
-                                if SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
-                                    SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
-                                    SETUP_MANIFEST['REPACK_TO_RW'] = '0'
+                            if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '1':
+                                if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
+                                    V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
+                                    V.SETUP_MANIFEST['REPACK_TO_RW'] = '1'
+                            elif V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '0':
+                                if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
+                                    V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
+                                    V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                             if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                                 if V.ASK:
                                     DISPLAY(f'是否合成: {f_basename}.new.dat.br [1/0]: ', end='')
