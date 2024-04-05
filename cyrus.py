@@ -765,7 +765,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
             mount_point = "/"
     if SETUP_MANIFEST["REPACK_EROFS_IMG"] == "0":
         fs_variant = "ext4"
-        if (SETUP_MANIFEST["REPACK_TO_RW"] == "1" and SETUP_MANIFEST["IS_DYNAMIC"] == "1")  or not fsize:
+        if (SETUP_MANIFEST["REPACK_TO_RW"] == "1" and SETUP_MANIFEST["IS_DYNAMIC"] == "1") or not fsize:
             RESIZE2RW = True
             read = "rw"
             block_size = 4096
@@ -1734,7 +1734,7 @@ def menu_modules():
             if 0 < int(choice) < len(dict0):
                 RunModules(dict0[int(choice)])
             else:
-                print("> Number \x1b[0;33m{}\x1b[0m enter error !".format(choice))
+                print(f"> Number \x1b[0;33m{choice}\x1b[0m enter error !")
 
 
 def RunModules(sub):
