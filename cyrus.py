@@ -1528,9 +1528,10 @@ def menu_more(project):
             with CoastTime():
                 devdex.deodex(project)
         elif int(option) == 6:
+            add_dir = f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}"
             if os.path.isfile(
-                    f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"):
-                REDUCE_CONF = f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"
+                    f"{add_dir}/reduce.txt"):
+                REDUCE_CONF = f"{add_dir}/reduce.txt"
             elif os.path.isfile(
                     f"{PWD_DIR}local/etc/devices/default/{V.SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"):
                 REDUCE_CONF = f"{PWD_DIR}local/etc/devices/default/{V.SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"
