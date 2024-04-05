@@ -604,7 +604,6 @@ def repack_super():
         parts = []
         for file in infile:
             parts.append(os.path.basename(file).rsplit('_', 1)[0])
-    group_size_a, group_size_b = 0, 0
     argvs = f'lpmake --metadata-size 65536 --super-name super --device super:{V.SETUP_MANIFEST["SUPER_SIZE"]}:{int(V.SETUP_MANIFEST["SUPER_SECTOR"]) * 512} '
     if V.SETUP_MANIFEST['IS_VAB'] == '1':
         argvs += '--metadata-slots 3 --virtual-ab -F '
@@ -618,7 +617,6 @@ def repack_super():
                         os.remove(img_a)
                         img_a = new_img_a
                 image_size = imgextractor.ULTRAMAN().LEMON(img_a)
-                group_size_a += int(image_size)
                 argvs += f'--partition {i}_a:readonly:{image_size}:{V.SETUP_MANIFEST["GROUP_NAME"]}_a --image {i}_a={img_a} --partition {i}_b:readonly:0:{V.SETUP_MANIFEST["GROUP_NAME"]}_b '
     else:
         argvs += '--metadata-slots 2 '
@@ -641,12 +639,9 @@ def repack_super():
                         os.remove(img_b)
                         img_b = new_img_b
                 image_size_a = imgextractor.ULTRAMAN().LEMON(img_a)
-                group_size_a += int(image_size_a)
                 image_size_b = imgextractor.ULTRAMAN().LEMON(img_b)
-                group_size_b += int(image_size_b)
                 argvs += f'--partition {i}_a:readonly:{image_size_a}:{V.SETUP_MANIFEST["GROUP_NAME"]}_a --image {i}_a={img_a} --partition {i}_b:readonly:{image_size_b}:{V.SETUP_MANIFEST["GROUP_NAME"]}_b --image {i}_b={img_b} '
-
-    if group_size_a == 0:
+    if not parts:
         input('> 未发现002_DNA文件夹下存在可用镜像文件')
         return
     if V.SETUP_MANIFEST['SUPER_SPARSE'] == '1':
