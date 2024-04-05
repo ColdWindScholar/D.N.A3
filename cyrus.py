@@ -1087,9 +1087,27 @@ def decompress_img(source, distance, keep=1):
                         print("Error moving file:", e)
                     source = source.replace('.unsparse', '')
                 dump_erofs_cmd = 'extract.erofs -i {} -o {} -x'.format(
-                        source.replace(os.sep, '/'),
-                        DNA_MAIN_DIR)
+                    source.replace(os.sep, '/'),
+                    DNA_MAIN_DIR)
                 call(dump_erofs_cmd)
+            elif file_type == 'super':
+                lpunpack_cmd = 'lpunpack {} {}'.format(source, DNA_TEMP_DIR)
+                call(lpunpack_cmd)
+                for img in glob.glob(DNA_TEMP_DIR + '*_b.img'):
+                    if not SETUP_MANIFEST['IS_VAB'] == '1' or os.path.getsize(img) == 0:
+                        os.remove(img)
+                    else:
+                        new_distance = DNA_MAIN_DIR + os.path.basename(img).rsplit('.', 1)[0]
+                        decompress_img(img, new_distance, keep=0)
+                else:
+                    for img in glob.glob(DNA_TEMP_DIR + '*_a.img'):
+                        new_source = img.rsplit('_', 1)[0] + '.img'
+                        try:
+                            os.rename(img, new_source)
+                        except:
+                            pass
+                        new_distance = DNA_MAIN_DIR + os.path.basename(new_source).rsplit('.', 1)[0]
+                        decompress_img(new_source, new_distance, keep=0)
             else:
                 print('> Pass, not support fs_type [{}]'.format(file_type))
             distance = DNA_MAIN_DIR + os.path.basename(source).replace('.unsparse.img', '').replace('.img', '')
@@ -1112,25 +1130,6 @@ def decompress_img(source, distance, keep=1):
                     else:
                         if os.path.isdir(DNA_MAIN_DIR + 'config'):
                             shutil.rmtree(DNA_MAIN_DIR + 'config')
-                        else:
-                            while file_type == 'super':
-                                lpunpack_cmd = 'lpunpack {} {}'.format(source, DNA_TEMP_DIR)
-                                call(lpunpack_cmd)
-                                for img in glob.glob(DNA_TEMP_DIR + '*_b.img'):
-                                    if not SETUP_MANIFEST['IS_VAB'] == '1' or os.path.getsize(img) == 0:
-                                        os.remove(img)
-                                    else:
-                                        new_distance = DNA_MAIN_DIR + os.path.basename(img).rsplit('.', 1)[0]
-                                        decompress_img(img, new_distance, keep=0)
-                                else:
-                                    for img in glob.glob(DNA_TEMP_DIR + '*_a.img'):
-                                        new_source = img.rsplit('_', 1)[0] + '.img'
-                                        try:
-                                            os.rename(img, new_source)
-                                        except:
-                                            pass
-                                        new_distance = DNA_MAIN_DIR + os.path.basename(new_source).rsplit('.', 1)[0]
-                                        decompress_img(new_source, new_distance, keep=0)
 
         if os.path.isdir(distance):
             if file_type != "ext":
@@ -1362,7 +1361,7 @@ def envelop_project(project):
                         for i in ["dsp", "odm", "op1", "op2", "charger_log", "audit_filter_table", "keydata",
                                   "keyrefuge"
                                   "omr", "publiccert.pem", "sepolicy_version", "cust", "donuts_key", "v_key",
-                             "carrier", "dqmdbg", "ADF", "APD", "asdf", "batinfo", "voucher", "xrom", "custom",
+                                  "carrier", "dqmdbg", "ADF", "APD", "asdf", "batinfo", "voucher", "xrom", "custom",
                                   "cpefs", "modem", "module_hashes", "pds", "tombstones", "avb", "op_odm", "addon.d",
                                   "factory", "oneplus(/.*)?"]:
                             f.write(f"/{i}                    u:object_r:rootfs:s0\n")
@@ -1525,7 +1524,7 @@ def download_rom(rom, url):
             with open(rom, "wb") as f:
                 for chunk in res.iter_content(2097152):
                     f.write(chunk)
-                    com+=len(chunk)
+                    com += len(chunk)
                     progress.update(task, completed=com)
 
         if os.path.exists(rom):
