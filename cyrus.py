@@ -34,7 +34,6 @@ else:
     sys.stdout.flush()
 os.system("cls" if os.name == "nt" else "clear")
 IS_ARM64 = False
-IS_FIRST = 0
 PWD_DIR = os.getcwd() + os.sep
 MOD_DIR = PWD_DIR + "local/sub/"
 ROM_DIR = PWD_DIR
@@ -62,6 +61,7 @@ class global_value(object):
     ASK = False
 
     def __init__(self):
+        self.V.IS_FIRST = 0
         self.programs = ["mv", "cpio", "brotli", "img2simg", "e2fsck", "resize2fs",
                          "mke2fs", "e2fsdroid", "mkfs.erofs", "lpmake", "lpunpack", "extract.erofs", "magiskboot"]
         if os.name == 'nt':
@@ -1325,7 +1325,7 @@ def envelop_project(project):
 
 def extract_zrom(rom):
     if zipfile.is_zipfile(rom):
-        project = 'DNA_' + os.path.basename(rom).rsplit('.', 1)[0]
+        V.project = 'DNA_' + os.path.basename(rom).rsplit('.', 1)[0]
         fantasy_zip = zipfile.ZipFile(rom)
         zip_lists = fantasy_zip.namelist()
     else:
@@ -1333,13 +1333,13 @@ def extract_zrom(rom):
         return
     if 'payload.bin' in zip_lists:
         print(f'> 解压缩: {os.path.basename(rom)}')
-        envelop_project(project)
+        envelop_project(V.project)
         infile = fantasy_zip.extract('payload.bin', V.DNA_TEMP_DIR)
         fantasy_zip.close()
         if os.path.isfile(V.DNA_TEMP_DIR + 'payload.bin'):
             decompress_bin(infile, V.DNA_TEMP_DIR,
                            input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> '))
-            menu_main(project)
+            menu_main(V.project)
     elif 'run.sh' in zip_lists:
         if not os.path.isdir(MOD_DIR):
             os.makedirs(MOD_DIR)
@@ -1374,7 +1374,7 @@ def extract_zrom(rom):
         able = 5
         infile = []
         print(f'> 解压缩: {os.path.basename(rom)}')
-        envelop_project(project)
+        envelop_project(V.project)
         fantasy_zip.extractall(V.DNA_TEMP_DIR)
         fantasy_zip.close()
         if [part_name for part_name in sorted(zip_lists) if part_name.endswith(".new.dat.br")]:
@@ -1391,11 +1391,10 @@ def extract_zrom(rom):
         else:
             V.ASK = True
             decompress(infile, able)
-        menu_main(project)
+        menu_main(V.project)
 
 
 def lists_project(dTitle, sPath, flag):
-    global IS_FIRST
     global dict0
     i = 0
     dict0 = {i: dTitle}
@@ -1495,31 +1494,28 @@ def download_zrom():
 
 
 def creat_project():
-    global project
     os.system("cls" if os.name == "nt" else "clear")
     print("\x1b[1;31m> 新建工程:\x1b[0m\n")
     CREAT_NAME = input("  输入名称【不能有空格、特殊符号】: DNA_").strip().rstrip("\\").replace(" ", "_")
     if CREAT_NAME:
-        project = "DNA_" + CREAT_NAME
-        if not os.path.isdir(project):
-            os.mkdir(project)
-            menu_main(project)
+        V.project = "DNA_" + CREAT_NAME
+        if not os.path.isdir(V.project):
+            os.mkdir(V.project)
+            menu_main(V.project)
         else:
-            PAUSE(f"\x1b[0;31m\n 工程目录< \x1b[0;32m{project} \x1b[0;31m>已存在, 回车返回 ...\x1b[0m\n")
-            del project
+            PAUSE(f"\x1b[0;31m\n 工程目录< \x1b[0;32m{V.project} \x1b[0;31m>已存在, 回车返回 ...\x1b[0m\n")
+            del V.project
             creat_project()
     else:
         menu_once()
 
 
 def menu_once():
-    global IS_FIRST
-    global project
     LOAD_SETUP_JSON()
-    while IS_FIRST >= 3:
-        IS_FIRST = 0
+    while V.IS_FIRST >= 3:
+        V.IS_FIRST = 0
 
-    IS_FIRST += 1
+    V.IS_FIRST += 1
     while True:
         os.system("cls" if os.name == "nt" else "clear")
         print("\x1b[0;33m> 工程列表\x1b[0m")
@@ -1561,8 +1557,8 @@ def menu_once():
             break
         else:
             if 0 < int(choice) < len(dict0):
-                project = dict0[int(choice)]
-                menu_main(project)
+                V.project = dict0[int(choice)]
+                menu_main(V.project)
                 break
             else:
                 PAUSE(f"> Number \x1b[0;33m{choice}\x1b[0m enter error !")
@@ -1691,7 +1687,7 @@ def RunModules(sub):
 
 
 def menu_main(project):
-    envelop_project(project)
+    envelop_project(V.project)
     V.ASK = True
     os.system('cls' if os.name == 'nt' else 'clear')
     print(f'\x1b[1;36m> 当前工程: \x1b[0m{project}')
