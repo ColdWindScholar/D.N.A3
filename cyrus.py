@@ -48,11 +48,11 @@ if platform.machine() in ('aarch64', 'armv8l', 'arm64'):
         ROM_DIR = "/sdcard/Download/"
 BIN_PATH = PWD_DIR + f"local/bin/{ostype}/{platform.machine()}/"
 
-RED, WHITE, CYAN, YELLOW, MAGENTA, GREEN, BOLD, CLOSE = ('\x1b[91m',
+RED, WHITE, CYAN, YELLOW, MAGENTA, GREEN, BOLD, CLOSE = ['\x1b[91m',
                                                          '\x1b[97m', '\x1b[36m',
                                                          '\x1b[93m', '\x1b[1;35m',
                                                          '\x1b[1;32m',
-                                                         '\x1b[1m', '\x1b[0m')
+                                                         '\x1b[1m', '\x1b[0m']
 
 
 class global_value(object):
