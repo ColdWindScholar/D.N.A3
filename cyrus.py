@@ -1565,7 +1565,7 @@ def menu_once():
             if len(dict0) > 1:
                 which = input("> 输入序号进行删除: ")
                 if which and not int(which) == 0 and not which.isdigit():
-                    menu_once()
+                    continue
                 elif int(which) > 0:
                     if int(which) < len(dict0):
                         if input(
