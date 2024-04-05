@@ -195,25 +195,17 @@ def LOAD_SETUP_JSON():
     validate_default_env_setup(V.SETUP_MANIFEST)
     with open(SETUP_JSON, "w", encoding="utf-8") as f:
         json.dump(V.SETUP_MANIFEST, f, indent=4)
-    if not os.path.isdir(
-            f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/addons"):
-        os.makedirs(
-            f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/addons")
-    if not os.path.isfile(
-            f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/ramdisk.cpio"):
-        file_path = os.path.join(PWD_DIR, "local", "etc", "devices", V.SETUP_MANIFEST["DEVICE_CODE"],
-                                 V.SETUP_MANIFEST["ANDROID_SDK"], "ramdisk.cpio.txt")
-
+    add_dir = f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}"
+    if not os.path.isdir(f"{add_dir}/addons"):
+        os.makedirs(f"{add_dir}/addons")
+    if not os.path.isfile(f"{add_dir}/ramdisk.cpio"):
+        file_path = os.path.join(add_dir, "ramdisk.cpio.txt")
         try:
             open(file_path, 'w').close()
         except Exception:
             pass
-    if not os.path.isfile(
-            f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"):
-        with open(
-                f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt",
-                "w", encoding='utf-8',
-                newline='\n') as f:
+    if not os.path.isfile(f"{add_dir}/reduce.txt"):
+        with open(f"{add_dir}/reduce.txt", "w", encoding='utf-8', newline='\n') as f:
             f.write(
                 "product/app/PhotoTable\nsystem/system/app/BasicDreams\nsystem/system/data-app/Youpin\nsystem_ext/priv-app/EmergencyInfo\nvendor/app/MiGameService\n")
     if not os.path.isfile(MAGISK_JSON):
@@ -646,7 +638,8 @@ def repack_super():
     if V.SETUP_MANIFEST['SUPER_SPARSE'] == '1':
         argvs += '--sparse '
     argvs += f'--group {V.SETUP_MANIFEST["GROUP_NAME"]}_a:{V.SETUP_MANIFEST["SUPER_SIZE"]} --group {V.SETUP_MANIFEST["GROUP_NAME"]}_b:{V.SETUP_MANIFEST["SUPER_SIZE"]} --output {V.DNA_DIST_DIR + "super.img"} '
-    DISPLAY(f'重新合成: super.img <Size:{V.SETUP_MANIFEST["SUPER_SIZE"]}|Vab:{V.SETUP_MANIFEST["IS_VAB"]}|Sparse:{V.SETUP_MANIFEST["SUPER_SPARSE"]}>')
+    DISPLAY(
+        f'重新合成: super.img <Size:{V.SETUP_MANIFEST["SUPER_SIZE"]}|Vab:{V.SETUP_MANIFEST["IS_VAB"]}|Sparse:{V.SETUP_MANIFEST["SUPER_SPARSE"]}>')
     DISPLAY(f"包含分区：{'|'.join(parts)}")
     with CoastTime():
         call(argvs)
@@ -839,7 +832,8 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                             DISPLAY(f"重新生成: {label}.new.dat.br | Level={level} ...", 3)
                             newdat_brotli = newdat + ".br"
                             call(f"brotli -{level}jfo {newdat_brotli} {newdat}")
-                            print(f" {GREEN}打包成功{CLOSE}" if os.path.isfile(newdat_brotli) else f" {RED}打包失败{CLOSE}")
+                            print(f" {GREEN}打包成功{CLOSE}" if os.path.isfile(
+                                newdat_brotli) else f" {RED}打包失败{CLOSE}")
                     else:
                         print(f" {RED}打包失败{CLOSE}")
     else:
