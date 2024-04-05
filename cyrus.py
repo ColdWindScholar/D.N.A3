@@ -61,7 +61,7 @@ class global_value(object):
     ASK = False
 
     def __init__(self):
-        self.V.IS_FIRST = 0
+        self.IS_FIRST = 0
         self.programs = ["mv", "cpio", "brotli", "img2simg", "e2fsck", "resize2fs",
                          "mke2fs", "e2fsdroid", "mkfs.erofs", "lpmake", "lpunpack", "extract.erofs", "magiskboot"]
         if os.name == 'nt':
@@ -1448,8 +1448,8 @@ def choose_zrom(flag=0):
                 download_zrom()
             elif int(choice) == 0:
                 return
-            elif 0 < int(choice) < len(dict0):
-                extract_zrom(dict0[int(choice)])
+            elif 0 < int(choice) < len(V.dict0):
+                extract_zrom(V.dict0[int(choice)])
             else:
                 PAUSE(f'> Number \x1b[0;33m{choice}\x1b[0m enter error !')
 
@@ -1530,20 +1530,20 @@ def menu_once():
             else:
                 choose_zrom()
         elif int(choice) == 44:
-            if len(dict0) > 1:
+            if len(V.dict0) > 1:
                 which = input("> 输入序号进行删除: ")
                 if which and not int(which) == 0 and not which.isdigit():
                     continue
                 elif int(which) > 0:
-                    if int(which) < len(dict0):
+                    if int(which) < len(V.dict0):
                         if input(
-                                f"\x1b[0;31m> 是否删除 \x1b[0;34mNo.{which} \x1b[0;31m工程: \x1b[0;32m{os.path.basename(dict0[int(which)])}\x1b[0;31m [0/1]:\x1b[0m ") == "1":
-                            if os.path.isdir(dict0[int(which)]):
-                                rmdire(dict0[int(which)])
+                                f"\x1b[0;31m> 是否删除 \x1b[0;34mNo.{which} \x1b[0;31m工程: \x1b[0;32m{os.path.basename(V.dict0[int(which)])}\x1b[0;31m [0/1]:\x1b[0m ") == "1":
+                            if os.path.isdir(V.dict0[int(which)]):
+                                rmdire(V.dict0[int(which)])
                                 if IS_ARM64:
-                                    if os.path.isdir(ROM_DIR + "D.N.A" + os.sep + dict0[int(which)]):
+                                    if os.path.isdir(ROM_DIR + "D.N.A" + os.sep + V.dict0[int(which)]):
                                         PAUSE(
-                                            f"> 请自主判断删除内置存储 {ROM_DIR + 'D.N.A' + os.sep + dict0[int(which)]}")
+                                            f"> 请自主判断删除内置存储 {ROM_DIR + 'D.N.A' + os.sep + V.dict0[int(which)]}")
                                 menu_once()
                     PAUSE(f"> Number {which} Error !")
         elif int(choice) == 66:
@@ -1555,8 +1555,8 @@ def menu_once():
             creat_project()
             break
         else:
-            if 0 < int(choice) < len(dict0):
-                V.project = dict0[int(choice)]
+            if 0 < int(choice) < len(V.dict0):
+                V.project = V.dict0[int(choice)]
                 menu_main(V.project)
                 break
             else:
@@ -1654,24 +1654,24 @@ def menu_modules():
             elif int(choice) == 33:
                 extract_zrom(input("请输入插件路径："))
             elif int(choice) == 44:
-                if len(dict0) > 1:
+                if len(V.dict0) > 1:
                     which = input("> 输入序号进行删除: ")
                     if which:
                         if not int(which) == 0:
                             if not which.isdigit():
                                 continue
                             if int(which) > 0:
-                                if int(which) < len(dict0):
+                                if int(which) < len(V.dict0):
                                     if input(
-                                            f"\x1b[0;31m> 是否删除 \x1b[0;34mNo.{which} \x1b[0;31m插件: \x1b[0;32m{os.path.basename(dict0[int(which)])}\x1b[0;31m [0/1]:\x1b[0m ") == "1":
-                                        if os.path.isdir(dict0[int(which)]):
-                                            rmdire(dict0[int(which)])
+                                            f"\x1b[0;31m> 是否删除 \x1b[0;34mNo.{which} \x1b[0;31m插件: \x1b[0;32m{os.path.basename(V.dict0[int(which)])}\x1b[0;31m [0/1]:\x1b[0m ") == "1":
+                                        if os.path.isdir(V.dict0[int(which)]):
+                                            rmdire(V.dict0[int(which)])
                                             continue
                                         PAUSE(f"> Number {which} Error !")
             elif int(choice) == 0:
                 return
-            if 0 < int(choice) < len(dict0):
-                RunModules(dict0[int(choice)])
+            if 0 < int(choice) < len(V.dict0):
+                RunModules(V.dict0[int(choice)])
             else:
                 print(f"> Number \x1b[0;33m{choice}\x1b[0m enter error !")
 
