@@ -1603,9 +1603,9 @@ def menu_modules():
 def RunModules(sub):
     os.system("cls" if os.name == "nt" else "clear")
     print(f"\x1b[1;31m> 执行插件:\x1b[0m {os.path.basename(sub)}\n")
-    Shell_Sub = sub + os.sep + "run.sh"
-    if os.path.isfile(Shell_Sub):
-        call(f"busybox bash {Shell_Sub} {V.DNA_MAIN_DIR}")
+    shell_sub = sub + os.sep + "run.sh"
+    if os.path.isfile(shell_sub):
+        call(f"busybox bash {shell_sub} {V.DNA_MAIN_DIR}")
     input('> 任意键继续')
 
 
