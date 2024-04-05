@@ -259,10 +259,10 @@ def validate_default_env_setup(SETUP_MANIFEST):
     if not re.match("\\d{1,2}", SETUP_MANIFEST["ANDROID_SDK"]) or int(SETUP_MANIFEST["ANDROID_SDK"]) < 5:
         sys.exit(f"Invalid [ANDROID_SDK : {SETUP_MANIFEST['ANDROID_SDK']}] - must be one of <5+>")
     if not re.match("[0-9]", SETUP_MANIFEST["REPACK_BR_LEVEL"]):
-        sys.exit("Invalid [{}] - must be one of <0-9>".format(SETUP_MANIFEST["REPACK_BR_LEVEL"]))
+        sys.exit(f"Invalid [{SETUP_MANIFEST['REPACK_BR_LEVEL']}] - must be one of <0-9>")
     if not re.match("\\d{1,3}", SETUP_MANIFEST["UNPACK_SPLIT_DAT"]):
         sys.exit(
-            'Invalid ["UNPACK_SPLIT_DAT" : "{}"] - must be one of <1-999>'.format(SETUP_MANIFEST["UNPACK_SPLIT_DAT"]))
+            f'Invalid ["UNPACK_SPLIT_DAT" : "{SETUP_MANIFEST["UNPACK_SPLIT_DAT"]}"] - must be one of <1-999>')
 
 
 def env_setup():
@@ -807,12 +807,11 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
         else:
             CONTENT = "remove_all_groups\n"
             for slot in ('_a', '_b'):
-                CONTENT += "add_group qti_dynamic_partitions{} {}\n".format(slot,
-                                                                            SETUP_MANIFEST["GROUP_SIZE" + slot.upper()])
+                CONTENT += f"add_group qti_dynamic_partitions{slot} {SETUP_MANIFEST['GROUP_SIZE' + slot.upper()]}\n"
 
             for partition in ('system', 'system_ext', 'product', 'vendor', 'odm'):
                 for slot in ('_a', '_b'):
-                    CONTENT += "add {0}{1} qti_dynamic_partitions{1}\n".format(partition, slot)
+                    CONTENT += f"add {partition}{slot} qti_dynamic_partitions{slot}\n"
 
             if SETUP_MANIFEST["IS_VAB"] == "1":
                 for partition in ('system_a', 'system_ext_a', 'product_a', 'vendor_a',
@@ -837,7 +836,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
 
         if SPARSE:
             DISPLAY("开始转换: sparse format ...")
-            call("img2simg {0} {1}".format(distance, distance.rsplit(".", 1)[0] + "_sparse.img"))
+            call(f"img2simg {distance} {distance.rsplit('.', 1)[0] + '_sparse.img'}")
             if os.path.exists(distance):
                 try:
                     os.remove(distance)
@@ -1456,9 +1455,9 @@ def download_rom(rom, url):
     file_size_in_mb = int(file_size / 1048576)
     com = 0
     print(f"> {GREEN}D.N.A DOWNLOADER:{CLOSE}\n")
-    print("Link: {}".format(url))
-    print("Size: {}Mb".format(str(file_size_in_mb)))
-    print("Path: {}".format(rom))
+    print(f"Link: {url}")
+    print(f"Size: {file_size_in_mb}Mb")
+    print(f"Path: {rom}")
     if not os.path.isfile(rom):
         with Progress() as progress:
             task = progress.add_task("[yellow]Downloading...", total=file_size)
@@ -1469,12 +1468,12 @@ def download_rom(rom, url):
                     progress.update(task, completed=com)
 
         if os.path.exists(rom):
-            print("{0}Successed !{1}".format(RED, CLOSE))
+            print(f"{RED}Successed !{CLOSE}")
             choose_zrom()
         else:
             if os.path.exists(rom):
                 os.remove(rom)
-            PAUSE("> {0}Failed !{1}".format(GREEN, CLOSE))
+            PAUSE(f"> {GREEN}Failed !{CLOSE}")
     else:
         PAUSE("> 发现 " + os.path.basename(rom))
 
@@ -1540,8 +1539,8 @@ def menu_once():
                                 rmdire(dict0[int(which)])
                                 if IS_ARM64:
                                     if os.path.isdir(ROM_DIR + "D.N.A" + os.sep + dict0[int(which)]):
-                                        PAUSE("> 请自主判断删除内置存储 {}".format(
-                                            ROM_DIR + "D.N.A" + os.sep + dict0[int(which)]))
+                                        PAUSE(
+                                            f"> 请自主判断删除内置存储 {ROM_DIR + 'D.N.A' + os.sep + dict0[int(which)]}")
                                 menu_once()
                     PAUSE(f"> Number {which} Error !")
         elif int(choice) == 66:
