@@ -655,19 +655,16 @@ def repack_super():
 
 def walk_contexts(contexts):
     with open(contexts, "r", encoding="utf-8") as f3:
-        content = [x.strip() for x in f3.readlines()]
+        content = [x for x in f3.readlines()]
     text_list = []
-    s = set()
-    for x in range(0, len(content)):
-        url = content[x]
-        if url not in s:
-            s.add(url)
-            text_list.append(url)
-        if os.path.isfile(contexts):
-            os.remove(contexts)
+    for x in content:
+        if x not in text_list:
+            text_list.append(x)
+    if os.path.isfile(contexts):
+        os.remove(contexts)
     with open(contexts, "a+", encoding="utf-8") as f:
         for i in text_list:
-            f.write(i + "\n")
+            f.write(i)
 
 
 def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
