@@ -380,31 +380,31 @@ def kill_dm(project):
 
 
 def patch_twrp(BOOTIMG):
-    if os.path.isfile("{}local/etc/devices/{}/{}/ramdisk.cpio".format(PWD_DIR, SETUP_MANIFEST["DEVICE_CODE"],
-                                                                      SETUP_MANIFEST[
-                                                                          "ANDROID_SDK"])) and os.path.isfile(BOOTIMG):
-        if os.path.isdir("{}bootimg".format(DNA_MAIN_DIR)):
+    if os.path.isfile(
+            f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/ramdisk.cpio") and os.path.isfile(
+            BOOTIMG):
+        if os.path.isdir(f"{DNA_MAIN_DIR}bootimg"):
             rmdire(f"{DNA_MAIN_DIR}bootimg")
         os.makedirs(DNA_MAIN_DIR + "bootimg")
         print("- Unpacking boot image")
         os.chdir(DNA_MAIN_DIR + "bootimg")
-        call("magiskboot unpack {}".format(BOOTIMG))
+        call(f"magiskboot unpack {BOOTIMG}")
         if os.path.isfile("kernel"):
             if os.path.isfile("ramdisk.cpio"):
-                print("- Replace ramdisk twrp@{}".format(SETUP_MANIFEST["ANDROID_SDK"]))
-                shutil.copy("{}local/etc/devices/{}/{}/ramdisk.cpio".format(PWD_DIR, SETUP_MANIFEST["DEVICE_CODE"],
-                                                                            SETUP_MANIFEST["ANDROID_SDK"]),
-                            os.path.join(os.path.abspath("."), "ramdisk.cpio"))
+                print(f"- Replace ramdisk twrp@{SETUP_MANIFEST['ANDROID_SDK']}")
+                shutil.copy(
+                    f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/ramdisk.cpio",
+                    os.path.join(os.path.abspath("."), "ramdisk.cpio"))
                 for dt in ('dtb', 'kernel_dtb', 'extra'):
                     if os.path.isfile(dt):
-                        print("- Patch fstab in {}".format(dt))
-                        call("magiskboot dtb {} patch".format(dt))
+                        print(f"- Patch fstab in {dt}")
+                        call(f"magiskboot dtb {dt} patch")
                     call(
                         "magiskboot hexpatch kernel 736B69705F696E697472616D667300 77616E745F696E697472616D667300")
                     call("magiskboot hexpatch kernel 77616E745F696E697472616D6673 736B69705F696E697472616D6673")
                     call("magiskboot hexpatch kernel 747269705F696E697472616D6673 736B69705F696E697472616D6673")
                     print("- Repacking boot image")
-                    call("magiskboot repack {}".format(BOOTIMG))
+                    call(f"magiskboot repack {BOOTIMG}")
 
                 if os.path.isfile("new-boot.img"):
                     print("+ Done")
@@ -418,11 +418,11 @@ def patch_twrp(BOOTIMG):
                     if add_magisk != "0":
                         patch_magisk("{}{}_twrp.img".format(DNA_DIST_DIR, os.path.basename(BOOTIMG).split(".")[0]))
         os.chdir(PWD_DIR)
-        if os.path.isdir("{}bootimg".format(DNA_MAIN_DIR)):
+        if os.path.isdir(f"{DNA_MAIN_DIR}bootimg"):
             rmdire(f"{DNA_MAIN_DIR}bootimg")
     else:
-        PAUSE("> 未发现local/etc/devices/{}/{}/ramdisk.cpio文件".format(SETUP_MANIFEST["DEVICE_CODE"],
-                                                                        SETUP_MANIFEST["ANDROID_SDK"]))
+        PAUSE(
+            f"> 未发现local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/ramdisk.cpio文件")
 
 
 def patch_magisk(BOOTIMG):
