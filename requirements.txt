@@ -1,5 +1,4 @@
 backports.statistics
-beautifulsoup4
 Requests
 protobuf==3.20.1
 rich
