@@ -662,6 +662,7 @@ def walk_contexts(contexts):
         for i in text_list:
             f.write(i)
 
+
 def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
     label = os.path.basename(source)
     if not os.path.isdir(V.DNA_DIST_DIR):
