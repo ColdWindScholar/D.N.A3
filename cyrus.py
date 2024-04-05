@@ -1372,7 +1372,7 @@ def extract_zrom(rom):
         zip_lists = fantasy_zip.namelist()
     else:
         PAUSE('> 破损的zip或不支持的zip类型')
-        sys.exit()
+        return
     if 'payload.bin' in zip_lists:
         print('> 解压缩: ' + os.path.basename(rom))
         envelop_project(project)
