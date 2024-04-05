@@ -11,7 +11,6 @@ import zipfile
 from glob import glob
 from hashlib import sha1
 
-
 import requests
 from rich import print as echo
 from rich.console import Console
