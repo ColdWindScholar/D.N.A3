@@ -1554,8 +1554,7 @@ def creat_project():
             os.mkdir(project)
             menu_main(project)
         else:
-            PAUSE("\x1b[0;31m\n 工程目录< \x1b[0;32m{} \x1b[0;31m>已存在, 回车返回 ...\x1b[0m\n".format(
-                str(project)))
+            PAUSE(f"\x1b[0;31m\n 工程目录< \x1b[0;32m{project} \x1b[0;31m>已存在, 回车返回 ...\x1b[0m\n")
             del project
             creat_project()
     else:
