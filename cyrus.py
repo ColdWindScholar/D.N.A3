@@ -379,7 +379,7 @@ def patch_twrp(BOOTIMG):
                     os.rename("new-boot.img", os.path.join(V.DNA_DIST_DIR, new_boot_img_name))
                     os.chdir(PWD_DIR)
                     add_magisk = input("> 是否继续添加Magisk [1/0]: ")
-                    if add_magisk != "0":
+                    if add_magisk == "1":
                         patch_magisk(f"{V.DNA_DIST_DIR}{os.path.basename(BOOTIMG).split('.')[0]}_twrp.img")
         os.chdir(PWD_DIR)
         if os.path.isdir(f"{V.DNA_MAIN_DIR}bootimg"):
