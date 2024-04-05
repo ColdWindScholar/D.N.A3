@@ -27,6 +27,7 @@ import seekfd
 if os.name == 'nt':
     import ctypes
     from tkinter.filedialog import askopenfilename
+
     ctypes.windll.kernel32.SetConsoleTitleW("DNA-3")
 else:
     sys.stdout.write("\x1b]2;DNA-3\x07")
@@ -314,46 +315,18 @@ def check_permissions():
     menu_once()
 
 
-def find_file(path, rule, flag=1):
+def find_file(path, rule):
     finds = []
-    if flag == 1:
-        for (root, lists, files) in os.walk(path):
-            for file in files:
-                if re.search(rule, os.path.basename(file)):
-                    finds.append(os.path.join(root, file))
-
-    elif flag == 2:
-        parent_depth = len(path.split(os.path.sep))
-        for (parent, _, filenames) in os.walk(path, topdown=True):
-            for filename in filenames:
-                if len(os.path.join(parent, filename).split(os.path.sep)) == parent_depth:
-                    if re.search(rule, os.path.basename(filename)):
-                        finds.append(filename)
-
-    elif flag == 3:
-        for (cur_path, cur_dirs, cur_files) in os.walk(path):
-            for name in cur_files:
-                if name.endswith(rule):
-                    finds.append(os.path.join(cur_path, name))
-
-    elif flag == 4:
-        for (parent, dirnames, filenames) in os.walk(path):
-            for dirname in dirnames:
-                finds.append(os.path.join(parent, dirname))
-
-            for filename in filenames:
-                finds.append(os.path.join(parent, filename))
-
-    elif flag == 5:
-        with open(path, "r") as f:
-            return [i.split()[0] for i in f]
-
+    for (root, lists, files) in os.walk(path):
+        for file in files:
+            if re.search(rule, os.path.basename(file)):
+                finds.append(os.path.join(root, file))
     return finds
 
 
 def kill_avb(project):
     for tab in find_file(project, "^fstab.*?"):
-        print("> 解除AVB加密: " + tab)
+        print(f"> 解除AVB加密: {tab}")
         with open(tab, "r") as sf:
             details = sf.read()
         details = re.sub("avb.*?,", "", details)
