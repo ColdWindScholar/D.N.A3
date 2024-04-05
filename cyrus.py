@@ -432,11 +432,10 @@ def patch_twrp(BOOTIMG):
 
 
 def patch_magisk(BOOTIMG):
+    MAGISK_MANIFEST = {}
     if os.path.isfile(MAGISK_JSON):
         with codecs.open(MAGISK_JSON, "r", "utf-8") as manifest_file:
             MAGISK_MANIFEST = json.load(manifest_file)
-    else:
-        MAGISK_MANIFEST = {}
     default_manifest = {
         'CLASS': "alpha",
         'KEEPVERITY': "true",
@@ -715,12 +714,10 @@ def repack_super():
 
 
 def walk_contexts(contexts):
-    f3 = open(contexts, "r", encoding="utf-8")
+    with open(contexts, "r", encoding="utf-8") as f3:
+        content = [x.strip() for x in f3.readlines()]
     text_list = []
     s = set()
-    document = f3.readlines()
-    f3.close()
-    content = [x.strip() for x in document]
     for x in range(0, len(content)):
         url = content[x]
         if url not in s:
@@ -728,7 +725,6 @@ def walk_contexts(contexts):
             text_list.append(url)
         if os.path.isfile(contexts):
             os.remove(contexts)
-
     with open(contexts, "a+", encoding="utf-8") as f:
         for i in range(len(text_list)):
             f.write(str(text_list[i]) + "\n")
