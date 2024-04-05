@@ -736,20 +736,16 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
             blocks = math.ceil(int(size) / int(block_size))
             mkimage_cmd = f"make_ext4fs -J -T {timestamp} -S {contexts} -l {size} -L {label} -a /{label} {distance} {source}"
             mke2fs_a_cmd = f"mke2fs -O ^has_journal,^metadata_csum,extent,huge_file,^flex_bg,^64bit,uninit_bg,dir_nlink,extra_isize -t {fs_variant} -b {block_size} -L {label} -I 256 -M {mount_point} -m 0 -q -F {distance} {blocks}"
-            e2fsdroid_a_cmd = "e2fsdroid -T {0} -C {1} -S {2} -f {3} -a /{4} -e {5}".format(
-                timestamp, fsconfig, contexts, source, label, distance)
+            e2fsdroid_a_cmd = f"e2fsdroid -T {timestamp} -C {fsconfig} -S {contexts} -f {source} -a /{label} -e {distance}"
         else:
             size = fsize
             if int(SETUP_MANIFEST["ANDROID_SDK"]) <= 9:
                 read = "rw"
-                mkimage_cmd = "make_ext4fs -J -T {0} -S {1} -l {2} -L {3} -a /{3} {4} {5}".format(
-                    timestamp, contexts, size, label, distance, source)
+                mkimage_cmd = f"make_ext4fs -J -T {timestamp} -S {contexts} -l {size} -L {label} -a /{label} {distance} {source}"
             else:
-                mkimage_cmd = "make_ext4fs -T {0} -S {1} -l {2} -L {3} -a /{3} {4} {5}".format(
-                    timestamp, contexts, size, label, distance, source)
+                mkimage_cmd = f"make_ext4fs -T {timestamp} -S {contexts} -l {size} -L {label} -a /{label} {distance} {source}"
             mke2fs_a_cmd = f"mke2fs -O ^has_journal,^metadata_csum,extent,huge_file,^flex_bg,^64bit,uninit_bg,dir_nlink,extra_isize -t {fs_variant} -b {block_size} -L {label} -I 256 -N {inodes} -M {mount_point} -m 0 -g {per_group} -q -F {distance} {blocks}"
-            e2fsdroid_a_cmd = "e2fsdroid -T {0} -C {1} -S {2} -f {3} -a /{4} -e -s {5}".format(
-                timestamp, fsconfig, contexts, source, label, distance)
+            e2fsdroid_a_cmd = f"e2fsdroid -T {timestamp} -C {fsconfig} -S {contexts} -f {source} -a /{label} -e -s {distance}"
     else:
         fs_variant = "erofs"
         mkerofs_cmd = "mkfs.erofs "
@@ -759,9 +755,8 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
             mkerofs_cmd += "-zlz4hc "
         elif SETUP_MANIFEST["RESIZE_EROFSIMG"] == "2":
             mkerofs_cmd += "-zlz4 "
-        mkerofs_cmd += "-T{0} --mount-point=/{1} --fs-config-file={2} --file-contexts={3} {4} {5}".format(
-            timestamp, label, fsconfig, contexts, distance, source)
-    printinform = "Size:{}|FsT:{}|FsR:{}|Sparse:{}".format(size, fs_variant, read, SETUP_MANIFEST["REPACK_SPARSE_IMG"])
+        mkerofs_cmd += f"-T{timestamp} --mount-point=/{label} --fs-config-file={fsconfig} --file-contexts={contexts} {distance} {source}"
+    printinform = f"Size:{size}|FsT:{fs_variant}|FsR:{read}|Sparse:{SETUP_MANIFEST['REPACK_SPARSE_IMG']}"
     if SETUP_MANIFEST["REPACK_EROFS_IMG"] == "0":
         if SETUP_MANIFEST["RESIZE_IMG"] == "1" and SETUP_MANIFEST["REPACK_TO_RW"] == "1":
             printinform += "|Resize:1"
