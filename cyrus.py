@@ -9,7 +9,7 @@ import subprocess
 import sys
 import time
 import zipfile
-from easygui import fileopenbox
+from tkinter.filedialog import askopenfilename
 import requests
 from rich.console import Console
 from rich.progress import Progress
@@ -1424,9 +1424,8 @@ def choose_zrom(flag=0):
     os.system('cls' if os.name == 'nt' else 'clear')
     if flag == 1:
         print('\x1b[0;33m> 选择固件:\x1b[0m')
-        sFilePath = fileopenbox(msg='选择一个固件', default='*.zip')
-
-        if sFilePath is not None:
+        sFilePath = askopenfilename(title='选择一个固件', filetypes=(("zip", "*.mpk"),))
+        if sFilePath:
             extract_zrom(sFilePath)
     else:
         print('\x1b[0;33m> 固件列表\x1b[0m')
