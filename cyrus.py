@@ -1151,12 +1151,12 @@ def decompress_win(infile_list):
                 appendf("\n".join((str(k) for k in fsconfig_0)), "%s_fsconfig.txt" % i)
             if contexts_0:
                 contexts_0.sort()
-                SAR = False
+                sar = False
                 for c in contexts_0:
                     if re.search(f"{i}/system/build\\.prop ", c):
-                        SAR = True
+                        sar = True
                         break
-                if SAR:
+                if sar:
                     contexts_0.insert(0, "/ u:object_r:rootfs:s0")
                     contexts_0.insert(1, "/{}(/.*)? u:object_r:rootfs:s0".format(i))
                     contexts_0.insert(2, "/{} u:object_r:rootfs:s0".format(i))
@@ -1240,32 +1240,32 @@ def extract_zrom(rom):
     elif 'run.sh' in zip_lists:
         if not os.path.isdir(MOD_DIR):
             os.makedirs(MOD_DIR)
-        ModName = os.path.basename(rom).rsplit('.', 1)[0].replace(' ', '_')
-        SUB_DIR = MOD_DIR + 'DNA_' + ModName
-        if not os.path.isdir(SUB_DIR):
-            DISPLAY(f'是否安装插件: {ModName} ? [1/0]: ', 2, '')
+        mod_name = os.path.basename(rom).rsplit('.', 1)[0].replace(' ', '_')
+        sub_dir = MOD_DIR + 'DNA_' + mod_name
+        if not os.path.isdir(sub_dir):
+            DISPLAY(f'是否安装插件: {mod_name} ? [1/0]: ', 2, '')
             if input() != '0':
-                fantasy_zip.extractall(SUB_DIR)
+                fantasy_zip.extractall(sub_dir)
                 fantasy_zip.close()
-                if os.path.isfile(SUB_DIR + os.sep + 'run.sh'):
+                if os.path.isfile(sub_dir + os.sep + 'run.sh'):
                     if os.name == 'nt':
-                        change_permissions_recursive(SUB_DIR, 0o777)
+                        change_permissions_recursive(sub_dir, 0o777)
                     print('\x1b[1;31m\n 安装完成 !!!\x1b[0m')
                 else:
-                    rmdire(SUB_DIR)
+                    rmdire(sub_dir)
                     print('\x1b[1;31m\n 安装失败 !!!\x1b[0m')
             else:
-                DISPLAY(f'已安装插件: {ModName}，是否删除原插件后安装 ? [0/1]: ', 2, '')
+                DISPLAY(f'已安装插件: {mod_name}，是否删除原插件后安装 ? [0/1]: ', 2, '')
                 if input() == '1':
-                    rmdire(SUB_DIR)
-                    fantasy_zip.extractall(SUB_DIR)
+                    rmdire(sub_dir)
+                    fantasy_zip.extractall(sub_dir)
                     fantasy_zip.close()
-                    if os.path.isfile(SUB_DIR + os.sep + 'run.sh'):
+                    if os.path.isfile(sub_dir + os.sep + 'run.sh'):
                         if os.name == 'nt':
-                            change_permissions_recursive(SUB_DIR, 0o777)
+                            change_permissions_recursive(sub_dir, 0o777)
                         print('\x1b[1;31m\n 安装完成 !!!\x1b[0m')
                     else:
-                        rmdire(SUB_DIR)
+                        rmdire(sub_dir)
                         print('\x1b[1;31m\n 安装失败 !!!\x1b[0m')
     else:
         able = 5
@@ -1331,9 +1331,9 @@ def choose_zrom(flag=0):
     os.system('cls' if os.name == 'nt' else 'clear')
     if flag == 1:
         print('\x1b[0;33m> 选择固件:\x1b[0m')
-        sFilePath = askopenfilename(title='选择一个固件', filetypes=(("zip", "*.zip"),))
-        if sFilePath:
-            extract_zrom(sFilePath)
+        s_file_path = askopenfilename(title='选择一个固件', filetypes=(("zip", "*.zip"),))
+        if s_file_path:
+            extract_zrom(s_file_path)
     else:
         print('\x1b[0;33m> 固件列表\x1b[0m')
         print(f"固件放置路径: {ROM_DIR}")
@@ -1383,17 +1383,17 @@ def download_rom(rom, url):
 def download_zrom():
     url = input("> 输入zip直链: ")
     if url:
-        sFilePath = ROM_DIR + url.split("/")[-1]
-        if not os.path.isfile(sFilePath):
-            download_rom(sFilePath, url)
+        s_file_path = ROM_DIR + url.split("/")[-1]
+        if not os.path.isfile(s_file_path):
+            download_rom(s_file_path, url)
 
 
 def creat_project():
     os.system("cls" if os.name == "nt" else "clear")
     print("\x1b[1;31m> 新建工程:\x1b[0m\n")
-    CREAT_NAME = input("  输入名称【不能有空格、特殊符号】: DNA_").strip().rstrip("\\").replace(" ", "_")
-    if CREAT_NAME:
-        V.project = "DNA_" + CREAT_NAME
+    creat_name = input("  输入名称【不能有空格、特殊符号】: DNA_").strip().rstrip("\\").replace(" ", "_")
+    if creat_name:
+        V.project = "DNA_" + creat_name
         if not os.path.isdir(V.project):
             os.mkdir(V.project)
             menu_main(V.project)
@@ -1738,8 +1738,7 @@ def menu_main(project):
                                 if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
                                     V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
                                     V.SETUP_MANIFEST['REPACK_TO_RW'] = '1'
-                            elif V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST[
-                                'REPACK_TO_RW'] == '0':
+                            elif V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '0':
                                 if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
                                     V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
                                     V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
