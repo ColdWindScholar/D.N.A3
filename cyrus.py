@@ -666,8 +666,8 @@ def walk_contexts(contexts):
         if os.path.isfile(contexts):
             os.remove(contexts)
     with open(contexts, "a+", encoding="utf-8") as f:
-        for i in range(len(text_list)):
-            f.write(str(text_list[i]) + "\n")
+        for i in text_list:
+            f.write(i + "\n")
 
 
 def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
@@ -1368,7 +1368,7 @@ def choose_zrom(flag=0):
     os.system('cls' if os.name == 'nt' else 'clear')
     if flag == 1:
         print('\x1b[0;33m> 选择固件:\x1b[0m')
-        sFilePath = askopenfilename(title='选择一个固件', filetypes=(("zip", "*.mpk"),))
+        sFilePath = askopenfilename(title='选择一个固件', filetypes=(("zip", "*.zip"),))
         if sFilePath:
             extract_zrom(sFilePath)
     else:
