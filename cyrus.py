@@ -10,7 +10,7 @@ import time
 import zipfile
 from glob import glob
 from hashlib import sha1
-from tkinter.filedialog import askopenfilename
+
 
 import requests
 from rich import print as echo
@@ -27,7 +27,7 @@ import seekfd
 
 if os.name == 'nt':
     import ctypes
-
+    from tkinter.filedialog import askopenfilename
     ctypes.windll.kernel32.SetConsoleTitleW("DNA-3")
 else:
     sys.stdout.write("\x1b]2;DNA-3\x07")
