@@ -867,10 +867,8 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
             with open(new_op_list, "w", encoding="UTF-8", newline="\n") as ST:
                 ST.write(CONTENT)
         renew_size = os.path.getsize(distance)
-        with open(new_op_list, "r", encoding="UTF-8") as f_r:
-            lines = f_r.readlines()
-        with open(new_op_list, "w", encoding="UTF-8") as f_w:
-            for line in lines:
+        with open(new_op_list, "w", encoding="UTF-8") as f_w, open(new_op_list, "r", encoding="UTF-8") as f_r:
+            for line in f_r.readlines():
                 if "resize " + label + " " in line:
                     line = "resize " + label + " " + str(renew_size) + "\n"
                 elif "resize " + label + "_a " in line:
