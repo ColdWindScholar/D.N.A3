@@ -616,8 +616,7 @@ def repack_super():
                     if os.path.isfile(new_img_a):
                         os.remove(img_a)
                         img_a = new_img_a
-                image_size = imgextractor.ULTRAMAN().LEMON(img_a)
-                argvs += f'--partition {i}_a:readonly:{image_size}:{V.SETUP_MANIFEST["GROUP_NAME"]}_a --image {i}_a={img_a} --partition {i}_b:readonly:0:{V.SETUP_MANIFEST["GROUP_NAME"]}_b '
+                argvs += f'--partition {i}_a:readonly:{imgextractor.ULTRAMAN().LEMON(img_a)}:{V.SETUP_MANIFEST["GROUP_NAME"]}_a --image {i}_a={img_a} --partition {i}_b:readonly:0:{V.SETUP_MANIFEST["GROUP_NAME"]}_b '
     else:
         argvs += '--metadata-slots 2 '
         for i in parts:

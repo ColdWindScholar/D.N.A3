@@ -188,6 +188,8 @@ class ULTRAMAN(object):
 
     def LEMON(self, target):
         from seekfd import gettype
+        if not os.path.exists(target):
+            return 0
         target_type = gettype(target)
         if target_type == 'sparse':
             return self.__ImgSizeFromSparseFile(target)
