@@ -140,7 +140,7 @@ def DISPLAY(message, flag=1, end='\n'):
     print(f"\x1b[1;3{flags[flag]}m [ {time.strftime('%H:%M:%S', time.localtime())} ]\t {message} \x1b[0m", end=end)
 
 
-def GET_DIR_SIZE(ddir, max_=1.06, flag=1):
+def GET_DIR_SIZE(ddir, max_=1.06):
     size = 0
     for (root, dirs, files) in os.walk(ddir):
         for name in files:
@@ -149,10 +149,7 @@ def GET_DIR_SIZE(ddir, max_=1.06, flag=1):
                     size += os.path.getsize(os.path.join(root, name))
                 except:
                     pass
-
-    if flag == 1:
-        return int(size * max_)
-    return int(size)
+    return int(size * max_)
 
 
 def ceil(x):
