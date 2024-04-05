@@ -622,8 +622,7 @@ def repack_super():
                         img_a = new_img_a
                 image_size = imgextractor.ULTRAMAN().LEMON(img_a)
                 group_size_a += int(image_size)
-                argvs += '--partition {0}_a:readonly:{1}:{2}_a --image {0}_a={3} --partition {0}_b:readonly:0:{2}_b '.format(
-                    i, image_size, SETUP_MANIFEST['GROUP_NAME'], img_a)
+                argvs += f'--partition {i}_a:readonly:{image_size}:{SETUP_MANIFEST["GROUP_NAME"]}_a --image {i}_a={img_a} --partition {i}_b:readonly:0:{SETUP_MANIFEST["GROUP_NAME"]}_b '
     else:
         argvs += '--metadata-slots 2 '
         for i in parts:
@@ -669,21 +668,8 @@ def repack_super():
     if int(group_size_b) <= half_size:
         group_size_b = half_size
 
-    argvs += '--group {0}_a:{1} --group {0}_b:{2} --output {3} '.format(
-        SETUP_MANIFEST['GROUP_NAME'],
-        str(group_size_a),
-        str(group_size_b),
-        DNA_DIST_DIR + 'super.img')
-    printinform2 = '重新合成: super.img <Size:{}|Vab:{}|Sparse:{}>'.format(SETUP_MANIFEST['SUPER_SIZE'],
-                                                                           SETUP_MANIFEST['IS_VAB'],
-                                                                           SETUP_MANIFEST['SUPER_SPARSE'])
-    DISPLAY(printinform2)
-    printinform2 = '重新合成: super.img <Size:{}|Vab:{}|Sparse:{}>'.format(
-        SETUP_MANIFEST['SUPER_SIZE'],
-        SETUP_MANIFEST['IS_VAB'],
-        SETUP_MANIFEST['SUPER_SPARSE']
-    )
-
+    argvs += f'--group {SETUP_MANIFEST["GROUP_NAME"]}_a:{group_size_a} --group {SETUP_MANIFEST["GROUP_NAME"]}_b:{group_size_b} --output {DNA_DIST_DIR + "super.img"} '
+    printinform2 = f'重新合成: super.img <Size:{SETUP_MANIFEST["SUPER_SIZE"]}|Vab:{SETUP_MANIFEST["IS_VAB"]}|Sparse:{SETUP_MANIFEST["SUPER_SPARSE"]}>'
     DISPLAY(printinform2)
 
     with CoastTime():
