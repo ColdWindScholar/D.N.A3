@@ -1786,9 +1786,8 @@ def menu_main(project):
                     choose = input('> {0}选择提取方式:  [0]全盘提取  [1]指定镜像{1} >> '.format(RED, CLOSE))
                     decompress_bin(infile, outdir, orzdir, choose)
             elif int(option) == 2:
-                infile = glob.glob(DNA_TEMP_DIR + '*.br')
                 ASK = input('> 是否开启静默 [0/1]: ') != '1'
-                decompress(infile, int(option))
+                decompress(glob.glob(DNA_TEMP_DIR + '*.br'), int(option))
             elif int(option) == 3:
                 infile = glob.glob(DNA_TEMP_DIR + '*.dat')
                 ASK = input('> 是否开启静默 [0/1]: ') != '1'
@@ -1797,9 +1796,8 @@ def menu_main(project):
                 ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 decompress(infile, int(option))
             elif int(option) == 4:
-                infile = glob.glob(DNA_TEMP_DIR + '*.img')
                 ASK = input('> 是否开启静默 [0/1]: ') != '1'
-                decompress(infile, int(option))
+                decompress(glob.glob(DNA_TEMP_DIR + '*.img'), int(option))
             elif int(option) == 5:
                 infile = glob.glob(DNA_TEMP_DIR + '*.win[0-9][0-9][0-9]')
                 for i in glob.glob(DNA_TEMP_DIR + '*.win*'):
