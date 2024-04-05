@@ -1884,30 +1884,10 @@ def menu_main(project):
                                 SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                             if ASK:
-                                DISPLAY(f'是否合成: {f_basename}.img [1/0]: ', end='')
+                                DISPLAY(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
                                 if input() != '1':
                                     continue
                             recompress(source, fsconfig, contexts, infojson, int(option))
-                source = DNA_MAIN_DIR + f_basename
-                if os.path.isdir(source):
-                    fsconfig = DNA_CONF_DIR + f_basename + '_fsconfig.txt'
-                    contexts = DNA_CONF_DIR + f_basename + '_contexts.txt'
-                    infojson = DNA_CONF_DIR + f_basename + '_info.txt'
-                    if not os.path.isfile(infojson):
-                        infojson = None
-                    if SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and SETUP_MANIFEST['REPACK_TO_RW'] == '1':
-                        if SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
-                            SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
-                            SETUP_MANIFEST['REPACK_TO_RW'] = '1'
-                    elif SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and SETUP_MANIFEST['REPACK_TO_RW'] == '0':
-                        if SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
-                            SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
-                            SETUP_MANIFEST['REPACK_TO_RW'] = '0'
-                    if os.path.isfile(contexts) and os.path.isfile(fsconfig):
-                        if ASK:
-                            DISPLAY(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
-                            if input() == '1':
-                                recompress(source, fsconfig, contexts, infojson, int(option))
             elif int(option) == 10:
                 infile = glob.glob(DNA_CONF_DIR + '*_contexts.txt')
                 ASK = input('> 是否开启静默 [0/1]: ') != '1'
