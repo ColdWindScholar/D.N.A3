@@ -1555,10 +1555,13 @@ def menu_more(project):
                 patch_addons()
             input('> 任意键继续')
         elif int(option) in [8, 9]:
+            currentbootimg = None
             if os.path.isfile(V.DNA_DIST_DIR + "boot.img"):
                 currentbootimg = V.DNA_DIST_DIR + "boot.img"
             elif os.path.isfile(V.DNA_TEMP_DIR + "boot.img"):
                 currentbootimg = V.DNA_TEMP_DIR + "boot.img"
+            if not currentbootimg:
+                continue
             if os.path.isfile(currentbootimg):
                 with CoastTime():
                     patch_twrp(currentbootimg) if int(option) == 8 else patch_magisk(currentbootimg)
