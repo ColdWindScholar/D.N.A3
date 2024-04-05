@@ -13,6 +13,7 @@ from tkinter.filedialog import askopenfilename
 import requests
 from rich.console import Console
 from rich.progress import Progress
+from rich import print as echo
 import tarfile
 import devdex
 import extract_payload
@@ -46,11 +47,11 @@ if platform.machine() in ('aarch64', 'armv8l', 'arm64'):
         ROM_DIR = "/sdcard/Download/"
 BIN_PATH = PWD_DIR + f"local/bin/{ostype}/{platform.machine()}/"
 
-BLUE, RED, WHITE, CYAN, YELLOW, MAGENTA, GREEN, BOLD, CLOSE = ('\x1b[94m', '\x1b[91m',
-                                                               '\x1b[97m', '\x1b[36m',
-                                                               '\x1b[93m', '\x1b[1;35m',
-                                                               '\x1b[1;32m',
-                                                               '\x1b[1m', '\x1b[0m')
+RED, WHITE, CYAN, YELLOW, MAGENTA, GREEN, BOLD, CLOSE = ('\x1b[91m',
+                                                         '\x1b[97m', '\x1b[36m',
+                                                         '\x1b[93m', '\x1b[1;35m',
+                                                         '\x1b[1;32m',
+                                                         '\x1b[1m', '\x1b[0m')
 
 
 class global_value(object):
@@ -130,9 +131,6 @@ class CoastTime:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         print(f"> Coast Time:{time.perf_counter() - self.t:.8f} s")
-
-
-
 
 
 def DISPLAY(message, flag=1, end='\n'):
@@ -1093,7 +1091,7 @@ def decompress_img(source, distance, keep=1):
                     os.remove(source.rsplit('.', 1)[0] + '.unsparse.img')
         else:
             if file_type != 'super':
-                print('\x1b[1;31m [Failed]\x1b[0m')
+                echo('[red][Failed][/]')
 
 
 def decompress_dat(transfer, source, distance, keep=0):
