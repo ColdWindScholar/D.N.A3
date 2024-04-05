@@ -748,7 +748,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
     walk_contexts(contexts)
     source = source.replace("\\", '/')
     if SETUP_MANIFEST["UTC"].lower() == "live":
-        timestamp = str(time.time()).split(".")[0]
+        timestamp = str(int(time.time()))
     else:
         timestamp = SETUP_MANIFEST["UTC"]
     read = "ro"
