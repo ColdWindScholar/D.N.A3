@@ -651,22 +651,9 @@ def repack_super():
         return
     if V.SETUP_MANIFEST['SUPER_SPARSE'] == '1':
         argvs += '--sparse '
-    if V.SETUP_MANIFEST['IS_VAB'] == '1':
-        reserve_size = int(V.SETUP_MANIFEST['SUPER_SECTOR']) * 1024
-        half_size = int(V.SETUP_MANIFEST['SUPER_SIZE']) - reserve_size
-        if int(group_size_a) <= half_size:
-            group_size_a = str(half_size)
-            group_size_b = str(half_size)
-
-    half_size = int(V.SETUP_MANIFEST['SUPER_SIZE']) / 2
-    if int(group_size_a) <= half_size:
-        group_size_a = half_size
-
-    if int(group_size_b) <= half_size:
-        group_size_b = half_size
-    argvs += f'--group {V.SETUP_MANIFEST["GROUP_NAME"]}_a:{group_size_a} --group {V.SETUP_MANIFEST["GROUP_NAME"]}_b:{group_size_b} --output {V.DNA_DIST_DIR + "super.img"} '
-    printinform2 = f'重新合成: super.img <Size:{V.SETUP_MANIFEST["SUPER_SIZE"]}|Vab:{V.SETUP_MANIFEST["IS_VAB"]}|Sparse:{V.SETUP_MANIFEST["SUPER_SPARSE"]}>'
-    DISPLAY(printinform2)
+    argvs += f'--group {V.SETUP_MANIFEST["GROUP_NAME"]}_a:{V.SETUP_MANIFEST["SUPER_SIZE"]} --group {V.SETUP_MANIFEST["GROUP_NAME"]}_b:{V.SETUP_MANIFEST["SUPER_SIZE"]} --output {V.DNA_DIST_DIR + "super.img"} '
+    DISPLAY(f'重新合成: super.img <Size:{V.SETUP_MANIFEST["SUPER_SIZE"]}|Vab:{V.SETUP_MANIFEST["IS_VAB"]}|Sparse:{V.SETUP_MANIFEST["SUPER_SPARSE"]}>')
+    DISPLAY(f"包含分区：{'|'.join(parts)}")
     with CoastTime():
         call(argvs)
     try:
