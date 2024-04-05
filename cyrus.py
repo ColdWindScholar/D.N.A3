@@ -1739,7 +1739,7 @@ def menu_modules():
 
 def RunModules(sub):
     os.system("cls" if os.name == "nt" else "clear")
-    print("\x1b[1;31m> 执行插件:\x1b[0m " + os.path.basename(sub) + "\n")
+    print(f"\x1b[1;31m> 执行插件:\x1b[0m {os.path.basename(sub)}\n")
     Shell_Sub = sub + os.sep + "run.sh"
     if os.path.isfile(Shell_Sub):
         call(f"busybox bash {Shell_Sub} {DNA_MAIN_DIR}")
