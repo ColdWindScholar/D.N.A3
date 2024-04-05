@@ -576,7 +576,7 @@ def patch_addons():
         DISPLAY("复制 default/{}/* ...".format(SETUP_MANIFEST["ANDROID_SDK"]))
         try:
             shutil.copytree(os.path.join(PWD_DIR, "local", "etc", "devices", "default", SETUP_MANIFEST["ANDROID_SDK"],
-                                  "addons"), DNA_MAIN_DIR, dirs_exist_ok=True)
+                                         "addons"), DNA_MAIN_DIR, dirs_exist_ok=True)
         except Exception as e:
             print("Error copying files:", e)
     if os.path.isdir(
