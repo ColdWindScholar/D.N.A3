@@ -498,8 +498,7 @@ def patch_magisk(BOOTIMG):
                     CONFIGS += "SHA1={}".format(SHA1)
                 with open("config", "w", newline="\n") as cn:
                     cn.write(CONFIGS)
-                if MAGISK_MANIFEST["IS_64BIT"] == "true":
-                    is_64bit = True
+                is_64bit = MAGISK_MANIFEST["IS_64BIT"] == "true"
                 target = MAGISK_MANIFEST["TARGET"]
                 dict = {'magiskinit': "lib/armeabi-v7a/libmagiskinit.so",
                         'magisk32': "lib/armeabi-v7a/libmagisk32.so",
