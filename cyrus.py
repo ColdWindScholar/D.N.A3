@@ -648,8 +648,7 @@ def repack_super():
                 group_size_a += int(image_size_a)
                 image_size_b = imgextractor.ULTRAMAN().LEMON(img_b)
                 group_size_b += int(image_size_b)
-                argvs += '--partition {0}_a:readonly:{1}:{2}_a --image {0}_a={3} --partition {0}_b:readonly:{4}:{2}_b --image {0}_b={5} '.format(
-                    i, image_size_a, SETUP_MANIFEST['GROUP_NAME'], img_a, image_size_b, img_b)
+                argvs += f'--partition {i}_a:readonly:{image_size_a}:{SETUP_MANIFEST["GROUP_NAME"]}_a --image {i}_a={img_a} --partition {i}_b:readonly:{image_size_b}:{SETUP_MANIFEST["GROUP_NAME"]}_b --image {i}_b={img_b} '
 
     if group_size_a == 0:
         PAUSE('> 未发现002_DNA文件夹下存在可用镜像文件')
