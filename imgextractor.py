@@ -4,6 +4,7 @@ import mmap
 import os
 import re
 import struct
+
 if os.name == 'nt':
     from ctypes import windll
     from ctypes.wintypes import LPCSTR, DWORD
@@ -259,8 +260,6 @@ class ULTRAMAN(object):
         dna_info = CONFIGS_DIR + self.FileName + '_info.txt'
         partition_size = os.path.getsize(self.OUTPUT_IMAGE_FILE)
 
-
-
         BLOCKSIZE = 1024
         LE32 = '<L'
         with open(self.OUTPUT_IMAGE_FILE, 'rb') as filesystem:
@@ -274,12 +273,12 @@ class ULTRAMAN(object):
         per_group = per_group
         label_raw = superblock[120:136]
         label = ''.join((chr(c) for c in label_raw))
-        manifest = {'a': '{}'.format(inode_count),
-                    'b': '{}'.format(block_size),
-                    'c': '{}'.format(per_group),
-                    'd': '{}'.format(label.strip(b'\x00'.decode())),
+        manifest = {'a': inode_count,
+                    'b': block_size,
+                    'c': per_group,
+                    'd': label.strip(b'\x00'.decode()),
                     'e': 'ext4',
-                    's': '{}'.format(partition_size)}
+                    's': partition_size}
 
         with codecs.open(dna_info, 'w', 'utf-8') as f:
             json.dump(manifest, f, indent=4)
