@@ -788,8 +788,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
     else:
         fs_variant = "erofs"
         mkerofs_cmd = "mkfs.erofs "
-        kernelversion = platform.uname().release
-        if not re.match("5.3", kernelversion):
+        if not re.match("5.3", platform.uname().release):
             mkerofs_cmd += "-E legacy-compress "
         if SETUP_MANIFEST["RESIZE_EROFSIMG"] == "1":
             mkerofs_cmd += "-zlz4hc "
