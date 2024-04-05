@@ -572,17 +572,16 @@ def patch_magisk(BOOTIMG):
 
 
 def patch_addons():
-    if os.path.isdir("{}local/etc/devices/default/{}/addons".format(PWD_DIR, SETUP_MANIFEST["ANDROID_SDK"])):
+    if os.path.isdir(f"{PWD_DIR}local/etc/devices/default/{SETUP_MANIFEST['ANDROID_SDK']}/addons"):
         DISPLAY("复制 default/{}/* ...".format(SETUP_MANIFEST["ANDROID_SDK"]))
-        source_dir = os.path.join(PWD_DIR, "local", "etc", "devices", "default", SETUP_MANIFEST["ANDROID_SDK"],
-                                  "addons")
         try:
-            shutil.copytree(source_dir, DNA_MAIN_DIR, dirs_exist_ok=True)
+            shutil.copytree(os.path.join(PWD_DIR, "local", "etc", "devices", "default", SETUP_MANIFEST["ANDROID_SDK"],
+                                  "addons"), DNA_MAIN_DIR, dirs_exist_ok=True)
         except Exception as e:
             print("Error copying files:", e)
-    if os.path.isdir("{}local/etc/devices/{}/{}/addons".format(PWD_DIR, SETUP_MANIFEST["DEVICE_CODE"],
-                                                               SETUP_MANIFEST["ANDROID_SDK"])):
-        DISPLAY("复制 {}/{}/* ...".format(SETUP_MANIFEST["DEVICE_CODE"], SETUP_MANIFEST["ANDROID_SDK"]))
+    if os.path.isdir(
+            f"{PWD_DIR}local/etc/devices/{SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/addons"):
+        DISPLAY(f"复制 {SETUP_MANIFEST['DEVICE_CODE']}/{SETUP_MANIFEST['ANDROID_SDK']}/* ...")
         source_dir = os.path.join(PWD_DIR, "local", "etc", "devices", SETUP_MANIFEST["DEVICE_CODE"],
                                   SETUP_MANIFEST["ANDROID_SDK"], "addons")
         destination_dir = os.path.join(DNA_MAIN_DIR)
