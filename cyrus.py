@@ -770,7 +770,6 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                         if V.SETUP_MANIFEST["REPACK_TO_RW"] == "1":
                             os.system(f"resize2fs -M {distance}")
         op_list = V.DNA_TEMP_DIR + "dynamic_partitions_op_list"
-        default_op_list = V.DNA_DIST_DIR + "dynamic_partitions_op_list_default"
         new_op_list = V.DNA_DIST_DIR + "dynamic_partitions_op_list"
         if os.path.isfile(op_list) or os.path.isfile(new_op_list):
             if not os.path.isfile(new_op_list):
@@ -794,16 +793,18 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                     for slot in ('_a', '_b'):
                         CONTENT += f"resize {partition}{slot} 4294967296\n"
 
-            with open(default_op_list, "w", encoding="UTF-8", newline="\n") as ST:
+            with open(new_op_list, "w", encoding="UTF-8", newline="\n") as ST:
                 ST.write(CONTENT)
         renew_size = os.path.getsize(distance)
-        with open(new_op_list, "w", encoding="UTF-8") as f_w, open(default_op_list, "r", encoding="UTF-8") as f_r:
-            for line in f_r.readlines():
-                if f"resize {label} " in line:
-                    line = f"resize {label} {renew_size}\n"
-                elif f"resize {label}_a " in line:
-                    line = f"resize {label}_a {renew_size}\n"
-                f_w.write(line)
+        with open(new_op_list, "r", encoding="UTF-8") as f_r:
+            data = f_r.readlines()
+            with open(new_op_list, "w", encoding="UTF-8") as f_w:
+                for line in data:
+                    if f"resize {label} " in line:
+                        line = f"resize {label} {renew_size}\n"
+                    elif f"resize {label}_a " in line:
+                        line = f"resize {label}_a {renew_size}\n"
+                    f_w.write(line)
 
         if SPARSE:
             DISPLAY("开始转换: sparse format ...")
