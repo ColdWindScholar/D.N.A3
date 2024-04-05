@@ -187,13 +187,12 @@ class ULTRAMAN(object):
             self.EXT4_EXTRACTOR()
 
     def LEMON(self, target):
-        size = ''
-        target_type = self.GetImageType(target)
-        if target_type == 'simg':
-            size = self.__ImgSizeFromSparseFile(target)
-        if target_type == 'img':
-            size = self.__ImgSizeFromRawFile(target)
-        return size
+        from seekfd import gettype
+        target_type = gettype(target)
+        if target_type == 'sparse':
+            return self.__ImgSizeFromSparseFile(target)
+        else:
+            return os.path.getsize(target)
 
     def APPLE(self, target):
         target_type = self.GetImageType(target)
