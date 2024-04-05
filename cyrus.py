@@ -994,7 +994,6 @@ def boot_utils(source, distance, flag=1):
     elif flag == 2:
         DISPLAY(f"重新合成: {os.path.basename(source)}.img")
         dboot(source, distance)
-    PAUSE()
 
 
 def decompress_img(source, distance, keep=1):
