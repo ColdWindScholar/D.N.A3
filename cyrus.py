@@ -148,7 +148,7 @@ def GET_DIR_SIZE(ddir, max_=1.06):
                 try:
                     size += os.path.getsize(os.path.join(root, name))
                 except:
-                    pass
+                    ...
     return int(size * max_)
 
 
@@ -202,7 +202,7 @@ def LOAD_SETUP_JSON():
         try:
             open(file_path, 'w').close()
         except Exception:
-            pass
+            ...
     if not os.path.isfile(f"{add_dir}/reduce.txt"):
         with open(f"{add_dir}/reduce.txt", "w", encoding='utf-8', newline='\n') as f:
             f.write(
@@ -335,7 +335,7 @@ def kill_avb(project):
 
 def kill_dm(project):
     for tab in find_file(project, "^fstab.*?"):
-        print("> 解除DM加密: " + tab)
+        print(f"> 解除DM加密: {tab}")
         with open(tab, "r") as sf:
             details = sf.read()
         details = re.sub("forceencrypt=", "encryptable=", details)
@@ -516,7 +516,7 @@ def patch_magisk(BOOTIMG):
                             os.makedirs(
                                 V.DNA_MAIN_DIR + "system" + os.sep + "system" + os.sep + "data-app" + os.sep + "Magisk")
                         except:
-                            pass
+                            ...
                         else:
                             destination_path = os.path.join(V.DNA_MAIN_DIR, 'system', 'system', 'data-app',
                                                             'Magisk',
@@ -545,10 +545,8 @@ def patch_addons():
         DISPLAY(f"复制 {V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/* ...")
         source_dir = os.path.join(PWD_DIR, "local", "etc", "devices", V.SETUP_MANIFEST["DEVICE_CODE"],
                                   V.SETUP_MANIFEST["ANDROID_SDK"], "addons")
-        destination_dir = os.path.join(V.DNA_MAIN_DIR)
-
         try:
-            shutil.copytree(source_dir, destination_dir, dirs_exist_ok=True)
+            shutil.copytree(source_dir, V.DNA_MAIN_DIR, dirs_exist_ok=True)
         except Exception as e:
             print("Error copying files:", e)
 
@@ -620,7 +618,7 @@ def repack_super():
                     if os.path.isfile(os.path.join(V.DNA_DIST_DIR, i + slot + '.img')):
                         os.remove(os.path.join(V.DNA_DIST_DIR, i + slot + '.img'))
     except:
-        pass
+        ...
 
 
 def walk_contexts(contexts):
@@ -706,7 +704,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
             try:
                 os.remove(distance)
             except:
-                pass
+                ...
     elif int(V.SETUP_MANIFEST["ANDROID_SDK"]) <= 9:
         call(mkimage_cmd)
     else:
@@ -716,7 +714,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                 try:
                     os.remove(distance)
                 except:
-                    pass
+                    ...
     if os.path.isfile(distance):
         print(" Done")
         if RESIZE2RW and os.name == 'posix':
@@ -773,7 +771,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                 try:
                     os.remove(distance)
                 except:
-                    pass
+                    ...
             if os.path.isfile(distance.rsplit(".", 1)[0] + "_sparse.img"):
                 source_file = distance.rsplit(".", 1)[0] + "_sparse.img"
                 destination_file = distance
@@ -985,11 +983,11 @@ def decompress_img(source, distance, keep=1):
                         try:
                             os.rename(img, new_source)
                         except:
-                            pass
+                            ...
                         new_distance = V.DNA_MAIN_DIR + os.path.basename(new_source).rsplit('.', 1)[0]
                         decompress_img(new_source, new_distance, keep=0)
             else:
-                print(F'> Pass, not support fs_type [{file_type}]')
+                print(F'> ..., not support fs_type [{file_type}]')
             distance = V.DNA_MAIN_DIR + os.path.basename(source).replace('.unsparse.img', '').replace('.img', '')
             if os.path.isdir(distance):
                 if os.path.isdir(V.DNA_MAIN_DIR + 'config'):
@@ -1040,7 +1038,7 @@ def decompress_dat(transfer, source, distance, keep=0):
                     try:
                         os.remove("{}.{}".format(source, i))
                     except:
-                        pass
+                        ...
 
     DISPLAY(f"正在分解: {os.path.basename(source)} ...", 3)
     sdat2img.main(transfer, source, distance)
@@ -1122,7 +1120,7 @@ def decompress_win(infile_list):
             try:
                 os.remove(i)
             except:
-                pass
+                ...
     parts = list(set(parts))
     for i in parts:
         if not os.path.isdir(V.DNA_MAIN_DIR + os.path.basename(i).rsplit('.', 1)[0]):
