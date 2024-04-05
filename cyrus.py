@@ -648,7 +648,7 @@ def repack_super():
 
     if group_size_a == 0:
         input('> 未发现002_DNA文件夹下存在可用镜像文件')
-        return None
+        return
     if V.SETUP_MANIFEST['SUPER_SPARSE'] == '1':
         argvs += '--sparse '
     if V.SETUP_MANIFEST['IS_VAB'] == '1':
@@ -664,14 +664,11 @@ def repack_super():
 
     if int(group_size_b) <= half_size:
         group_size_b = half_size
-
     argvs += f'--group {V.SETUP_MANIFEST["GROUP_NAME"]}_a:{group_size_a} --group {V.SETUP_MANIFEST["GROUP_NAME"]}_b:{group_size_b} --output {V.DNA_DIST_DIR + "super.img"} '
     printinform2 = f'重新合成: super.img <Size:{V.SETUP_MANIFEST["SUPER_SIZE"]}|Vab:{V.SETUP_MANIFEST["IS_VAB"]}|Sparse:{V.SETUP_MANIFEST["SUPER_SPARSE"]}>'
     DISPLAY(printinform2)
-
     with CoastTime():
         call(argvs)
-
     try:
         if os.path.isfile(os.path.join(V.DNA_DIST_DIR, 'super.img')):
             for i in parts:
