@@ -858,7 +858,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
             if SETUP_MANIFEST["IS_VAB"] == "1":
                 for partition in ('system_a', 'system_ext_a', 'product_a', 'vendor_a',
                                   'odm_a'):
-                    CONTENT += "resize {} 4294967296\n".format(partition)
+                    CONTENT += f"resize {partition} 4294967296\n"
 
             else:
                 for partition in ('system', 'system_ext', 'product', 'vendor', 'odm'):
@@ -1158,7 +1158,7 @@ def decompress_dat(transfer, source, distance, keep=0):
                     except:
                         pass
 
-    DISPLAY("正在分解: " + os.path.basename(source) + " ...", 3)
+    DISPLAY(f"正在分解: {os.path.basename(source) } ...", 3)
     sdat2img.main(transfer, source, distance)
     if os.path.isfile(distance):
         tTime = time.time() - sTime
@@ -1180,7 +1180,7 @@ def decompress_dat(transfer, source, distance, keep=0):
 
 def decompress_bro(transfer, source, distance, keep=0):
     sTime = time.time()
-    DISPLAY("正在分解: " + os.path.basename(source) + " ...", 3)
+    DISPLAY(f"正在分解: {os.path.basename(source)} ...", 3)
     call("brotli -df {} -o {}".format(source, distance))
     if os.path.isfile(distance):
         print("\x1b[1;32m [%ds]\x1b[0m" % (time.time() - sTime))
@@ -1374,14 +1374,14 @@ def extract_zrom(rom):
         PAUSE('> 破损的zip或不支持的zip类型')
         return
     if 'payload.bin' in zip_lists:
-        print('> 解压缩: ' + os.path.basename(rom))
+        print(f'> 解压缩: {os.path.basename(rom)}')
         envelop_project(project)
         infile = fantasy_zip.extract('payload.bin', DNA_TEMP_DIR)
         fantasy_zip.close()
         if os.path.isfile(DNA_TEMP_DIR + 'payload.bin'):
             outdir = DNA_TEMP_DIR
             orzdir = DNA_TEMP_DIR + 'orz' + os.sep
-            choose = input('> {0}选择提取方式:  [0]全盘提取  [1]指定镜像{1} >> '.format(RED, CLOSE))
+            choose = input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> ')
             decompress_bin(infile, outdir, orzdir, choose)
             menu_main(project)
     elif 'run.sh' in zip_lists:
@@ -1391,7 +1391,7 @@ def extract_zrom(rom):
         ModName = ModName.replace(' ', '_')
         SUB_DIR = MOD_DIR + 'DNA_' + ModName
         if not os.path.isdir(SUB_DIR):
-            DISPLAY('是否安装插件: ' + ModName + ' ? [1/0]: ', 2, '')
+            DISPLAY(f'是否安装插件: {ModName} ? [1/0]: ', 2, '')
             if input() != '0':
                 fantasy_zip.extractall(SUB_DIR)
                 fantasy_zip.close()
@@ -1403,7 +1403,7 @@ def extract_zrom(rom):
                     rmdire(SUB_DIR)
                     print('\x1b[1;31m\n 安装失败 !!!\x1b[0m')
             else:
-                DISPLAY('已安装插件: ' + ModName + '，是否删除原插件后安装 ? [0/1]: ', 2, '')
+                DISPLAY(f'已安装插件: {ModName}，是否删除原插件后安装 ? [0/1]: ', 2, '')
                 if input() == '1':
                     rmdire(SUB_DIR)
                     fantasy_zip.extractall(SUB_DIR)
