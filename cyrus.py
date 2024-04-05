@@ -450,24 +450,24 @@ def patch_magisk(BOOTIMG):
                     cn.write(CONFIGS)
                 is_64bit = MAGISK_MANIFEST["IS_64BIT"] == "true"
                 target = MAGISK_MANIFEST["TARGET"]
-                dict = {'magiskinit': "lib/armeabi-v7a/libmagiskinit.so",
+                magisk_dict = {'magiskinit': "lib/armeabi-v7a/libmagiskinit.so",
                         'magisk32': "lib/armeabi-v7a/libmagisk32.so",
                         'magisk64': ""}
                 if re.match("arm", target):
                     if is_64bit:
-                        dict["magiskinit"] = "lib/arm64-v8a/libmagiskinit.so"
-                        dict["magisk64"] = "lib/arm64-v8a/libmagisk64.so"
+                        magisk_dict["magiskinit"] = "lib/arm64-v8a/libmagiskinit.so"
+                        magisk_dict["magisk64"] = "lib/arm64-v8a/libmagisk64.so"
                 elif re.match("x86", target):
-                    dict["magiskinit"] = ('lib/x86/libmagiskinit.so',)
-                    dict["magisk32"] = "lib/x86/libmagisk32.so"
+                    magisk_dict["magiskinit"] = ('lib/x86/libmagiskinit.so',)
+                    magisk_dict["magisk32"] = "lib/x86/libmagisk32.so"
                     if is_64bit:
-                        dict["magiskinit"] = ('lib/x86_64/libmagiskinit.so',)
-                        dict["magisk64"] = "lib/x86_64/libmagisk64.so"
+                        magisk_dict["magiskinit"] = ('lib/x86_64/libmagiskinit.so',)
+                        magisk_dict["magisk64"] = "lib/x86_64/libmagisk64.so"
                 MAGISK_FILES = sorted(MAGISK_FILES, key=(lambda x: os.path.getmtime(x)), reverse=True)
                 MAGISK_FILE = MAGISK_FILES[0]
                 fantasy_zip = zipfile.ZipFile(MAGISK_FILE)
                 zip_lists = fantasy_zip.namelist()
-                for (k, v) in dict.items():
+                for (k, v) in magisk_dict.items():
                     if v in zip_lists:
                         fantasy_zip.extract(v)
                         if os.path.isfile(v):
@@ -1725,8 +1725,8 @@ def menu_main(project):
                                 if input() != '1':
                                     continue
                             recompress(source, fsconfig, contexts, infojson, 9)
-                    for file in infile:
-                        f_basename = os.path.basename(file).rsplit('_', 1)[0]
+                    for _file in infile:
+                        f_basename = os.path.basename(_file).rsplit('_', 1)[0]
                         source = V.DNA_MAIN_DIR + f_basename
                         if os.path.isdir(source):
                             fsconfig = V.DNA_CONF_DIR + f_basename + '_fsconfig.txt'
