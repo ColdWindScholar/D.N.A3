@@ -1119,11 +1119,7 @@ def decompress_img(source, distance, keep=1):
                             shutil.rmtree(DNA_MAIN_DIR + 'config')
 
         if os.path.isdir(distance):
-            if file_type != "ext":
-                tTime = time.time() - sTime
-                print('\x1b[1;32m %ds Done\x1b[0m' % tTime)
-            else:
-                print('\x1b[1;32m Done\x1b[0m')
+            print('\x1b[1;32m %ds Done\x1b[0m' % (time.time() - sTime))
             if keep == 0:
                 if os.path.isfile(source):
                     os.remove(source)
