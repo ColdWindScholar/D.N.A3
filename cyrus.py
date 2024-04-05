@@ -1536,7 +1536,7 @@ def download_rom(rom, url):
 
 def download_zrom():
     url = input("> 输入zip直链: ")
-    if url != "":
+    if url:
         rom = url.split("/")[-1]
         sFilePath = str(ROM_DIR + rom)
         if not os.path.isfile(sFilePath):
@@ -1548,7 +1548,7 @@ def creat_project():
     os.system("cls" if os.name == "nt" else "clear")
     print("\x1b[1;31m> 新建工程:\x1b[0m\n")
     CREAT_NAME = input("  输入名称【不能有空格、特殊符号】: DNA_")
-    if CREAT_NAME != "":
+    if CREAT_NAME:
         path = CREAT_NAME.strip()
         path = path.rstrip("\\")
         CC_NAME = path.replace(" ", "_")
