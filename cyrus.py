@@ -746,11 +746,9 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
     fspatch.main(source, fsconfig)
     walk_contexts(fsconfig)
     walk_contexts(contexts)
-    source = source.replace("\\", '/')
-    if SETUP_MANIFEST["UTC"].lower() == "live":
-        timestamp = str(int(time.time()))
-    else:
-        timestamp = SETUP_MANIFEST["UTC"]
+    if os.name == 'nt':
+        source = source.replace("\\", '/')
+    timestamp = str(int(time.time())) if SETUP_MANIFEST["UTC"].lower() == "live" else SETUP_MANIFEST["UTC"]
     read = "ro"
     RESIZE2RW = False
     SPARSE = (SETUP_MANIFEST["REPACK_SPARSE_IMG"] == "1")
