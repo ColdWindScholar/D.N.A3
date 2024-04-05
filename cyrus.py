@@ -357,32 +357,26 @@ def find_file(path, rule, flag=1):
 
 
 def kill_avb(project):
-    rule = "^fstab.*?"
-    fstab = find_file(project, rule)
-    if len(fstab) > 0:
-        for tab in fstab:
-            print("> 解除AVB加密: " + tab)
-            with open(tab, "r") as sf:
-                details = sf.read()
-            details = re.sub("avb.*?,", "", details)
-            details = re.sub(",avb,", ",", details)
-            details = re.sub(",avb_keys=.*", "", details)
-            with open(tab, "w") as tf:
-                tf.write(details)
+    for tab in find_file(project, "^fstab.*?"):
+        print("> 解除AVB加密: " + tab)
+        with open(tab, "r") as sf:
+            details = sf.read()
+        details = re.sub("avb.*?,", "", details)
+        details = re.sub(",avb,", ",", details)
+        details = re.sub(",avb_keys=.*", "", details)
+        with open(tab, "w") as tf:
+            tf.write(details)
 
 
 def kill_dm(project):
-    rule = "^fstab.*?"
-    fstab = find_file(project, rule)
-    if len(fstab) > 0:
-        for tab in fstab:
-            print("> 解除DM加密: " + tab)
-            with open(tab, "r") as sf:
-                details = sf.read()
-            details = re.sub("forceencrypt=", "encryptable=", details)
-            details = re.sub(",fileencryption=.*metadata_encryption", "", details)
-            with open(tab, "w") as tf:
-                tf.write(details)
+    for tab in find_file(project, "^fstab.*?"):
+        print("> 解除DM加密: " + tab)
+        with open(tab, "r") as sf:
+            details = sf.read()
+        details = re.sub("forceencrypt=", "encryptable=", details)
+        details = re.sub(",fileencryption=.*metadata_encryption", "", details)
+        with open(tab, "w") as tf:
+            tf.write(details)
 
 
 def patch_twrp(BOOTIMG):
@@ -1749,7 +1743,8 @@ def menu_main(project):
                 if not os.path.exists(infile):
                     PAUSE("未发现Payload.Bin")
                 else:
-                    decompress_bin(infile, DNA_TEMP_DIR, input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> '))
+                    decompress_bin(infile, DNA_TEMP_DIR,
+                                   input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> '))
             elif int(option) == 2:
                 ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 decompress(glob.glob(DNA_TEMP_DIR + '*.br'), int(option))
