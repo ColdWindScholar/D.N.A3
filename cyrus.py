@@ -720,7 +720,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
         (fsize, dsize, inodes, block_size, blocks, per_group, mount_point) = LOAD_IMAGE_JSON(dumpinfo, source)
         size = dsize
     else:
-        size = GET_DIR_SIZE(source, 1.2)
+        size = GET_DIR_SIZE(source, 1.3)
         if int(size) < 1048576:
             size = 1048576
         mount_point = "/" + label
