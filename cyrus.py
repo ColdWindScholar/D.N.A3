@@ -1263,29 +1263,6 @@ def envelop_project(project):
         os.makedirs(V.DNA_MAIN_DIR)
     if not os.path.isdir(V.DNA_MAIN_DIR):
         os.makedirs(V.DNA_MAIN_DIR)
-    if not os.path.isfile(V.DNA_CONF_DIR + "file_contexts"):
-        if os.path.isdir(V.DNA_CONF_DIR):
-            contexts_files = find_file(V.DNA_MAIN_DIR, "^[a-z].*?_file_contexts$")
-            if contexts_files:
-                with open(V.DNA_CONF_DIR + "file_contexts", "w", encoding='utf-8', newline="\n") as f:
-                    for text in contexts_files:
-                        with open(text, "r", encoding='utf-8') as f_r:
-                            f.write(f_r.read())
-
-                if os.path.isfile(V.DNA_CONF_DIR + "file_contexts"):
-                    with open(V.DNA_CONF_DIR + "file_contexts", "w", encoding='utf-8', newline="\n") as f:
-                        f.write("/firmware(/.*)?         u:object_r:firmware_file:s0\n")
-                        f.write("/bt_firmware(/.*)?      u:object_r:bt_firmware_file:s0\n")
-                        f.write("/persist(/.*)?          u:object_r:mnt_vendor_file:s0\n")
-                        for i in ["dsp", "odm", "op1", "op2", "charger_log", "audit_filter_table", "keydata",
-                                  "keyrefuge"
-                                  "omr", "publiccert.pem", "sepolicy_version", "cust", "donuts_key", "v_key",
-                                  "carrier", "dqmdbg", "ADF", "APD", "asdf", "batinfo", "voucher", "xrom", "custom",
-                                  "cpefs", "modem", "module_hashes", "pds", "tombstones", "avb", "op_odm", "addon.d",
-                                  "factory", "oneplus(/.*)?"]:
-                            f.write(f"/{i}                    u:object_r:rootfs:s0\n")
-    if os.path.isfile(V.DNA_CONF_DIR + "file_contexts"):
-        walk_contexts(V.DNA_CONF_DIR + "file_contexts")
 
 
 def extract_zrom(rom):
