@@ -146,8 +146,6 @@ def DISPLAY(message, flag=1, end='\n'):
     print(f"\x1b[1;3{flags[flag]}m [ {time.strftime('%H:%M:%S', time.localtime())} ]\t {message} \x1b[0m", end=end)
 
 
-
-
 def GETDIRSIZE(ddir, max_=1.06, flag=1):
     size = 0
     for (root, dirs, files) in os.walk(ddir):
@@ -1077,10 +1075,10 @@ def decompress_img(source, distance, keep=1):
                                     '') + '_fs_config'
                     if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                         new_contexts = V.DNA_CONF_DIR + os.path.basename(source).replace('.unsparse.img',
-                                                                                             '').replace(
+                                                                                         '').replace(
                             '.img', '') + '_contexts.txt'
                         new_fsconfig = V.DNA_CONF_DIR + os.path.basename(source).replace('.unsparse.img',
-                                                                                             '').replace(
+                                                                                         '').replace(
                             '.img', '') + '_fsconfig.txt'
                         shutil.copy(contexts, new_contexts)
                         shutil.copy(fsconfig, new_fsconfig)
@@ -1840,7 +1838,8 @@ def menu_main(project):
                                 if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
                                     V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
                                     V.SETUP_MANIFEST['REPACK_TO_RW'] = '1'
-                            elif V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '0':
+                            elif V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST[
+                                'REPACK_TO_RW'] == '0':
                                 if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
                                     V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
                                     V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
