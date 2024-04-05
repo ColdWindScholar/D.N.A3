@@ -132,8 +132,7 @@ class CoastTime:
         print(f"> Coast Time:{time.perf_counter() - self.t:.8f} s")
 
 
-def PAUSE(info='> 任意键继续'):
-    input(info)
+
 
 
 def DISPLAY(message, flag=1, end='\n'):
@@ -1572,11 +1571,11 @@ def menu_more(project):
         elif int(option) == 1:
             with CoastTime():
                 kill_avb(project)
-            PAUSE()
+            input('> 任意键继续')
         elif int(option) == 2:
             with CoastTime():
                 kill_dm(project)
-            PAUSE()
+            input('> 任意键继续')
         elif int(option) == 5:
             with CoastTime():
                 devdex.deodex(project)
@@ -1600,12 +1599,12 @@ def menu_more(project):
                                     shutil.rmtree(V.DNA_MAIN_DIR + line)
                                 except NotADirectoryError:
                                     os.remove(V.DNA_MAIN_DIR + line)
-            PAUSE()
+            input('> 任意键继续')
 
         elif int(option) == 7:
             with CoastTime():
                 patch_addons()
-            PAUSE()
+            input('> 任意键继续')
         elif int(option) in [8, 9]:
             if os.path.isfile(V.DNA_DIST_DIR + "boot.img"):
                 currentbootimg = V.DNA_DIST_DIR + "boot.img"
@@ -1617,10 +1616,10 @@ def menu_more(project):
                         patch_twrp(currentbootimg)
                     else:
                         patch_magisk(currentbootimg)
-            PAUSE()
+            input('> 任意键继续')
         elif int(option) == 11:
             repack_super()
-            PAUSE()
+            input('> 任意键继续')
         else:
             input(f"> Number \x1b[0;33m{option}\x1b[0m enter error !")
 
@@ -1667,7 +1666,7 @@ def RunModules(sub):
     Shell_Sub = sub + os.sep + "run.sh"
     if os.path.isfile(Shell_Sub):
         call(f"busybox bash {Shell_Sub} {V.DNA_MAIN_DIR}")
-    PAUSE()
+    input('> 任意键继续')
 
 
 def menu_main(project):
@@ -1725,7 +1724,7 @@ def menu_main(project):
                 infile = list(set(sorted(infile)))
                 V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 decompress_win(infile)
-                PAUSE()
+                input('> 任意键继续')
             elif int(option) == 6:
                 menu_more(project)
             elif int(option) == 7:
@@ -1844,5 +1843,5 @@ def menu_main(project):
                                 recompress(source, fsconfig, contexts, infojson, int(option))
             else:
                 input('\x1b[0;33m{option}\x1b[0m enter error !')
-            PAUSE()
+            input('> 任意键继续')
     menu_main(project)
