@@ -31,7 +31,6 @@ if os.name == 'nt':
 else:
     sys.stdout.write("\x1b]2;DNA-3\x07")
     sys.stdout.flush()
-os.system("cls" if os.name == "nt" else "clear")
 IS_ARM64 = False
 PWD_DIR = os.getcwd() + os.sep
 MOD_DIR = PWD_DIR + "local/sub/"
@@ -144,7 +143,7 @@ def DISPLAY(message, flag=1, end='\n'):
     print(f"\x1b[1;3{flags[flag]}m [ {time.strftime('%H:%M:%S', time.localtime())} ]\t {message} \x1b[0m", end=end)
 
 
-def GETDIRSIZE(ddir, max_=1.06, flag=1):
+def GET_DIR_SIZE(ddir, max_=1.06, flag=1):
     size = 0
     for (root, dirs, files) in os.walk(ddir):
         for name in files:
@@ -182,7 +181,7 @@ def LOAD_IMAGE_JSON(dumpinfo, source_dir):
         mount_point = "/" + mount_point
     fsize = info["s"]
     blocks = ceil(int(fsize) / int(block_size))
-    dsize = str(GETDIRSIZE(source_dir)).strip()
+    dsize = str(GET_DIR_SIZE(source_dir)).strip()
     if int(dsize) > int(fsize):
         minsize = int(dsize) - int(fsize)
         if int(minsize) < int(20971520):
@@ -730,7 +729,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
         (fsize, dsize, inodes, block_size, blocks, per_group, mount_point) = LOAD_IMAGE_JSON(dumpinfo, source)
         size = dsize
     else:
-        size = GETDIRSIZE(source, 1.2)
+        size = GET_DIR_SIZE(source, 1.2)
         if int(size) < 1048576:
             size = 1048576
         mount_point = "/" + label
