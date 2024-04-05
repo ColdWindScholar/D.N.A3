@@ -1369,8 +1369,7 @@ def extract_zrom(rom):
     elif 'run.sh' in zip_lists:
         if not os.path.isdir(MOD_DIR):
             os.makedirs(MOD_DIR)
-        ModName = os.path.basename(rom).rsplit('.', 1)[0]
-        ModName = ModName.replace(' ', '_')
+        ModName = os.path.basename(rom).rsplit('.', 1)[0].replace(' ', '_')
         SUB_DIR = MOD_DIR + 'DNA_' + ModName
         if not os.path.isdir(SUB_DIR):
             DISPLAY(f'是否安装插件: {ModName} ? [1/0]: ', 2, '')
