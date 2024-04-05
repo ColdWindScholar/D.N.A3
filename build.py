@@ -47,29 +47,12 @@ local = os.getcwd()
 print("Building...")
 import PyInstaller.__main__
 
-if ostype == 'Darwin':
-    PyInstaller.__main__.run([
+PyInstaller.__main__.run([
         'dna.py',
         '-F',
         '--exclude-module',
         'numpy',
-        '-i', 'icon.ico'
-    ])
-elif os.name == 'posix':
-    PyInstaller.__main__.run([
-        'dna.py',
-        '-F',
-        '--exclude-module',
-        'numpy',
-        '-i', 'icon.ico'
-    ])
-elif os.name == 'nt':
-    PyInstaller.__main__.run([
-        'dna.py',
-        '-F',
-        '--exclude-module',
-        'numpy',
-        '-i', 'icon.ico'
+        '-i', 'logo.ico'
     ])
 if os.name == 'nt':
     if os.path.exists(local + os.sep + "dist" + os.sep + "dna.exe"):
