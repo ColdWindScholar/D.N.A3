@@ -675,7 +675,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
     walk_contexts(contexts)
     if os.name == 'nt':
         source = source.replace("\\", '/')
-    timestamp = str(int(time.time())) if V.SETUP_MANIFEST["UTC"].lower() == "live" else V.SETUP_MANIFEST["UTC"]
+    timestamp = int(time.time()) if V.SETUP_MANIFEST["UTC"].lower() == "live" else V.SETUP_MANIFEST["UTC"]
     read = "ro"
     RESIZE2RW = False
     fsize = None
