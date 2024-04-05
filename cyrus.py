@@ -1181,7 +1181,7 @@ def decompress_bro(transfer, source, distance, keep=0):
         print("\x1b[1;31m [Failed]\x1b[0m")
 
 
-def decompress_bin(infile, outdir, orzdir, flag='1'):
+def decompress_bin(infile, outdir, flag='1'):
     os.system("cls" if os.name == "nt" else "clear")
     if flag == "1":
         payload_partitions = extract_payload.info(infile)
@@ -1364,10 +1364,7 @@ def extract_zrom(rom):
         infile = fantasy_zip.extract('payload.bin', DNA_TEMP_DIR)
         fantasy_zip.close()
         if os.path.isfile(DNA_TEMP_DIR + 'payload.bin'):
-            outdir = DNA_TEMP_DIR
-            orzdir = DNA_TEMP_DIR + 'orz' + os.sep
-            choose = input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> ')
-            decompress_bin(infile, outdir, orzdir, choose)
+            decompress_bin(infile, DNA_TEMP_DIR, input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> '))
             menu_main(project)
     elif 'run.sh' in zip_lists:
         if not os.path.isdir(MOD_DIR):
@@ -1754,10 +1751,7 @@ def menu_main(project):
                 if not os.path.exists(infile):
                     PAUSE("未发现Payload.Bin")
                 else:
-                    outdir = DNA_TEMP_DIR
-                    orzdir = DNA_TEMP_DIR + 'orz' + os.sep
-                    choose = input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> ')
-                    decompress_bin(infile, outdir, orzdir, choose)
+                    decompress_bin(infile, DNA_TEMP_DIR, input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> '))
             elif int(option) == 2:
                 ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 decompress(glob.glob(DNA_TEMP_DIR + '*.br'), int(option))
