@@ -1190,11 +1190,9 @@ def decompress_bin(infile, outdir, orzdir, flag='1'):
     os.system("cls" if os.name == "nt" else "clear")
     if flag == "1":
         payload_partitions = extract_payload.info(infile)
-        print("> {0}包含的所有镜像文件: {1}{2}\n".format(YELLOW, len(payload_partitions), CLOSE))
-        print(payload_partitions)
-        print("\n")
+        print(f"> {YELLOW}包含的所有镜像文件: {len(payload_partitions)}{CLOSE}\n{payload_partitions}")
         partitions = input(
-            "> {0}根据以上信息输入一个或多个镜像，以空格分开{1}\n> {2}".format(RED, CLOSE, MAGENTA)).split()
+            f"> {RED}根据以上信息输入一个或多个镜像，以空格分开{CLOSE}\n> {MAGENTA}").split()
         print("\n")
         for part in partitions:
             if not part.endswith(".img"):
@@ -1202,7 +1200,7 @@ def decompress_bin(infile, outdir, orzdir, flag='1'):
             if part in payload_partitions:
                 extract_payload.main(infile, outdir, part)
     else:
-        print("> {0}提取【{1}】所有镜像文件:{2}\n".format(YELLOW, os.path.basename(infile), CLOSE))
+        print(f"> {YELLOW}提取【{os.path.basename(infile)}】所有镜像文件:{CLOSE}\n")
         extract_payload.main(infile, outdir)
         os.system("cls" if os.name == "nt" else "clear")
         infile = glob.glob(outdir + "*.img")
