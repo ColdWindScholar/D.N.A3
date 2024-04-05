@@ -1561,10 +1561,7 @@ def menu_more(project):
                 currentbootimg = V.DNA_TEMP_DIR + "boot.img"
             if os.path.isfile(currentbootimg):
                 with CoastTime():
-                    if int(option) == 8:
-                        patch_twrp(currentbootimg)
-                    else:
-                        patch_magisk(currentbootimg)
+                    patch_twrp(currentbootimg) if int(option) == 8 else patch_magisk(currentbootimg)
             input('> 任意键继续')
         elif int(option) == 11:
             repack_super()
