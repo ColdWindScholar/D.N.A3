@@ -755,8 +755,6 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                     os.remove(distance)
                 except:
                     pass
-    if flag > 8:
-        SPARSE = True
     if os.path.isfile(distance):
         print(" Done")
         if RESIZE2RW and os.name == 'posix':
@@ -806,7 +804,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                         line = f"resize {label}_a {renew_size}\n"
                     f_w.write(line)
 
-        if SPARSE:
+        if flag > 8:
             DISPLAY("开始转换: sparse format ...")
             call(f"img2simg {distance} {distance.rsplit('.', 1)[0] + '_sparse.img'}")
             if os.path.exists(distance):
