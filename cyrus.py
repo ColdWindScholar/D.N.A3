@@ -1,4 +1,3 @@
-import codecs
 from glob import glob
 import hashlib
 import json
@@ -193,11 +192,11 @@ def LOAD_IMAGE_JSON(dumpinfo, source_dir):
 
 
 def LOAD_SETUP_JSON():
-    with codecs.open(SETUP_JSON, "r", "utf-8") as manifest_file:
+    with open(SETUP_JSON, "r", encoding="utf-8") as manifest_file:
         V.SETUP_MANIFEST = json.load(manifest_file)
     set_default_env_setup()
     validate_default_env_setup(V.SETUP_MANIFEST)
-    with codecs.open(SETUP_JSON, "w", "utf-8") as f:
+    with open(SETUP_JSON, "w", encoding="utf-8") as f:
         json.dump(V.SETUP_MANIFEST, f, indent=4)
     if not os.path.isdir(
             f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/addons"):
@@ -227,7 +226,7 @@ def LOAD_SETUP_JSON():
                           'PATCHVBMETAFLAG': "false",
                           'TARGET': "arm",
                           'IS_64BIT': "true"}
-        with codecs.open(MAGISK_JSON, "w", "utf-8") as g:
+        with open(MAGISK_JSON, "w", encoding="utf-8") as g:
             json.dump(default_magisk, g, indent=4)
 
 
@@ -435,7 +434,7 @@ def patch_twrp(BOOTIMG):
 def patch_magisk(BOOTIMG):
     MAGISK_MANIFEST = {}
     if os.path.isfile(MAGISK_JSON):
-        with codecs.open(MAGISK_JSON, "r", "utf-8") as manifest_file:
+        with open(MAGISK_JSON, "r", encoding="utf-8") as manifest_file:
             MAGISK_MANIFEST = json.load(manifest_file)
     default_manifest = {
         'CLASS': "alpha",
@@ -1008,7 +1007,7 @@ def decompress_img(source, distance, keep=1):
             os.makedirs(V.DNA_CONF_DIR)
         boot_info = V.DNA_CONF_DIR + os.path.basename(distance) + '_kernel.txt'
         bootjson = {'name': os.path.basename(source)}
-        with codecs.open(boot_info, 'w', 'utf-8') as f:
+        with open(boot_info, 'w', encoding='utf-8') as f:
             json.dump(bootjson, f, indent=4)
 
     elif file_type == 'sparse':
