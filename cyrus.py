@@ -606,9 +606,7 @@ def repack_super():
         for file in infile:
             parts.append(os.path.basename(file).rsplit('_', 1)[0])
     group_size_a, group_size_b = 0, 0
-    argvs = 'lpmake --metadata-size 65536 --super-name super --device super:{}:{} '.format(SETUP_MANIFEST['SUPER_SIZE'],
-                                                                                           str(int(SETUP_MANIFEST[
-                                                                                                       'SUPER_SECTOR']) * 512))
+    argvs = f'lpmake --metadata-size 65536 --super-name super --device super:{SETUP_MANIFEST["SUPER_SIZE"]}:{int(SETUP_MANIFEST["SUPER_SECTOR"]) * 512} '
     if SETUP_MANIFEST['IS_VAB'] == '1':
         argvs += '--metadata-slots 3 --virtual-ab -F '
         for i in parts:
