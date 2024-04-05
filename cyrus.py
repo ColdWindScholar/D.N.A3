@@ -1,5 +1,3 @@
-from glob import glob
-from hashlib import sha1
 import json
 import os
 import platform
@@ -7,14 +5,18 @@ import re
 import shutil
 import subprocess
 import sys
+import tarfile
 import time
 import zipfile
+from glob import glob
+from hashlib import sha1
 from tkinter.filedialog import askopenfilename
+
 import requests
+from rich import print as echo
 from rich.console import Console
 from rich.progress import Progress
-from rich import print as echo
-import tarfile
+
 import devdex
 import extract_payload
 import fspatch
