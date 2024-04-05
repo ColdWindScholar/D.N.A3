@@ -469,7 +469,6 @@ def patch_magisk(BOOTIMG):
         call(f"magiskboot unpack {BOOTIMG}")
         if os.path.isfile("kernel"):
             if os.path.isfile("ramdisk.cpio"):
-
                 sha1_ = sha1()
                 with open(BOOTIMG, "rb") as f:
                     while True:
@@ -478,7 +477,6 @@ def patch_magisk(BOOTIMG):
                             break
                         else:
                             sha1_.update(fileData)
-
                 SHA1 = sha1_.digest().hex()
                 with open(BOOTIMG, 'rb') as source_file:
                     with open('stock_boot.img', 'wb') as dest_file:
