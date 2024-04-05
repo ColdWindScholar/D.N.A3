@@ -458,7 +458,7 @@ def patch_magisk(BOOTIMG):
         sys.exit("Invalid [TARGET] - must be one of <arm/x86>")
     MAGISK_FILES = glob(f"{PWD_DIR}local/etc/magisk/{MAGISK_MANIFEST['CLASS']}/Magisk-*.apk")
     if not MAGISK_FILES:
-        PAUSE(f"> 未发现local/etc/magisk/{MAGISK_MANIFEST['CLASS']}/Magisk-*.apk文件")
+        input(f"> 未发现local/etc/magisk/{MAGISK_MANIFEST['CLASS']}/Magisk-*.apk文件")
         return
     if os.path.isfile(BOOTIMG):
         if os.path.isdir(f"{V.DNA_MAIN_DIR}bootimg"):
@@ -651,7 +651,7 @@ def repack_super():
                 argvs += f'--partition {i}_a:readonly:{image_size_a}:{V.SETUP_MANIFEST["GROUP_NAME"]}_a --image {i}_a={img_a} --partition {i}_b:readonly:{image_size_b}:{V.SETUP_MANIFEST["GROUP_NAME"]}_b --image {i}_b={img_b} '
 
     if group_size_a == 0:
-        PAUSE('> 未发现002_DNA文件夹下存在可用镜像文件')
+        input('> 未发现002_DNA文件夹下存在可用镜像文件')
         return None
     if V.SETUP_MANIFEST['SUPER_SPARSE'] == '1':
         argvs += '--sparse '
@@ -1240,7 +1240,7 @@ def decompress_win(infile_list):
                 symlinks_0.sort()
                 appendf("\n".join((str(h) for h in symlinks_0)), "%s_symlinks.txt" % i)
         else:
-            PAUSE("未知格式")
+            input("未知格式")
 
 
 def decompress(infile, flag=4):
@@ -1319,7 +1319,7 @@ def extract_zrom(rom):
         fantasy_zip = zipfile.ZipFile(rom)
         zip_lists = fantasy_zip.namelist()
     else:
-        PAUSE('> 破损的zip或不支持的zip类型')
+        input('> 破损的zip或不支持的zip类型')
         return
     if 'payload.bin' in zip_lists:
         print(f'> 解压缩: {os.path.basename(rom)}')
@@ -1377,7 +1377,7 @@ def extract_zrom(rom):
             infile = glob(V.DNA_TEMP_DIR + '*.img')
             able = 4
         if not infile:
-            PAUSE('> 仅支持含有payload.bin/*.new.dat/*.new.dat.br/*.img的zip固件')
+            input('> 仅支持含有payload.bin/*.new.dat/*.new.dat.br/*.img的zip固件')
         else:
             V.ASK = True
             decompress(infile, able)
@@ -1440,7 +1440,7 @@ def choose_zrom(flag=0):
             elif 0 < int(choice) < len(V.dict0):
                 extract_zrom(V.dict0[int(choice)])
             else:
-                PAUSE(f'> Number \x1b[0;33m{choice}\x1b[0m enter error !')
+                input(f'> Number \x1b[0;33m{choice}\x1b[0m enter error !')
 
 
 def download_rom(rom, url):
@@ -1468,9 +1468,9 @@ def download_rom(rom, url):
         else:
             if os.path.exists(rom):
                 os.remove(rom)
-            PAUSE(f"> {GREEN}Failed !{CLOSE}")
+            input(f"> {GREEN}Failed !{CLOSE}")
     else:
-        PAUSE("> 发现 " + os.path.basename(rom))
+        input("> 发现 " + os.path.basename(rom))
 
 
 def download_zrom():
@@ -1491,7 +1491,7 @@ def creat_project():
             os.mkdir(V.project)
             menu_main(V.project)
         else:
-            PAUSE(f"\x1b[0;31m\n 工程目录< \x1b[0;32m{V.project} \x1b[0;31m>已存在, 回车返回 ...\x1b[0m\n")
+            input(f"\x1b[0;31m\n 工程目录< \x1b[0;32m{V.project} \x1b[0;31m>已存在, 回车返回 ...\x1b[0m\n")
             del V.project
             creat_project()
     else:
@@ -1527,10 +1527,10 @@ def menu_once():
                                 rmdire(V.dict0[int(which)])
                                 if IS_ARM64:
                                     if os.path.isdir(ROM_DIR + "D.N.A" + os.sep + V.dict0[int(which)]):
-                                        PAUSE(
+                                        input(
                                             f"> 请自主判断删除内置存储 {ROM_DIR + 'D.N.A' + os.sep + V.dict0[int(which)]}")
                                 menu_once()
-                    PAUSE(f"> Number {which} Error !")
+                    input(f"> Number {which} Error !")
         elif int(choice) == 66:
             download_zrom()
         elif int(choice) == 77:
@@ -1545,7 +1545,7 @@ def menu_once():
                 menu_main(V.project)
                 break
             else:
-                PAUSE(f"> Number \x1b[0;33m{choice}\x1b[0m enter error !")
+                input(f"> Number \x1b[0;33m{choice}\x1b[0m enter error !")
 
 
 def menu_more(project):
@@ -1565,7 +1565,7 @@ def menu_more(project):
         print("-------------------------------------------------------")
         option = input(f"> {RED}输入序号{CLOSE} >> ")
         if not option.isdigit():
-            PAUSE("> 输入序号数字")
+            input("> 输入序号数字")
             continue
         if int(option) == 0:
             break
@@ -1588,7 +1588,7 @@ def menu_more(project):
                     f"{PWD_DIR}local/etc/devices/default/{V.SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"):
                 REDUCE_CONF = f"{PWD_DIR}local/etc/devices/default/{V.SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"
             else:
-                PAUSE("精简列表<reduce.txt>丢失！")
+                input("精简列表<reduce.txt>丢失！")
             with CoastTime():
                 for line in open(REDUCE_CONF):
                     line = line.replace("/", os.sep).strip("\n")
@@ -1622,7 +1622,7 @@ def menu_more(project):
             repack_super()
             PAUSE()
         else:
-            PAUSE(f"> Number \x1b[0;33m{option}\x1b[0m enter error !")
+            input(f"> Number \x1b[0;33m{option}\x1b[0m enter error !")
 
 
 def menu_modules():
@@ -1652,7 +1652,7 @@ def menu_modules():
                                         if os.path.isdir(V.dict0[int(which)]):
                                             rmdire(V.dict0[int(which)])
                                             continue
-                                        PAUSE(f"> Number {which} Error !")
+                                        input(f"> Number {which} Error !")
             elif int(choice) == 0:
                 return
             if 0 < int(choice) < len(V.dict0):
@@ -1690,8 +1690,8 @@ def menu_main(project):
             input('> 输入序号数字')
         else:
             if int(option) == 55:
-                PAUSE("Github: https://github.com/ColdWindScholar/D.N.A3/")
-                PAUSE("Wrote By ColdWindScholar (3590361911@qq.com)")
+                input("Github: https://github.com/ColdWindScholar/D.N.A3/")
+                input("Wrote By ColdWindScholar (3590361911@qq.com)")
             if int(option) == 88:
                 sys.exit()
             elif int(option) == 0:
@@ -1699,7 +1699,7 @@ def menu_main(project):
             elif int(option) == 1:
                 infile = V.DNA_TEMP_DIR + 'payload.bin'
                 if not os.path.exists(infile):
-                    PAUSE("未发现Payload.Bin")
+                    input("未发现Payload.Bin")
                 else:
                     decompress_bin(infile, V.DNA_TEMP_DIR,
                                    input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> '))
@@ -1843,6 +1843,6 @@ def menu_main(project):
                                         continue
                                 recompress(source, fsconfig, contexts, infojson, int(option))
             else:
-                PAUSE('\x1b[0;33m{option}\x1b[0m enter error !')
+                input('\x1b[0;33m{option}\x1b[0m enter error !')
             PAUSE()
     menu_main(project)
