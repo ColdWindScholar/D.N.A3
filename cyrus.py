@@ -3,7 +3,6 @@ import codecs
 import glob
 import hashlib
 import json
-import math
 import os
 import platform
 import re
@@ -160,6 +159,17 @@ def GETDIRSIZE(ddir, max_=1.06, flag=1):
     return int(size)
 
 
+def ceil(x):
+    if isinstance(x, int):
+        return x
+    if isinstance(x, float):
+        int_part = int(x)
+        if x > 0 and x > int_part:
+            return int_part + 1
+        return int_part
+    return int(x)
+
+
 def LOAD_IMAGE_JSON(dumpinfo, source_dir):
     with open(dumpinfo, "a+", encoding="utf-8") as f:
         f.seek(0)
@@ -171,7 +181,7 @@ def LOAD_IMAGE_JSON(dumpinfo, source_dir):
     if mount_point != "/":
         mount_point = "/" + mount_point
     fsize = info["s"]
-    blocks = math.ceil(int(fsize) / int(block_size))
+    blocks = ceil(int(fsize) / int(block_size))
     dsize = str(GETDIRSIZE(source_dir)).strip()
     if int(dsize) > int(fsize):
         minsize = int(dsize) - int(fsize)
@@ -732,7 +742,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
             RESIZE2RW = True
             read = "rw"
             block_size = 4096
-            blocks = math.ceil(int(size) / int(block_size))
+            blocks = ceil(int(size) / int(block_size))
             mkimage_cmd = f"make_ext4fs -J -T {timestamp} -S {contexts} -C {fsconfig} -l {size} -L {label} -a /{label} {distance} {source}"
             mke2fs_a_cmd = f"mke2fs -O ^has_journal,^metadata_csum,extent,huge_file,^flex_bg,^64bit,uninit_bg,dir_nlink,extra_isize -t {fs_variant} -b {block_size} -L {label} -I 256 -M {mount_point} -m 0 -q -F {distance} {blocks}"
             e2fsdroid_a_cmd = f"e2fsdroid -T {timestamp} -C {fsconfig} -S {contexts} -f {source} -a /{label} -e {distance}"
