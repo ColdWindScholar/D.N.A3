@@ -83,7 +83,7 @@ if os.path.isdir(BIN_PATH):
         if not shutil.which(prog):
             sys.exit(f"[x] Not found: {prog}\n[i] Please install {prog} \n   Or add <{prog}> to {BIN_PATH}")
 else:
-    print("Run err on: " + platform.machine())
+    print(f"Run err on: {platform.system()} {platform.machine()}")
     sys.exit()
 
 
