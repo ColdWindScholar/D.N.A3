@@ -902,10 +902,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                             DISPLAY("重新生成: {}.new.dat.br {} ...".format(label, level), 3)
                             newdat_brotli = newdat + ".br"
                             call("brotli -{}jfo {} {}".format(level, newdat_brotli, newdat))
-                            if os.path.isfile(newdat_brotli):
-                                print(" Done")
-                            else:
-                                print(" Failed")
+                            print(" Done" if os.path.isfile(newdat_brotli) else " Failed")
                     else:
                         print(" Failed")
     else:
