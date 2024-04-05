@@ -33,7 +33,6 @@ else:
     sys.stdout.write("\x1b]2;DNA-3\x07")
     sys.stdout.flush()
 os.system("cls" if os.name == "nt" else "clear")
-ASK = False
 IS_ARM64 = False
 IS_FIRST = 0
 PWD_DIR = os.getcwd() + os.sep
@@ -51,18 +50,36 @@ if platform.machine() in ('aarch64', 'armv8l', 'arm64'):
         IS_ARM64 = True
         ROM_DIR = "/sdcard/Download/"
 BIN_PATH = PWD_DIR + f"local/bin/{ostype}/{platform.machine()}/"
-PASSWORD_DICT = {
-    '1': "FC", '2': "0A", '3': "EF", '4': "0D", '5': "C9", '6': "8A", '7': "B3", '8': "AD", '9': "04", '0': "00"}
-PASSWORD_DICT_REVERSE = {v: k for k, v in PASSWORD_DICT.items()}
+
 BLUE, RED, WHITE, CYAN, YELLOW, MAGENTA, GREEN, BOLD, CLOSE = ('\x1b[94m', '\x1b[91m',
                                                                '\x1b[97m', '\x1b[36m',
                                                                '\x1b[93m', '\x1b[1;35m',
                                                                '\x1b[1;32m',
                                                                '\x1b[1m', '\x1b[0m')
-programs = ["mv", "cpio", "brotli", "img2simg", "e2fsck", "resize2fs",
-            "mke2fs", "e2fsdroid", "mkfs.erofs", "lpmake", "lpunpack", "extract.erofs", "magiskboot"]
-if os.name == 'nt':
-    programs = []
+
+
+class global_value(object):
+    ASK = False
+
+    def __init__(self):
+        self.programs = ["mv", "cpio", "brotli", "img2simg", "e2fsck", "resize2fs",
+                         "mke2fs", "e2fsdroid", "mkfs.erofs", "lpmake", "lpunpack", "extract.erofs", "magiskboot"]
+        if os.name == 'nt':
+            self.programs = []
+        self.PASSWORD_DICT = {
+            '1': "FC", '2': "0A", '3': "EF", '4': "0D", '5': "C9", '6': "8A", '7': "B3", '8': "AD", '9': "04",
+            '0': "00"}
+        self.PASSWORD_DICT_REVERSE = {v: k for k, v in self.PASSWORD_DICT.items()}
+
+
+    def __getattr__(self, item):
+        try:
+            return getattr(self, item)
+        except (Exception, BaseException):
+            return "None"
+
+
+value = global_value()
 
 
 def change_permissions_recursive(path, mode):
@@ -79,7 +96,7 @@ if os.path.isdir(BIN_PATH):
     if os.name == 'posix':
         change_permissions_recursive(BIN_PATH, 0o777)
 
-    for prog in programs:
+    for prog in value.programs:
         if not shutil.which(prog):
             sys.exit(f"[x] Not found: {prog}\n[i] Please install {prog} \n   Or add <{prog}> to {BIN_PATH}")
 else:
@@ -135,7 +152,7 @@ def DISPLAY(message, flag=1, end='\n'):
 
 
 def CHAR2NUM(chars):
-    return "".join([PASSWORD_DICT_REVERSE[r] for r in re.sub("(?<=\\w)(?=(?:\\w\\w)+$)", " ", chars).split()])
+    return "".join([value.PASSWORD_DICT_REVERSE[r] for r in re.sub("(?<=\\w)(?=(?:\\w\\w)+$)", " ", chars).split()])
 
 
 def GETDIRSIZE(ddir, max_=1.06, flag=1):
@@ -1016,7 +1033,7 @@ def decompress_img(source, distance, keep=1):
         if file_type == 'ext':
             with Console().status(f"[yellow]正在提取{os.path.basename(source)}[/]"):
                 try:
-                    imgextractor.ULTRAMAN().MONSTER(source, distance, PASSWORD_DICT)
+                    imgextractor.ULTRAMAN().MONSTER(source, distance, value.PASSWORD_DICT)
                 except:
                     shutil.rmtree(distance)
                     os.unlink(source)
@@ -1242,7 +1259,7 @@ def decompress(infile, flag=4):
                     continue
                 else:
                     transfer = None
-            if ASK:
+            if value.ASK:
                 DISPLAY(f'是否分解: {os.path.basename(part)} [1/0]: ', 2, '')
                 if input() != '1':
                     continue
@@ -1257,7 +1274,7 @@ def decompress(infile, flag=4):
             continue
         if seekfd.gettype(part) not in ('ext', 'sparse', 'erofs', 'super', 'boot', 'vendor_boot'):
             continue
-        if ASK:
+        if value.ASK:
             DISPLAY(f'是否分解: {os.path.basename(part)} [1/0]: ', 2, '')
             if input() == '1':
                 decompress_img(part, DNA_MAIN_DIR + os.path.basename(part).rsplit('.', 1)[0])
@@ -1371,8 +1388,7 @@ def extract_zrom(rom):
         if not infile:
             PAUSE('> 仅支持含有payload.bin/*.new.dat/*.new.dat.br/*.img的zip固件')
         else:
-            global ASK
-            ASK = True
+            value.ASK = True
             decompress(infile, able)
         menu_main(project)
 
@@ -1674,9 +1690,8 @@ def RunModules(sub):
 
 
 def menu_main(project):
-    global ASK
     envelop_project(project)
-    ASK = True
+    value.ASK = True
     os.system('cls' if os.name == 'nt' else 'clear')
     print(f'\x1b[1;36m> 当前工程: \x1b[0m{project}')
     print('-------------------------------------------------------\n')
@@ -1708,17 +1723,17 @@ def menu_main(project):
                     decompress_bin(infile, DNA_TEMP_DIR,
                                    input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> '))
             elif int(option) == 2:
-                ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                value.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 decompress(glob.glob(DNA_TEMP_DIR + '*.br'), int(option))
             elif int(option) == 3:
                 infile = glob.glob(DNA_TEMP_DIR + '*.dat')
-                ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                value.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 decompress(infile, int(option))
                 infile = glob.glob(DNA_TEMP_DIR + '*.img')
-                ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                value.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 decompress(infile, int(option))
             elif int(option) == 4:
-                ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                value.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 decompress(glob.glob(DNA_TEMP_DIR + '*.img'), int(option))
             elif int(option) == 5:
                 infile = glob.glob(DNA_TEMP_DIR + '*.win[0-9][0-9][0-9]')
@@ -1727,7 +1742,7 @@ def menu_main(project):
                 for i in glob.glob(DNA_TEMP_DIR + '*.win'):
                     infile.append(i)
                 infile = list(set(sorted(infile)))
-                ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                value.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 decompress_win(infile)
                 PAUSE()
             elif int(option) == 6:
@@ -1737,12 +1752,12 @@ def menu_main(project):
             elif int(option) == 8:
                 infile = glob.glob(DNA_CONF_DIR + '*_contexts.txt')
                 infile_kernel = glob.glob(DNA_CONF_DIR + '*_kernel.txt')
-                ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                value.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 for file in infile_kernel:
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
                     source = DNA_MAIN_DIR + f_basename
                     if os.path.isdir(source):
-                        if ASK:
+                        if value.ASK:
                             DISPLAY(f'是否合成: {f_basename}.img [1/0]: ', end='')
                             if input() != '1':
                                 continue
@@ -1765,14 +1780,14 @@ def menu_main(project):
                                 SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
                                 SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
-                            if ASK:
+                            if value.ASK:
                                 DISPLAY(f'是否合成: {f_basename}.img [1/0]: ', end='')
                                 if input() != '1':
                                     continue
                             recompress(source, fsconfig, contexts, infojson, int(option))
             elif int(option) == 9:
                 infile = glob.glob(DNA_CONF_DIR + '*_contexts.txt')
-                ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                value.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 for file in infile:
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
                     source = DNA_MAIN_DIR + f_basename
@@ -1791,14 +1806,14 @@ def menu_main(project):
                                 SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
                                 SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
-                            if ASK:
+                            if value.ASK:
                                 DISPLAY(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
                                 if input() != '1':
                                     continue
                             recompress(source, fsconfig, contexts, infojson, int(option))
             elif int(option) == 10:
                 infile = glob.glob(DNA_CONF_DIR + '*_contexts.txt')
-                ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                value.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 for file in infile:
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
                     source = DNA_MAIN_DIR + f_basename
@@ -1817,7 +1832,7 @@ def menu_main(project):
                                 SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
                                 SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
-                            if ASK:
+                            if value.ASK:
                                 DISPLAY(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
                                 if input() != '1':
                                     continue
@@ -1840,7 +1855,7 @@ def menu_main(project):
                                     SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
                                     SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                             if os.path.isfile(contexts) and os.path.isfile(fsconfig):
-                                if ASK:
+                                if value.ASK:
                                     DISPLAY(f'是否合成: {f_basename}.new.dat.br [1/0]: ', end='')
                                     if input() != '1':
                                         continue
