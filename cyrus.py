@@ -734,16 +734,16 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
             read = "rw"
             block_size = 4096
             blocks = math.ceil(int(size) / int(block_size))
-            mkimage_cmd = f"make_ext4fs -J -T {timestamp} -S {contexts} -l {size} -L {label} -a /{label} {distance} {source}"
+            mkimage_cmd = f"make_ext4fs -J -T {timestamp} -S {contexts} -C {fsconfig} -l {size} -L {label} -a /{label} {distance} {source}"
             mke2fs_a_cmd = f"mke2fs -O ^has_journal,^metadata_csum,extent,huge_file,^flex_bg,^64bit,uninit_bg,dir_nlink,extra_isize -t {fs_variant} -b {block_size} -L {label} -I 256 -M {mount_point} -m 0 -q -F {distance} {blocks}"
             e2fsdroid_a_cmd = f"e2fsdroid -T {timestamp} -C {fsconfig} -S {contexts} -f {source} -a /{label} -e {distance}"
         else:
             size = fsize
             if int(SETUP_MANIFEST["ANDROID_SDK"]) <= 9:
                 read = "rw"
-                mkimage_cmd = f"make_ext4fs -J -T {timestamp} -S {contexts} -l {size} -L {label} -a /{label} {distance} {source}"
+                mkimage_cmd = f"make_ext4fs -J -T {timestamp} -S {contexts} -C {fsconfig} -l {size} -L {label} -a /{label} {distance} {source}"
             else:
-                mkimage_cmd = f"make_ext4fs -T {timestamp} -S {contexts} -l {size} -L {label} -a /{label} {distance} {source}"
+                mkimage_cmd = f"make_ext4fs -T {timestamp} -S {contexts} -C {fsconfig} -l {size} -L {label} -a /{label} {distance} {source}"
             mke2fs_a_cmd = f"mke2fs -O ^has_journal,^metadata_csum,extent,huge_file,^flex_bg,^64bit,uninit_bg,dir_nlink,extra_isize -t {fs_variant} -b {block_size} -L {label} -I 256 -N {inodes} -M {mount_point} -m 0 -g {per_group} -q -F {distance} {blocks}"
             e2fsdroid_a_cmd = f"e2fsdroid -T {timestamp} -C {fsconfig} -S {contexts} -f {source} -a /{label} -e -s {distance}"
     else:
