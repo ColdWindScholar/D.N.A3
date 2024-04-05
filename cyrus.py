@@ -1529,17 +1529,16 @@ def menu_more(project):
                 devdex.deodex(project)
         elif int(option) == 6:
             add_dir = f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}"
-            if os.path.isfile(
-                    f"{add_dir}/reduce.txt"):
-                REDUCE_CONF = f"{add_dir}/reduce.txt"
+            if os.path.isfile(f"{add_dir}/reduce.txt"):
+                reduce_conf = f"{add_dir}/reduce.txt"
             elif os.path.isfile(
                     f"{PWD_DIR}local/etc/devices/default/{V.SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"):
-                REDUCE_CONF = f"{PWD_DIR}local/etc/devices/default/{V.SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"
+                reduce_conf = f"{PWD_DIR}local/etc/devices/default/{V.SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"
             else:
                 input("精简列表<reduce.txt>丢失！")
                 continue
             with CoastTime():
-                for line in open(REDUCE_CONF):
+                for line in open(reduce_conf):
                     line = line.replace("/", os.sep).strip("\n")
                     if line:
                         if not line.startswith("#"):
