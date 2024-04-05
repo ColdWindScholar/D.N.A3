@@ -641,7 +641,7 @@ def repack_super():
                 image_size_a = imgextractor.ULTRAMAN().LEMON(img_a)
                 image_size_b = imgextractor.ULTRAMAN().LEMON(img_b)
                 argvs += f'--partition {i}_a:readonly:{image_size_a}:{V.SETUP_MANIFEST["GROUP_NAME"]}_a --image {i}_a={img_a} --partition {i}_b:readonly:{image_size_b}:{V.SETUP_MANIFEST["GROUP_NAME"]}_b --image {i}_b={img_b} '
-    if not parts:
+    if not parts or not "--image" in argvs:
         input('> 未发现002_DNA文件夹下存在可用镜像文件')
         return
     if V.SETUP_MANIFEST['SUPER_SPARSE'] == '1':
