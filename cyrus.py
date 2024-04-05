@@ -410,13 +410,12 @@ def patch_twrp(BOOTIMG):
                     print("+ Done")
                     if not os.path.isdir(DNA_DIST_DIR):
                         os.mkdir(DNA_DIST_DIR)
-                    new_boot_img_name = "{}{}_twrp.img".format(os.path.basename(BOOTIMG).split(".")[0],
-                                                               os.path.basename(DNA_DIST_DIR))
+                    new_boot_img_name = f"{os.path.basename(BOOTIMG).split('.')[0]}{os.path.basename(DNA_DIST_DIR)}_twrp.img"
                     os.rename("new-boot.img", os.path.join(DNA_DIST_DIR, new_boot_img_name))
                     os.chdir(PWD_DIR)
-                    add_magisk = input("> 是否继续添加脸谱 [1/0]: ")
+                    add_magisk = input("> 是否继续添加Magisk [1/0]: ")
                     if add_magisk != "0":
-                        patch_magisk("{}{}_twrp.img".format(DNA_DIST_DIR, os.path.basename(BOOTIMG).split(".")[0]))
+                        patch_magisk(f"{DNA_DIST_DIR}{os.path.basename(BOOTIMG).split('.')[0]}_twrp.img")
         os.chdir(PWD_DIR)
         if os.path.isdir(f"{DNA_MAIN_DIR}bootimg"):
             rmdire(f"{DNA_MAIN_DIR}bootimg")
@@ -452,15 +451,15 @@ def patch_magisk(BOOTIMG):
         sys.exit("Invalid [TARGET] - must be one of <arm/x86>")
     MAGISK_FILES = glob.glob(f"{PWD_DIR}local/etc/magisk/{MAGISK_MANIFEST['CLASS']}/Magisk-*.apk")
     if len(MAGISK_FILES) <= 0:
-        PAUSE("> 未发现local/etc/magisk/{}/Magisk-*.apk文件".format(MAGISK_MANIFEST["CLASS"]))
+        PAUSE(f"> 未发现local/etc/magisk/{MAGISK_MANIFEST['CLASS']}/Magisk-*.apk文件")
         return
     if os.path.isfile(BOOTIMG):
-        if os.path.isdir("{}bootimg".format(DNA_MAIN_DIR)):
+        if os.path.isdir(f"{DNA_MAIN_DIR}bootimg"):
             rmdire(f"{DNA_MAIN_DIR}bootimg")
         os.makedirs(DNA_MAIN_DIR + "bootimg")
         print("- Unpacking boot image")
         os.chdir(DNA_MAIN_DIR + "bootimg")
-        call("magiskboot unpack {}".format(BOOTIMG))
+        call(f"magiskboot unpack {BOOTIMG}")
         if os.path.isfile("kernel"):
             if os.path.isfile("ramdisk.cpio"):
 
@@ -480,10 +479,8 @@ def patch_magisk(BOOTIMG):
                         shutil.copyfileobj(source_file, dest_file)
 
                 shutil.copy2('ramdisk.cpio', 'ramdisk.cpio.orig')
-                print("- Patching ramdisk magisk@{}".format(MAGISK_MANIFEST["CLASS"]))
-                CONFIGS = "KEEPVERITY={}\nKEEPFORCEENCRYPT={}\nPATCHVBMETAFLAG={}\n".format(
-                    MAGISK_MANIFEST["KEEPVERITY"], MAGISK_MANIFEST["KEEPFORCEENCRYPT"],
-                    MAGISK_MANIFEST["PATCHVBMETAFLAG"])
+                print(F"- Patching ramdisk magisk@{MAGISK_MANIFEST['CLASS']}")
+                CONFIGS = f"KEEPVERITY={MAGISK_MANIFEST['KEEPVERITY']}\nKEEPFORCEENCRYPT={MAGISK_MANIFEST['KEEPFORCEENCRYPT']}\nPATCHVBMETAFLAG={MAGISK_MANIFEST['PATCHVBMETAFLAG']}\n"
                 CONFIGS += f"RECOVERYMODE={str(os.path.isfile('recovery_dtbo')).lower()}\n"
                 if SHA1:
                     CONFIGS += f"SHA1={SHA1}"
@@ -537,7 +534,7 @@ def patch_magisk(BOOTIMG):
                 for dt in ('dtb', 'kernel_dtb', 'extra'):
                     if os.path.isfile(dt):
                         print(f"- Patch fstab in {dt}")
-                        call("magiskboot dtb {} patch".format(dt))
+                        call(F"magiskboot dtb {dt} patch")
                     call(
                         "magiskboot hexpatch kernel 736B69705F696E697472616D667300 77616E745F696E697472616D667300")
                     call("magiskboot hexpatch kernel 77616E745F696E697472616D6673 736B69705F696E697472616D6673")
@@ -567,13 +564,13 @@ def patch_magisk(BOOTIMG):
                         destination_path = os.path.join(DNA_MAIN_DIR, 'vendor', 'data-app', 'Magisk', 'Magisk.apk')
                         shutil.copy(MAGISK_FILE, destination_path)
             os.chdir(PWD_DIR)
-            if os.path.isdir("{}bootimg".format(DNA_MAIN_DIR)):
+            if os.path.isdir(f"{DNA_MAIN_DIR}bootimg"):
                 rmdire(f"{DNA_MAIN_DIR}bootimg")
 
 
 def patch_addons():
     if os.path.isdir(f"{PWD_DIR}local/etc/devices/default/{SETUP_MANIFEST['ANDROID_SDK']}/addons"):
-        DISPLAY("复制 default/{}/* ...".format(SETUP_MANIFEST["ANDROID_SDK"]))
+        DISPLAY(f"复制 default/{SETUP_MANIFEST['ANDROID_SDK']}/* ...")
         try:
             shutil.copytree(os.path.join(PWD_DIR, "local", "etc", "devices", "default", SETUP_MANIFEST["ANDROID_SDK"],
                                          "addons"), DNA_MAIN_DIR, dirs_exist_ok=True)
