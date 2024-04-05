@@ -176,11 +176,11 @@ def LOAD_IMAGE_JSON(dumpinfo, source_dir):
         mount_point = "/" + mount_point
     fsize = info["s"]
     blocks = ceil(int(fsize) / int(block_size))
-    dsize = str(GET_DIR_SIZE(source_dir)).strip()
-    if int(dsize) > int(fsize):
-        minsize = int(dsize) - int(fsize)
-        if int(minsize) < int(20971520):
-            isize = int(int(dsize) * 1.08)
+    dsize = GET_DIR_SIZE(source_dir)
+    if dsize > int(fsize):
+        minsize = dsize - int(fsize)
+        if int(minsize) < 20971520:
+            isize = int(dsize * 1.08)
             dsize = str(isize)
     else:
         dsize = fsize
