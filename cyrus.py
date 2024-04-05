@@ -1469,7 +1469,7 @@ def choose_zrom(flag=0):
             extract_zrom(sFilePath)
     else:
         print('\x1b[0;33m> 固件列表\x1b[0m')
-        print("固件放置路径: " + ROM_DIR)
+        print(f"固件放置路径: {ROM_DIR}")
         lists_project('返回上级', ROM_DIR + '*.zip', 1)
         choice = input('> 选择: ')
         if choice:
