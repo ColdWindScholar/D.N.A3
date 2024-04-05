@@ -323,16 +323,13 @@ def find_file(path, rule, flag=1):
         for (root, lists, files) in os.walk(path):
             for file in files:
                 if re.search(rule, os.path.basename(file)):
-                    find = os.path.join(root, file)
-                    finds.append(find)
+                    finds.append(os.path.join(root, file))
 
     elif flag == 2:
         parent_depth = len(path.split(os.path.sep))
         for (parent, _, filenames) in os.walk(path, topdown=True):
             for filename in filenames:
-                dirname_path = os.path.join(parent, filename)
-                dirname_depth = len(dirname_path.split(os.path.sep))
-                if dirname_depth == parent_depth:
+                if len(os.path.join(parent, filename).split(os.path.sep)) == parent_depth:
                     if re.search(rule, os.path.basename(filename)):
                         finds.append(filename)
 
