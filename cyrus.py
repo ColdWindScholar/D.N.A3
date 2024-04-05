@@ -1750,7 +1750,7 @@ def RunModules(sub):
 
 
 def menu_main(project):
-    global ASK, ASK, ASK, ASK, ASK, ASK
+    global ASK
     envelop_project(project)
     ASK = True
     os.system('cls' if os.name == 'nt' else 'clear')
