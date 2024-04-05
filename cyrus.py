@@ -1,4 +1,3 @@
-import base64
 import codecs
 from glob import glob
 import hashlib
@@ -481,8 +480,7 @@ def patch_magisk(BOOTIMG):
                         else:
                             sha1.update(fileData)
 
-                fileHash = base64.b64encode(sha1.digest()).decode("utf-8 ")
-                SHA1 = base64.b64decode(fileHash).hex()
+                SHA1 = sha1.digest().hex()
                 with open(BOOTIMG, 'rb') as source_file:
                     with open('stock_boot.img', 'wb') as dest_file:
                         shutil.copyfileobj(source_file, dest_file)
