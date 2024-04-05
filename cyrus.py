@@ -61,7 +61,6 @@ class global_value(object):
     ASK = False
 
     def __init__(self):
-        self.IS_FIRST = 0
         self.programs = ["mv", "cpio", "brotli", "img2simg", "e2fsck", "resize2fs",
                          "mke2fs", "e2fsdroid", "mkfs.erofs", "lpmake", "lpunpack", "extract.erofs", "magiskboot"]
         if os.name == 'nt':
@@ -1503,10 +1502,6 @@ def creat_project():
 
 def menu_once():
     LOAD_SETUP_JSON()
-    while V.IS_FIRST >= 3:
-        V.IS_FIRST = 0
-
-    V.IS_FIRST += 1
     while True:
         os.system("cls" if os.name == "nt" else "clear")
         print("\x1b[0;33m> 工程列表\x1b[0m")
