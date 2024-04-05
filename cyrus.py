@@ -443,7 +443,7 @@ def patch_magisk(BOOTIMG):
         'PATCHVBMETAFLAG': "false",
         'TARGET': "arm",
         'IS_64BIT': "true"}
-    for (property_, value) in default_manifest.items():
+    for property_, value in default_manifest.items():
         if property_ not in MAGISK_MANIFEST:
             MAGISK_MANIFEST[property_] = value
 
