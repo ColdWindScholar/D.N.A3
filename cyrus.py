@@ -460,7 +460,7 @@ def patch_magisk(BOOTIMG):
                                          'x86', 'x86_64'):
         sys.exit("Invalid [TARGET] - must be one of <arm/x86>")
     MAGISK_FILES = glob(f"{PWD_DIR}local/etc/magisk/{MAGISK_MANIFEST['CLASS']}/Magisk-*.apk")
-    if len(MAGISK_FILES) <= 0:
+    if not MAGISK_FILES:
         PAUSE(f"> 未发现local/etc/magisk/{MAGISK_MANIFEST['CLASS']}/Magisk-*.apk文件")
         return
     if os.path.isfile(BOOTIMG):
@@ -603,7 +603,7 @@ def patch_addons():
 
 def repack_super():
     infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
-    if len(infile) <= 0:
+    if not infile:
         parts = [
             'system',
             'system_ext',
@@ -1173,7 +1173,7 @@ def decompress_bin(infile, outdir, flag='1'):
         extract_payload.main(infile, outdir)
         os.system("cls" if os.name == "nt" else "clear")
         infile = glob(outdir + "*.img")
-        if len(infile) > 0:
+        if infile:
             decompress(infile)
 
 
@@ -1298,7 +1298,7 @@ def envelop_project(project):
     if not os.path.isfile(V.DNA_CONF_DIR + "file_contexts"):
         if os.path.isdir(V.DNA_CONF_DIR):
             contexts_files = find_file(V.DNA_MAIN_DIR, "^[a-z].*?_file_contexts$")
-            if len(contexts_files) > 0:
+            if contexts_files:
                 with open(V.DNA_CONF_DIR + "file_contexts", "w", encoding='utf-8', newline="\n") as f:
                     for text in contexts_files:
                         with open(text, "r", encoding='utf-8') as f_r:
@@ -1523,7 +1523,7 @@ def menu_once():
             else:
                 choose_zrom()
         elif int(choice) == 44:
-            if len(V.dict0) > 1:
+            if V.dict0:
                 which = input("> 输入序号进行删除: ")
                 if which and not int(which) == 0 and not which.isdigit():
                     continue
@@ -1647,7 +1647,7 @@ def menu_modules():
             elif int(choice) == 33:
                 extract_zrom(input("请输入插件路径："))
             elif int(choice) == 44:
-                if len(V.dict0) > 1:
+                if V.dict0:
                     which = input("> 输入序号进行删除: ")
                     if which:
                         if not int(which) == 0:
