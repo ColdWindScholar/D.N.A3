@@ -1,6 +1,6 @@
 import base64
 import codecs
-import glob
+from glob import glob
 import hashlib
 import json
 import os
@@ -459,7 +459,7 @@ def patch_magisk(BOOTIMG):
     if MAGISK_MANIFEST["TARGET"] not in ('arm', 'arm64', 'armeabi-v7a', 'arm64-v8a',
                                          'x86', 'x86_64'):
         sys.exit("Invalid [TARGET] - must be one of <arm/x86>")
-    MAGISK_FILES = glob.glob(f"{PWD_DIR}local/etc/magisk/{MAGISK_MANIFEST['CLASS']}/Magisk-*.apk")
+    MAGISK_FILES = glob(f"{PWD_DIR}local/etc/magisk/{MAGISK_MANIFEST['CLASS']}/Magisk-*.apk")
     if len(MAGISK_FILES) <= 0:
         PAUSE(f"> 未发现local/etc/magisk/{MAGISK_MANIFEST['CLASS']}/Magisk-*.apk文件")
         return
@@ -534,7 +534,7 @@ def patch_magisk(BOOTIMG):
                 patch_cmds += '"patch" "backup ramdisk.cpio.orig" "mkdir 000 .backup" "add 000 .backup/.magisk config"'
                 call(patch_cmds)
                 for file_pattern in ['ramdisk.cpio.orig', 'config', 'magisk*.xz', 'magiskinit', 'magisk*']:
-                    matching_files = glob.glob(file_pattern)
+                    matching_files = glob(file_pattern)
                     for file_to_delete in matching_files:
                         try:
                             os.remove(file_to_delete)
@@ -602,7 +602,7 @@ def patch_addons():
 
 
 def repack_super():
-    infile = glob.glob(V.DNA_CONF_DIR + '*_contexts.txt')
+    infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
     if len(infile) <= 0:
         parts = [
             'system',
@@ -1050,14 +1050,14 @@ def decompress_img(source, distance, keep=1):
             elif file_type == 'super':
                 lpunpack_cmd = f'lpunpack {source} {V.DNA_TEMP_DIR}'
                 call(lpunpack_cmd)
-                for img in glob.glob(V.DNA_TEMP_DIR + '*_b.img'):
+                for img in glob(V.DNA_TEMP_DIR + '*_b.img'):
                     if not V.SETUP_MANIFEST['IS_VAB'] == '1' or os.path.getsize(img) == 0:
                         os.remove(img)
                     else:
                         new_distance = V.DNA_MAIN_DIR + os.path.basename(img).rsplit('.', 1)[0]
                         decompress_img(img, new_distance, keep=0)
                 else:
-                    for img in glob.glob(V.DNA_TEMP_DIR + '*_a.img'):
+                    for img in glob(V.DNA_TEMP_DIR + '*_a.img'):
                         new_source = img.rsplit('_', 1)[0] + '.img'
                         try:
                             os.rename(img, new_source)
@@ -1172,7 +1172,7 @@ def decompress_bin(infile, outdir, flag='1'):
         print(f"> {YELLOW}提取【{os.path.basename(infile)}】所有镜像文件:{CLOSE}\n")
         extract_payload.main(infile, outdir)
         os.system("cls" if os.name == "nt" else "clear")
-        infile = glob.glob(outdir + "*.img")
+        infile = glob(outdir + "*.img")
         if len(infile) > 0:
             decompress(infile)
 
@@ -1375,13 +1375,13 @@ def extract_zrom(rom):
         fantasy_zip.extractall(V.DNA_TEMP_DIR)
         fantasy_zip.close()
         if [part_name for part_name in sorted(zip_lists) if part_name.endswith(".new.dat.br")]:
-            infile = glob.glob(V.DNA_TEMP_DIR + '*.br')
+            infile = glob(V.DNA_TEMP_DIR + '*.br')
             able = 2
         elif [part_name for part_name in zip_lists if part_name.endswith(".new.dat")]:
-            infile = glob.glob(V.DNA_TEMP_DIR + '*.dat')
+            infile = glob(V.DNA_TEMP_DIR + '*.dat')
             able = 3
         elif [part_name for part_name in zip_lists if part_name.endswith(".img")]:
-            infile = glob.glob(V.DNA_TEMP_DIR + '*.img')
+            infile = glob(V.DNA_TEMP_DIR + '*.img')
             able = 4
         if not infile:
             PAUSE('> 仅支持含有payload.bin/*.new.dat/*.new.dat.br/*.img的zip固件')
@@ -1395,19 +1395,19 @@ def lists_project(dTitle, sPath, flag):
     i = 0
     V.dict0 = {i: dTitle}
     if flag == 0:
-        for obj in glob.glob(sPath):
+        for obj in glob(sPath):
             if os.path.isdir(obj):
                 i += 1
                 V.dict0[i] = obj
 
     elif flag == 1:
-        for obj in glob.glob(sPath):
+        for obj in glob(sPath):
             if os.path.isfile(obj):
                 i += 1
                 V.dict0[i] = obj
 
     elif flag == 2:
-        for obj in glob.glob(sPath):
+        for obj in glob(sPath):
             if os.path.isdir(obj):
                 if os.path.isfile(obj + os.sep + "run.sh"):
                     i += 1
@@ -1713,22 +1713,22 @@ def menu_main(project):
                                    input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> '))
             elif int(option) == 2:
                 V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
-                decompress(glob.glob(V.DNA_TEMP_DIR + '*.br'), int(option))
+                decompress(glob(V.DNA_TEMP_DIR + '*.br'), int(option))
             elif int(option) == 3:
-                infile = glob.glob(V.DNA_TEMP_DIR + '*.dat')
+                infile = glob(V.DNA_TEMP_DIR + '*.dat')
                 V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 decompress(infile, int(option))
-                infile = glob.glob(V.DNA_TEMP_DIR + '*.img')
+                infile = glob(V.DNA_TEMP_DIR + '*.img')
                 V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 decompress(infile, int(option))
             elif int(option) == 4:
                 V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
-                decompress(glob.glob(V.DNA_TEMP_DIR + '*.img'), int(option))
+                decompress(glob(V.DNA_TEMP_DIR + '*.img'), int(option))
             elif int(option) == 5:
-                infile = glob.glob(V.DNA_TEMP_DIR + '*.win[0-9][0-9][0-9]')
-                for i in glob.glob(V.DNA_TEMP_DIR + '*.win*'):
+                infile = glob(V.DNA_TEMP_DIR + '*.win[0-9][0-9][0-9]')
+                for i in glob(V.DNA_TEMP_DIR + '*.win*'):
                     infile.append(i)
-                for i in glob.glob(V.DNA_TEMP_DIR + '*.win'):
+                for i in glob(V.DNA_TEMP_DIR + '*.win'):
                     infile.append(i)
                 infile = list(set(sorted(infile)))
                 V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
@@ -1739,8 +1739,8 @@ def menu_main(project):
             elif int(option) == 7:
                 menu_modules()
             elif int(option) == 8:
-                infile = glob.glob(V.DNA_CONF_DIR + '*_contexts.txt')
-                infile_kernel = glob.glob(V.DNA_CONF_DIR + '*_kernel.txt')
+                infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
+                infile_kernel = glob(V.DNA_CONF_DIR + '*_kernel.txt')
                 V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 for file in infile_kernel:
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
@@ -1775,7 +1775,7 @@ def menu_main(project):
                                     continue
                             recompress(source, fsconfig, contexts, infojson, int(option))
             elif int(option) == 9:
-                infile = glob.glob(V.DNA_CONF_DIR + '*_contexts.txt')
+                infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
                 V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 for file in infile:
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
@@ -1801,7 +1801,7 @@ def menu_main(project):
                                     continue
                             recompress(source, fsconfig, contexts, infojson, int(option))
             elif int(option) == 10:
-                infile = glob.glob(V.DNA_CONF_DIR + '*_contexts.txt')
+                infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
                 V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
                 for file in infile:
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
