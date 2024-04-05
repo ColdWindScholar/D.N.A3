@@ -4,6 +4,7 @@ import shutil
 import zipfile
 from platform import system
 from pip._internal.cli.main import main as _main
+
 with open('requirements.txt', 'r', encoding='utf-8') as l:
     for i in l.read().split("\n"):
         print(f"Installing {i}")
@@ -45,18 +46,14 @@ def zip_folder(folder_path):
 local = os.getcwd()
 print("Building...")
 import PyInstaller.__main__
+
 if ostype == 'Darwin':
     PyInstaller.__main__.run([
         'dna.py',
         '-F',
         '--exclude-module',
         'numpy',
-        '--hidden-import',
-        'tkinter',
-        '--hidden-import',
-        'PIL',
-        '--hidden-import',
-        'PIL._tkinter_finder'
+        '-i', 'icon.ico'
     ])
 elif os.name == 'posix':
     PyInstaller.__main__.run([
@@ -64,12 +61,7 @@ elif os.name == 'posix':
         '-F',
         '--exclude-module',
         'numpy',
-        '--hidden-import',
-        'tkinter',
-        '--hidden-import',
-        'PIL',
-        '--hidden-import',
-        'PIL._tkinter_finder',
+        '-i', 'icon.ico'
     ])
 elif os.name == 'nt':
     PyInstaller.__main__.run([
@@ -77,6 +69,7 @@ elif os.name == 'nt':
         '-F',
         '--exclude-module',
         'numpy',
+        '-i', 'icon.ico'
     ])
 if os.name == 'nt':
     if os.path.exists(local + os.sep + "dist" + os.sep + "dna.exe"):
@@ -93,14 +86,14 @@ for i in os.listdir(local + os.sep + "local"):
             shutil.rmtree(local + os.sep + "local" + os.sep + i)
         else:
             os.remove(local + os.sep + "local" + os.sep + i)
-for i in os.listdir(local + os.sep + "local"+os.sep+"bin"):
+for i in os.listdir(local + os.sep + "local" + os.sep + "bin"):
     if i in pclist:
         continue
     else:
-        if os.path.isdir(local + os.sep + "local"+os.sep+"bin" + os.sep + i):
-            shutil.rmtree(local + os.sep + "local"+os.sep+"bin" + os.sep + i)
+        if os.path.isdir(local + os.sep + "local" + os.sep + "bin" + os.sep + i):
+            shutil.rmtree(local + os.sep + "local" + os.sep + "bin" + os.sep + i)
         else:
-            os.remove(local + os.sep + "local"+os.sep+"bin" + os.sep + i)
+            os.remove(local + os.sep + "local" + os.sep + "bin" + os.sep + i)
 for i in os.listdir(local):
     if i not in ['dna', 'dna.exe', 'local', 'LICENSE']:
         print(f"Removing {i}")
