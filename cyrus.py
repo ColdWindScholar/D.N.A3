@@ -1536,6 +1536,7 @@ def menu_more(project):
                 REDUCE_CONF = f"{PWD_DIR}local/etc/devices/default/{V.SETUP_MANIFEST['ANDROID_SDK']}/reduce.txt"
             else:
                 input("精简列表<reduce.txt>丢失！")
+                continue
             with CoastTime():
                 for line in open(REDUCE_CONF):
                     line = line.replace("/", os.sep).strip("\n")
