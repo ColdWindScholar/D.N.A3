@@ -301,8 +301,7 @@ def env_setup():
             print(f"{YELLOW}[{'0' if i < 10 else ''}{i}]{CLOSE}\t{BOLD}{name}{CLOSE}: {GREEN}{data[value]}{CLOSE}")
             data1[str(i)] = name
             i += 1
-        print("\n")
-        sum_ = input(f"请输入你要更改的序列，输入{YELLOW}00{CLOSE}为返回：")
+        sum_ = input(f"\n请输入你要更改的序列，输入{YELLOW}00{CLOSE}为返回：")
         if sum_ in ["00", "0"]:
             return
         if sum_ not in data1.keys():
@@ -861,11 +860,11 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                             DISPLAY(f"重新生成: {label}.new.dat.br | Level={level} ...", 3)
                             newdat_brotli = newdat + ".br"
                             call(f"brotli -{level}jfo {newdat_brotli} {newdat}")
-                            print(" Done" if os.path.isfile(newdat_brotli) else " Failed")
+                            print(f" {GREEN}打包成功{CLOSE}" if os.path.isfile(newdat_brotli) else f" {RED}打包失败{CLOSE}")
                     else:
-                        print(" Failed")
+                        print(f" {RED}打包失败{CLOSE}")
     else:
-        print(" Failed")
+        print(f" {RED}打包失败{CLOSE}")
 
 
 def rmdire(path):
