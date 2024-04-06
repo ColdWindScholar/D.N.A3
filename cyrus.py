@@ -552,18 +552,20 @@ def patch_addons():
 
 
 def repack_super():
-    infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
-    if not infile:
-        parts = [
-            'system',
-            'system_ext',
-            'product',
-            'vendor',
-            'odm']
-    else:
-        parts = []
+    parts_1 = [
+        'system',
+        'system_ext',
+        'product',
+        'vendor',
+        'odm',
+        "vendor_dlmk",
+        "my_"
+        ]
+    parts = []
+    for i in parts_1:
+        infile = glob(V.DNA_DIST_DIR + i+'*'+'.img')
         for file in infile:
-            parts.append(os.path.basename(file).rsplit('_', 1)[0])
+            parts.append(os.path.basename(file).rsplit('.', 1)[0])
     argvs = f'lpmake --metadata-size 65536 --super-name super --device super:{V.SETUP_MANIFEST["SUPER_SIZE"]}:{int(V.SETUP_MANIFEST["SUPER_SECTOR"]) * 512} '
     if V.SETUP_MANIFEST['IS_VAB'] == '1':
         argvs += '--metadata-slots 3 --virtual-ab -F '
