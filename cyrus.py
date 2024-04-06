@@ -451,8 +451,8 @@ def patch_magisk(BOOTIMG):
                 is_64bit = MAGISK_MANIFEST["IS_64BIT"] == "true"
                 target = MAGISK_MANIFEST["TARGET"]
                 magisk_dict = {'magiskinit': "lib/armeabi-v7a/libmagiskinit.so",
-                        'magisk32': "lib/armeabi-v7a/libmagisk32.so",
-                        'magisk64': ""}
+                               'magisk32': "lib/armeabi-v7a/libmagisk32.so",
+                               'magisk64': ""}
                 if re.match("arm", target):
                     if is_64bit:
                         magisk_dict["magiskinit"] = "lib/arm64-v8a/libmagiskinit.so"
@@ -1572,6 +1572,7 @@ def RunModules(sub):
         call(f"busybox bash {shell_sub} {V.DNA_MAIN_DIR}")
     input('> 任意键继续')
 
+
 def quiet():
     V.JM = input('> 是否开启静默 [0/1]: ') == '1'
 
@@ -1733,7 +1734,8 @@ def menu_main(project):
                                 if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
                                     V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
                                     V.SETUP_MANIFEST['REPACK_TO_RW'] = '1'
-                            elif V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '0':
+                            elif V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST[
+                                'REPACK_TO_RW'] == '0':
                                 if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
                                     V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
                                     V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
