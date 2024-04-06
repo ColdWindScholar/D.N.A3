@@ -213,43 +213,45 @@ class ULTRAMAN(object):
             with open(unsparse_file, 'wb') as raw_img_file:
                 sector_base = 82528
                 output_len = 0
-                while True:
-                    if total_chunks > 0:
-                        chunk_header = EXT4_CHUNK_HEADER(img_file.read(EXT4_CHUNK_HEADER_SIZE))
-                        sector_size = chunk_header.chunk_size * header.block_size >> 9
-                        chunk_data_size = chunk_header.total_size - header.chunk_header_size
-                        if chunk_header.type == 51905:
+                while total_chunks > 0:
+                    chunk_header = EXT4_CHUNK_HEADER(img_file.read(EXT4_CHUNK_HEADER_SIZE))
+                    sector_size = chunk_header.chunk_size * header.block_size >> 9
+                    chunk_data_size = chunk_header.total_size - header.chunk_header_size
+                    if chunk_header.type == 51905:
+                        if header.chunk_header_size > EXT4_CHUNK_HEADER_SIZE:
+                            img_file.seek(header.chunk_header_size - EXT4_CHUNK_HEADER_SIZE, 1)
+                        data = img_file.read(chunk_data_size)
+                        len_data = len(data)
+                        if len_data == sector_size << 9:
+                            raw_img_file.write(data)
+                            output_len += len_data
+                            sector_base += sector_size
+                    else:
+                        if chunk_header.type == 51906:
                             if header.chunk_header_size > EXT4_CHUNK_HEADER_SIZE:
                                 img_file.seek(header.chunk_header_size - EXT4_CHUNK_HEADER_SIZE, 1)
                             data = img_file.read(chunk_data_size)
-                            len_data = len(data)
-                            if len_data == sector_size << 9:
-                                raw_img_file.write(data)
-                                output_len += len_data
-                                sector_base += sector_size
+                            len_data = sector_size << 9
+                            raw_img_file.truncate(raw_img_file.truncate() + len_data)
+                            raw_img_file.seek(0, 2)
+                            output_len += len(data)
+                            sector_base += sector_size
                         else:
-                            if chunk_header.type == 51906:
+                            if chunk_header.type == 51907:
                                 if header.chunk_header_size > EXT4_CHUNK_HEADER_SIZE:
                                     img_file.seek(header.chunk_header_size - EXT4_CHUNK_HEADER_SIZE, 1)
                                 data = img_file.read(chunk_data_size)
                                 len_data = sector_size << 9
-                                raw_img_file.write(struct.pack('B', 0) * len_data)
+                                raw_img_file.truncate(raw_img_file.truncate()+len_data)
+                                raw_img_file.seek(0, 2)
                                 output_len += len(data)
                                 sector_base += sector_size
                             else:
-                                if chunk_header.type == 51907:
-                                    if header.chunk_header_size > EXT4_CHUNK_HEADER_SIZE:
-                                        img_file.seek(header.chunk_header_size - EXT4_CHUNK_HEADER_SIZE, 1)
-                                    data = img_file.read(chunk_data_size)
-                                    len_data = sector_size << 9
-                                    raw_img_file.write(struct.pack('B', 0) * len_data)
-                                    output_len += len(data)
-                                    sector_base += sector_size
-                                else:
-                                    len_data = sector_size << 9
-                                    raw_img_file.write(struct.pack('B', 0) * len_data)
-                                    sector_base += sector_size
-                        total_chunks -= 1
+                                len_data = sector_size << 9
+                                raw_img_file.truncate(raw_img_file.truncate() + len_data)
+                                raw_img_file.seek(0, 2)
+                                sector_base += sector_size
+                    total_chunks -= 1
             return unsparse_file
 
     def EXT4_EXTRACTOR(self):
