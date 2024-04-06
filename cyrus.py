@@ -57,7 +57,7 @@ RED, WHITE, CYAN, YELLOW, MAGENTA, GREEN, BOLD, CLOSE = ['\x1b[91m',
 
 
 class global_value(object):
-    ASK = False
+    JM = False
 
     def __init__(self):
         self.programs = ["mv", "cpio", "brotli", "img2simg", "e2fsck", "resize2fs",
@@ -900,7 +900,6 @@ def dboot(infile, dist):
         return
     else:
         if ramdisk:
-            os.remove(os.path.join(infile, "boot_o.img"))
             if os.path.exists(os.path.join(dist, os.path.basename(infile) + ".img")):
                 os.remove(os.path.join(dist, os.path.basename(infile) + ".img"))
             os.rename(infile + os.sep + "new-boot.img", os.path.join(dist, os.path.basename(infile) + ".img"))
@@ -1181,7 +1180,7 @@ def decompress(infile, flag=4):
                     continue
                 else:
                     transfer = None
-            if V.ASK:
+            if not V.JM:
                 DISPLAY(f'是否分解: {os.path.basename(part)} [1/0]: ', 2, '')
                 if input() != '1':
                     continue
@@ -1196,10 +1195,11 @@ def decompress(infile, flag=4):
             continue
         if seekfd.gettype(part) not in ('ext', 'sparse', 'erofs', 'super', 'boot', 'vendor_boot'):
             continue
-        if V.ASK:
+        if not V.JM:
             DISPLAY(f'是否分解: {os.path.basename(part)} [1/0]: ', 2, '')
-            if input() == '1':
-                decompress_img(part, V.DNA_MAIN_DIR + os.path.basename(part).rsplit('.', 1)[0])
+            if input() == '0':
+                continue
+        decompress_img(part, V.DNA_MAIN_DIR + os.path.basename(part).rsplit('.', 1)[0])
 
 
 def envelop_project(project):
@@ -1284,7 +1284,7 @@ def extract_zrom(rom):
         if not infile:
             input('> 仅支持含有payload.bin/*.new.dat/*.new.dat.br/*.img的zip固件')
         else:
-            V.ASK = True
+            V.JM = True
             decompress(infile, able)
         menu_main(V.project)
 
@@ -1572,10 +1572,13 @@ def RunModules(sub):
         call(f"busybox bash {shell_sub} {V.DNA_MAIN_DIR}")
     input('> 任意键继续')
 
+def quiet():
+    V.JM = input('> 是否开启静默 [0/1]: ') == '1'
+
 
 def menu_main(project):
     envelop_project(V.project)
-    V.ASK = True
+    V.JM = True
     os.system('cls' if os.name == 'nt' else 'clear')
     print(f'\x1b[1;36m> 当前工程: \x1b[0m{project}')
     print('-------------------------------------------------------\n')
@@ -1606,15 +1609,15 @@ def menu_main(project):
                     decompress_bin(infile, V.DNA_TEMP_DIR,
                                    input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> '))
             elif int(option) == 2:
-                V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                quiet()
                 decompress(glob(V.DNA_TEMP_DIR + '*.br'), int(option))
             elif int(option) == 3:
-                V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                quiet()
                 decompress(glob(V.DNA_TEMP_DIR + '*.dat'), int(option))
-                V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                quiet()
                 decompress(glob(V.DNA_TEMP_DIR + '*.img'), int(option))
             elif int(option) == 4:
-                V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                quiet()
                 decompress(glob(V.DNA_TEMP_DIR + '*.img'), int(option))
             elif int(option) == 5:
                 infile = glob(V.DNA_TEMP_DIR + '*.win[0-9][0-9][0-9]')
@@ -1622,7 +1625,7 @@ def menu_main(project):
                     infile.append(i)
                 for i in glob(V.DNA_TEMP_DIR + '*.win'):
                     infile.append(i)
-                V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                quiet()
                 decompress_win(list(set(sorted(infile))))
                 input('> 任意键继续')
             elif int(option) == 6:
@@ -1632,12 +1635,12 @@ def menu_main(project):
             elif int(option) == 8:
                 infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
                 infile_kernel = glob(V.DNA_CONF_DIR + '*_kernel.txt')
-                V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                quiet()
                 for file in infile_kernel:
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
                     source = V.DNA_MAIN_DIR + f_basename
                     if os.path.isdir(source):
-                        if V.ASK:
+                        if not V.JM:
                             DISPLAY(f'是否合成: {f_basename}.img [1/0]: ', end='')
                             if input() != '1':
                                 continue
@@ -1660,14 +1663,14 @@ def menu_main(project):
                                 V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
                                 V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
-                            if V.ASK:
+                            if not V.JM:
                                 DISPLAY(f'是否合成: {f_basename}.img [1/0]: ', end='')
                                 if input() != '1':
                                     continue
                             recompress(source, fsconfig, contexts, infojson, int(option))
             elif int(option) == 9:
                 infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
-                V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                quiet()
                 for file in infile:
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
                     source = V.DNA_MAIN_DIR + f_basename
@@ -1686,14 +1689,14 @@ def menu_main(project):
                                 V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
                                 V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
-                            if V.ASK:
+                            if not V.JM:
                                 DISPLAY(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
                                 if input() != '1':
                                     continue
                             recompress(source, fsconfig, contexts, infojson, int(option))
             elif int(option) == 10:
                 infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
-                V.ASK = input('> 是否开启静默 [0/1]: ') != '1'
+                quiet()
                 for file in infile:
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
                     source = V.DNA_MAIN_DIR + f_basename
@@ -1712,7 +1715,7 @@ def menu_main(project):
                                 V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
                                 V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
-                            if V.ASK:
+                            if not V.JM:
                                 DISPLAY(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
                                 if input() != '1':
                                     continue
@@ -1735,7 +1738,7 @@ def menu_main(project):
                                     V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
                                     V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                             if os.path.isfile(contexts) and os.path.isfile(fsconfig):
-                                if V.ASK:
+                                if not V.JM:
                                     DISPLAY(f'是否合成: {f_basename}.new.dat.br [1/0]: ', end='')
                                     if input() != '1':
                                         continue
