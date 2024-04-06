@@ -1,4 +1,4 @@
-import json
+fimport json
 import os
 import platform
 import re
@@ -900,7 +900,6 @@ def dboot(infile, dist):
         return
     else:
         if ramdisk:
-            os.remove(os.path.join(infile, "boot_o.img"))
             if os.path.exists(os.path.join(dist, os.path.basename(infile) + ".img")):
                 os.remove(os.path.join(dist, os.path.basename(infile) + ".img"))
             os.rename(infile + os.sep + "new-boot.img", os.path.join(dist, os.path.basename(infile) + ".img"))
