@@ -36,8 +36,8 @@ def gettype(file) -> str:
                 file_.seek(-1, 1)
             except:
                 return False
-            buf += bytearray(file_.read(4))
-        return buf[1:] == b'\x67\x44\x6c\x61'
+            buf = bytearray(file_.read(4))
+        return buf == b'\x67\x44\x6c\x61'
 
     try:
         if is_super(file):
