@@ -25,17 +25,7 @@ def gettype(file) -> str:
 
     def is_super(fil) -> any:
         with open(fil, 'rb') as file_:
-            buf = bytearray(file_.read(4))
-            if len(buf) < 4:
-                return False
-            file_.seek(0, 0)
-
-            while buf[0] == 0x00:
-                buf = bytearray(file_.read(1))
-            try:
-                file_.seek(-1, 1)
-            except:
-                return False
+            file_.seek(4096,0)
             buf = bytearray(file_.read(4))
         return buf == b'\x67\x44\x6c\x61'
 
