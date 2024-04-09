@@ -560,10 +560,10 @@ def repack_super():
         'odm',
         "vendor_dlmk",
         "my_"
-        ]
+    ]
     parts = []
     for i in parts_1:
-        infile = glob(V.DNA_DIST_DIR + i+'*'+'.img')
+        infile = glob(V.DNA_DIST_DIR + i + '*' + '.img')
         for file in infile:
             parts.append(os.path.basename(file).rsplit('.', 1)[0])
     argvs = f'lpmake --metadata-size 65536 --super-name super --device super:{V.SETUP_MANIFEST["SUPER_SIZE"]}:{int(V.SETUP_MANIFEST["SUPER_SECTOR"]) * 512} '
