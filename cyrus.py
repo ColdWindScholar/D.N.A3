@@ -135,12 +135,12 @@ class CoastTime:
         print(f"> Coast Time:{time.perf_counter() - self.t:.8f} s")
 
 
-def DISPLAY(message, flag=1, end='\n'):
+def display(message, flag=1, end='\n'):
     flags = {1: "3", 2: "6", 3: "4", 4: "1"}
     print(f"\x1b[1;3{flags[flag]}m [ {time.strftime('%H:%M:%S', time.localtime())} ]\t {message} \x1b[0m", end=end)
 
 
-def GET_DIR_SIZE(ddir, max_=1.06):
+def get_dir_size(ddir, max_=1.06):
     size = 0
     for (root, dirs, files) in os.walk(ddir):
         for name in files:
@@ -163,7 +163,7 @@ def ceil(x):
     return int(x)
 
 
-def LOAD_IMAGE_JSON(dumpinfo, source_dir):
+def load_image_json(dumpinfo, source_dir):
     with open(dumpinfo, "a+", encoding="utf-8") as f:
         f.seek(0)
         info = json.load(f)
@@ -175,7 +175,7 @@ def LOAD_IMAGE_JSON(dumpinfo, source_dir):
         mount_point = "/" + mount_point
     fsize = info["s"]
     blocks = ceil(int(fsize) / int(block_size))
-    dsize = GET_DIR_SIZE(source_dir)
+    dsize = get_dir_size(source_dir)
     if dsize > int(fsize):
         minsize = dsize - int(fsize)
         if int(minsize) < 20971520:
@@ -187,7 +187,7 @@ def LOAD_IMAGE_JSON(dumpinfo, source_dir):
         fsize, dsize, inodes, block_size, blocks, per_group, mount_point)
 
 
-def LOAD_SETUP_JSON():
+def load_setup_json():
     with open(SETUP_JSON, "r", encoding="utf-8") as manifest_file:
         V.SETUP_MANIFEST = json.load(manifest_file)
     set_default_env_setup()
@@ -394,10 +394,10 @@ def patch_twrp(BOOTIMG):
 
 
 def patch_magisk(BOOTIMG):
-    MAGISK_MANIFEST = {}
+    magisk_manifest = {}
     if os.path.isfile(MAGISK_JSON):
         with open(MAGISK_JSON, "r", encoding="utf-8") as manifest_file:
-            MAGISK_MANIFEST = json.load(manifest_file)
+            magisk_manifest = json.load(manifest_file)
     default_manifest = {
         'CLASS': "alpha",
         'KEEPVERITY': "true",
@@ -406,21 +406,21 @@ def patch_magisk(BOOTIMG):
         'TARGET': "arm",
         'IS_64BIT': "true"}
     for property_, value in default_manifest.items():
-        if property_ not in MAGISK_MANIFEST:
-            MAGISK_MANIFEST[property_] = value
+        if property_ not in magisk_manifest:
+            magisk_manifest[property_] = value
 
     for k in ('KEEPVERITY', 'KEEPFORCEENCRYPT', 'PATCHVBMETAFLAG', 'IS_64BIT'):
-        if MAGISK_MANIFEST[k] not in ('true', 'false'):
+        if magisk_manifest[k] not in ('true', 'false'):
             sys.exit(f"Invalid [{k}] - must be one of <true/false>")
 
-    if MAGISK_MANIFEST["CLASS"].lower() not in ('stable', 'alpha', 'canary'):
+    if magisk_manifest["CLASS"].lower() not in ('stable', 'alpha', 'canary'):
         sys.exit("Invalid [CLASS] - must be one of <stable/alpha/canary>")
-    if MAGISK_MANIFEST["TARGET"] not in ('arm', 'arm64', 'armeabi-v7a', 'arm64-v8a',
+    if magisk_manifest["TARGET"] not in ('arm', 'arm64', 'armeabi-v7a', 'arm64-v8a',
                                          'x86', 'x86_64'):
         sys.exit("Invalid [TARGET] - must be one of <arm/x86>")
-    MAGISK_FILES = glob(f"{PWD_DIR}local/etc/magisk/{MAGISK_MANIFEST['CLASS']}/Magisk-*.apk")
+    MAGISK_FILES = glob(f"{PWD_DIR}local/etc/magisk/{magisk_manifest['CLASS']}/Magisk-*.apk")
     if not MAGISK_FILES:
-        input(f"> 未发现local/etc/magisk/{MAGISK_MANIFEST['CLASS']}/Magisk-*.apk文件")
+        input(f"> 未发现local/etc/magisk/{magisk_manifest['CLASS']}/Magisk-*.apk文件")
         return
     if os.path.isfile(BOOTIMG):
         if os.path.isdir(f"{V.DNA_MAIN_DIR}bootimg"):
@@ -434,26 +434,26 @@ def patch_magisk(BOOTIMG):
                 sha1_ = sha1()
                 with open(BOOTIMG, "rb") as f:
                     while True:
-                        fileData = f.read(2048)
-                        if not fileData:
+                        file_data = f.read(2048)
+                        if not file_data:
                             break
                         else:
-                            sha1_.update(fileData)
+                            sha1_.update(file_data)
                 SHA1 = sha1_.digest().hex()
                 with open(BOOTIMG, 'rb') as source_file:
                     with open('stock_boot.img', 'wb') as dest_file:
                         shutil.copyfileobj(source_file, dest_file)
 
                 shutil.copy2('ramdisk.cpio', 'ramdisk.cpio.orig')
-                print(F"- Patching ramdisk magisk@{MAGISK_MANIFEST['CLASS']}")
-                CONFIGS = f"KEEPVERITY={MAGISK_MANIFEST['KEEPVERITY']}\nKEEPFORCEENCRYPT={MAGISK_MANIFEST['KEEPFORCEENCRYPT']}\nPATCHVBMETAFLAG={MAGISK_MANIFEST['PATCHVBMETAFLAG']}\n"
+                print(F"- Patching ramdisk magisk@{magisk_manifest['CLASS']}")
+                CONFIGS = f"KEEPVERITY={magisk_manifest['KEEPVERITY']}\nKEEPFORCEENCRYPT={magisk_manifest['KEEPFORCEENCRYPT']}\nPATCHVBMETAFLAG={magisk_manifest['PATCHVBMETAFLAG']}\n"
                 CONFIGS += f"RECOVERYMODE={str(os.path.isfile('recovery_dtbo')).lower()}\n"
                 if SHA1:
                     CONFIGS += f"SHA1={SHA1}"
                 with open("config", "w", newline="\n") as cn:
                     cn.write(CONFIGS)
-                is_64bit = MAGISK_MANIFEST["IS_64BIT"] == "true"
-                target = MAGISK_MANIFEST["TARGET"]
+                is_64bit = magisk_manifest["IS_64BIT"] == "true"
+                target = magisk_manifest["TARGET"]
                 magisk_dict = {'magiskinit': "lib/armeabi-v7a/libmagiskinit.so",
                                'magisk32': "lib/armeabi-v7a/libmagisk32.so",
                                'magisk64': ""}
@@ -529,7 +529,7 @@ def patch_magisk(BOOTIMG):
 
 def patch_addons():
     if os.path.isdir(f"{PWD_DIR}local/etc/devices/default/{V.SETUP_MANIFEST['ANDROID_SDK']}/addons"):
-        DISPLAY(f"复制 default/{V.SETUP_MANIFEST['ANDROID_SDK']}/* ...")
+        display(f"复制 default/{V.SETUP_MANIFEST['ANDROID_SDK']}/* ...")
         try:
             shutil.copytree(os.path.join(PWD_DIR, "local", "etc", "devices", "default", V.SETUP_MANIFEST["ANDROID_SDK"],
                                          "addons"), V.DNA_MAIN_DIR, dirs_exist_ok=True)
@@ -537,7 +537,7 @@ def patch_addons():
             print("Error copying files:", e)
     if os.path.isdir(
             f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/addons"):
-        DISPLAY(f"复制 {V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/* ...")
+        display(f"复制 {V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/* ...")
         source_dir = os.path.join(PWD_DIR, "local", "etc", "devices", V.SETUP_MANIFEST["DEVICE_CODE"],
                                   V.SETUP_MANIFEST["ANDROID_SDK"], "addons")
         try:
@@ -603,9 +603,9 @@ def repack_super():
     if V.SETUP_MANIFEST['SUPER_SPARSE'] == '1':
         argvs += '--sparse '
     argvs += f'--group {V.SETUP_MANIFEST["GROUP_NAME"]}_a:{V.SETUP_MANIFEST["SUPER_SIZE"]} --group {V.SETUP_MANIFEST["GROUP_NAME"]}_b:{V.SETUP_MANIFEST["SUPER_SIZE"]} --output {V.DNA_DIST_DIR + "super.img"} '
-    DISPLAY(
+    display(
         f'重新合成: super.img <Size:{V.SETUP_MANIFEST["SUPER_SIZE"]}|Vab:{V.SETUP_MANIFEST["IS_VAB"]}|Sparse:{V.SETUP_MANIFEST["SUPER_SPARSE"]}>')
-    DISPLAY(f"包含分区：{'|'.join(parts)}")
+    display(f"包含分区：{'|'.join(parts)}")
     with CoastTime():
         call(argvs)
     try:
@@ -645,10 +645,10 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
     RESIZE2RW = False
     fsize = None
     if dumpinfo:
-        (fsize, dsize, inodes, block_size, blocks, per_group, mount_point) = LOAD_IMAGE_JSON(dumpinfo, source)
+        (fsize, dsize, inodes, block_size, blocks, per_group, mount_point) = load_image_json(dumpinfo, source)
         size = dsize
     else:
-        size = GET_DIR_SIZE(source, 1.3)
+        size = get_dir_size(source, 1.3)
         if int(size) < 1048576:
             size = 1048576
         mount_point = "/" + label
@@ -693,8 +693,8 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
         printinform += "|lz4hc"
     elif V.SETUP_MANIFEST["RESIZE_EROFSIMG"] == "2":
         printinform += "|lz4"
-    DISPLAY(printinform)
-    DISPLAY(f"重新合成: {label}.img ...", 4)
+    display(printinform)
+    display(f"重新合成: {label}.img ...", 4)
 
     if V.SETUP_MANIFEST["REPACK_EROFS_IMG"] == "1":
         if call(mkerofs_cmd) != 0:
@@ -762,7 +762,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                     f_w.write(line)
 
         if flag > 8 or (V.SETUP_MANIFEST["REPACK_SPARSE_IMG"] == "1"):
-            DISPLAY("开始转换: sparse format ...")
+            display("开始转换: sparse format ...")
             call(f"img2simg {distance} {distance.rsplit('.', 1)[0] + '_sparse.img'}")
             if os.path.exists(distance):
                 try:
@@ -777,7 +777,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                 except Exception as e:
                     print("Error moving file:", e)
                 if flag > 8:
-                    DISPLAY(f"重新生成: {label}.new.dat ...", 3)
+                    display(f"重新生成: {label}.new.dat ...", 3)
                     img2sdat.main(distance, V.DNA_DIST_DIR, 4, label)
                     newdat = V.DNA_DIST_DIR + label + ".new.dat"
                     if os.path.isfile(newdat):
@@ -785,7 +785,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                         os.remove(distance)
                         if flag == 10:
                             level = V.SETUP_MANIFEST["REPACK_BR_LEVEL"]
-                            DISPLAY(f"重新生成: {label}.new.dat.br | Level={level} ...", 3)
+                            display(f"重新生成: {label}.new.dat.br | Level={level} ...", 3)
                             newdat_brotli = newdat + ".br"
                             call(f"brotli -{level}jfo {newdat_brotli} {newdat}")
                             print(f" {GREEN}打包成功{CLOSE}" if os.path.isfile(
@@ -906,10 +906,10 @@ def boot_utils(source, distance, flag=1):
     if not os.path.isdir(distance):
         os.makedirs(distance)
     if flag == 1:
-        DISPLAY(f"正在分解: {os.path.basename(source)}")
+        display(f"正在分解: {os.path.basename(source)}")
         unpackboot(source, distance)
     elif flag == 2:
-        DISPLAY(f"重新合成: {os.path.basename(source)}.img")
+        display(f"重新合成: {os.path.basename(source)}.img")
         dboot(source, distance)
 
 
@@ -931,7 +931,7 @@ def decompress_img(source, distance, keep=1):
             json.dump(bootjson, f, indent=4)
 
     elif file_type == 'sparse':
-        DISPLAY(f'正在转换: Unsparse Format [{os.path.basename(source)}] ...')
+        display(f'正在转换: Unsparse Format [{os.path.basename(source)}] ...')
         new_source = imgextractor.ULTRAMAN().APPLE(source)
         if os.path.isfile(new_source):
             if keep == 0:
@@ -939,7 +939,7 @@ def decompress_img(source, distance, keep=1):
             decompress_img(new_source, distance)
     if file_type in ['ext', 'erofs', 'super']:
         if file_type != 'ext':
-            DISPLAY(f'正在分解: {os.path.basename(source)} <{file_type}>', 3)
+            display(f'正在分解: {os.path.basename(source)} <{file_type}>', 3)
         if not os.path.isdir(V.DNA_CONF_DIR):
             os.makedirs(V.DNA_CONF_DIR)
         if file_type == 'ext':
@@ -1023,7 +1023,7 @@ def decompress_dat(transfer, source, distance, keep=0):
     sTime = time.time()
     if os.path.isfile(source + ".1"):
         max = V.SETUP_MANIFEST["UNPACK_SPLIT_DAT"]
-        DISPLAY(f"合并: {os.path.basename(source)}.1~{max} ...")
+        display(f"合并: {os.path.basename(source)}.1~{max} ...")
         with open(source, "ab") as f:
             for i in range(1, int(max)):
                 if os.path.exists("{}.{}".format(source, i)):
@@ -1034,7 +1034,7 @@ def decompress_dat(transfer, source, distance, keep=0):
                     except:
                         ...
 
-    DISPLAY(f"正在分解: {os.path.basename(source)} ...", 3)
+    display(f"正在分解: {os.path.basename(source)} ...", 3)
     sdat2img.main(transfer, source, distance)
     if os.path.isfile(distance):
         tTime = time.time() - sTime
@@ -1055,11 +1055,11 @@ def decompress_dat(transfer, source, distance, keep=0):
 
 
 def decompress_bro(transfer, source, distance, keep=0):
-    sTime = time.time()
-    DISPLAY(f"正在分解: {os.path.basename(source)} ...", 3)
+    s_time = time.time()
+    display(f"正在分解: {os.path.basename(source)} ...", 3)
     call(f"brotli -df {source} -o {distance}")
     if os.path.isfile(distance):
-        print("\x1b[1;32m [%ds]\x1b[0m" % (time.time() - sTime))
+        print("\x1b[1;32m [%ds]\x1b[0m" % (time.time() - s_time))
         if keep == 0:
             os.remove(source)
         elif keep == 1:
@@ -1176,7 +1176,7 @@ def decompress(infile, flag=4):
                 else:
                     transfer = None
             if not V.JM:
-                DISPLAY(f'是否分解: {os.path.basename(part)} [1/0]: ', 2, '')
+                display(f'是否分解: {os.path.basename(part)} [1/0]: ', 2, '')
                 if input() != '1':
                     continue
             if flag == 2:
@@ -1191,7 +1191,7 @@ def decompress(infile, flag=4):
         if seekfd.gettype(part) not in ('ext', 'sparse', 'erofs', 'super', 'boot', 'vendor_boot'):
             continue
         if not V.JM:
-            DISPLAY(f'是否分解: {os.path.basename(part)} [1/0]: ', 2, '')
+            display(f'是否分解: {os.path.basename(part)} [1/0]: ', 2, '')
             if input() == '0':
                 continue
         decompress_img(part, V.DNA_MAIN_DIR + os.path.basename(part).rsplit('.', 1)[0])
@@ -1236,9 +1236,9 @@ def extract_zrom(rom):
         mod_name = os.path.basename(rom).rsplit('.', 1)[0].replace(' ', '_')
         sub_dir = MOD_DIR + 'DNA_' + mod_name
         if not os.path.isdir(sub_dir):
-            DISPLAY(f'是否安装插件: {mod_name} ? [1/0]: ', 2, '')
+            display(f'是否安装插件: {mod_name} ? [1/0]: ', 2, '')
         else:
-            DISPLAY(f'已安装插件: {mod_name}，是否删除原插件后安装 ? [0/1]: ', 2, '')
+            display(f'已安装插件: {mod_name}，是否删除原插件后安装 ? [0/1]: ', 2, '')
         if input() == '1':
             rmdire(sub_dir)
             fantasy_zip.extractall(sub_dir)
@@ -1389,7 +1389,7 @@ def creat_project():
 
 
 def menu_once():
-    LOAD_SETUP_JSON()
+    load_setup_json()
     while True:
         os.system("cls" if os.name == "nt" else "clear")
         print("\x1b[0;33m> 工程列表\x1b[0m")
@@ -1422,7 +1422,7 @@ def menu_once():
             download_zrom()
         elif int(choice) == 77:
             env_setup()
-            LOAD_SETUP_JSON()
+            load_setup_json()
         elif int(choice) == 0:
             creat_project()
             break
@@ -1544,12 +1544,12 @@ def menu_modules():
             elif int(choice) == 0:
                 return
             if 0 < int(choice) < len(V.dict0):
-                RunModules(V.dict0[int(choice)])
+                run_modules(V.dict0[int(choice)])
             else:
                 print(f"> Number \x1b[0;33m{choice}\x1b[0m enter error !")
 
 
-def RunModules(sub):
+def run_modules(sub):
     os.system("cls" if os.name == "nt" else "clear")
     print(f"\x1b[1;31m> 执行插件:\x1b[0m {os.path.basename(sub)}\n")
     shell_sub = sub + os.sep + "run.sh"
@@ -1627,7 +1627,7 @@ def menu_main(project):
                     source = V.DNA_MAIN_DIR + f_basename
                     if os.path.isdir(source):
                         if not V.JM:
-                            DISPLAY(f'是否合成: {f_basename}.img [1/0]: ', end='')
+                            display(f'是否合成: {f_basename}.img [1/0]: ', end='')
                             if input() != '1':
                                 continue
                         boot_utils(source, V.DNA_DIST_DIR, 2)
@@ -1650,7 +1650,7 @@ def menu_main(project):
                                 V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                             if not V.JM:
-                                DISPLAY(f'是否合成: {f_basename}.img [1/0]: ', end='')
+                                display(f'是否合成: {f_basename}.img [1/0]: ', end='')
                                 if input() != '1':
                                     continue
                             recompress(source, fsconfig, contexts, infojson, int(option))
@@ -1676,7 +1676,7 @@ def menu_main(project):
                                 V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                             if not V.JM:
-                                DISPLAY(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
+                                display(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
                                 if input() != '1':
                                     continue
                             recompress(source, fsconfig, contexts, infojson, int(option))
@@ -1702,7 +1702,7 @@ def menu_main(project):
                                 V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                             if not V.JM:
-                                DISPLAY(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
+                                display(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
                                 if input() != '1':
                                     continue
                             recompress(source, fsconfig, contexts, infojson, 9)
@@ -1726,7 +1726,7 @@ def menu_main(project):
                                     V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                             if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                                 if not V.JM:
-                                    DISPLAY(f'是否合成: {f_basename}.new.dat.br [1/0]: ', end='')
+                                    display(f'是否合成: {f_basename}.new.dat.br [1/0]: ', end='')
                                     if input() != '1':
                                         continue
                                 recompress(source, fsconfig, contexts, infojson, int(option))
