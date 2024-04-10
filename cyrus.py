@@ -908,9 +908,7 @@ def decompress_img(source, distance, keep=1):
         if not os.path.isdir(V.DNA_CONF_DIR):
             os.makedirs(V.DNA_CONF_DIR)
         boot_info = V.DNA_CONF_DIR + os.path.basename(distance) + '_kernel.txt'
-        bootjson = {'name': os.path.basename(source)}
-        with open(boot_info, 'w', encoding='utf-8') as f:
-            json.dump(bootjson, f, indent=4)
+        open(boot_info, 'w', encoding='utf-8').close()
 
     elif file_type == 'sparse':
         display(f'正在转换: Unsparse Format [{os.path.basename(source)}] ...')
@@ -941,8 +939,7 @@ def decompress_img(source, distance, keep=1):
                     except Exception as e:
                         print("Error moving file:", e)
                     source = source.replace('.unsparse', '')
-                dump_erofs_cmd = f'extract.erofs -i {source.replace(os.sep, "/")} -o {V.DNA_MAIN_DIR} -x'
-                call(dump_erofs_cmd)
+                call(f'extract.erofs -i {source.replace(os.sep, "/")} -o {V.DNA_MAIN_DIR} -x')
             elif file_type == 'super':
                 lpunpack_cmd = f'lpunpack {source} {V.DNA_TEMP_DIR}'
                 call(lpunpack_cmd)
