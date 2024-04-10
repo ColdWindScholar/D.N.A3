@@ -1561,10 +1561,6 @@ def quiet():
     V.JM = input('> 是否开启静默 [0/1]: ') == '1'
 
 
-def pack_info():
-    pass
-
-
 def menu_main(project):
     envelop_project(V.project)
     V.JM = True
@@ -1639,7 +1635,8 @@ def menu_main(project):
                 if os.path.isdir(source):
                     fsconfig = V.DNA_CONF_DIR + f_basename + '_fsconfig.txt'
                     contexts = V.DNA_CONF_DIR + f_basename + '_contexts.txt'
-                    infojson = None if not os.path.isfile(V.DNA_CONF_DIR + f_basename + '_info.txt') else (V.DNA_CONF_DIR + f_basename + '_info.txt')
+                    infojson = None if not os.path.isfile(V.DNA_CONF_DIR + f_basename + '_info.txt') else (
+                                V.DNA_CONF_DIR + f_basename + '_info.txt')
                     if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '1':
                         if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
                             V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
