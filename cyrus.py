@@ -646,7 +646,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
         size = dsize
     else:
         size = get_dir_size(source, 1.3)
-        if int(size) < 1048576:
+        if int(size) <= 1048576:
             size = 1048576
         mount_point = "/" + label
         if os.path.isfile(source + os.sep + "system" + os.sep + "build.prop"):
