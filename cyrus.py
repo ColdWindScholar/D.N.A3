@@ -1625,12 +1625,8 @@ def menu_main():
                             V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                     if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                         if not V.JM:
-                            if int(option) == 8:
-                                display(f'是否合成: {f_basename}.img [1/0]: ', end='')
-                            elif int(option) == 10:
-                                display(f'是否合成: {f_basename}.new.dat.br [1/0]: ', end='')
-                            else:
-                                display(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
+                            txts = {8: "img", 9: "new.dat", 10: "new.dat.br"}
+                            display(f'是否合成: {f_basename}.{txts.get(int(option), ".new.dat.br")} [1/0]: ', end='')
                             if input() != '1':
                                 continue
                         recompress(source, fsconfig, contexts, infojson, int(option))
