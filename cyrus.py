@@ -1617,44 +1617,20 @@ def menu_main(project):
             quiet()
             decompress_win(list(set(sorted(infile))))
             input('> 任意键继续')
-        elif int(option) == 8:
+        elif int(option) in [8, 9, 10]:
             infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
-            infile_kernel = glob(V.DNA_CONF_DIR + '*_kernel.txt')
             quiet()
-            for file in infile_kernel:
-                f_basename = os.path.basename(file).rsplit('_', 1)[0]
-                source = V.DNA_MAIN_DIR + f_basename
-                if os.path.isdir(source):
-                    if not V.JM:
-                        display(f'是否合成: {f_basename}.img [1/0]: ', end='')
-                        if input() != '1':
-                            continue
-                    boot_utils(source, V.DNA_DIST_DIR, 2)
-            for file in infile:
-                f_basename = os.path.basename(file).rsplit('_', 1)[0]
-                source = V.DNA_MAIN_DIR + f_basename
-                if os.path.isdir(source):
-                    fsconfig = V.DNA_CONF_DIR + f_basename + '_fsconfig.txt'
-                    contexts = V.DNA_CONF_DIR + f_basename + '_contexts.txt'
-                    infojson = None if not os.path.isfile(V.DNA_CONF_DIR + f_basename + '_info.txt') else (
-                            V.DNA_CONF_DIR + f_basename + '_info.txt')
-                    if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '1':
-                        if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
-                            V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
-                            V.SETUP_MANIFEST['REPACK_TO_RW'] = '1'
-                    elif V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '0':
-                        if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
-                            V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
-                            V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
-                    if os.path.isfile(contexts) and os.path.isfile(fsconfig):
+            if int(option) == 8:
+                infile_kernel = glob(V.DNA_CONF_DIR + '*_kernel.txt')
+                for file in infile_kernel:
+                    f_basename = os.path.basename(file).rsplit('_', 1)[0]
+                    source = V.DNA_MAIN_DIR + f_basename
+                    if os.path.isdir(source):
                         if not V.JM:
                             display(f'是否合成: {f_basename}.img [1/0]: ', end='')
                             if input() != '1':
                                 continue
-                        recompress(source, fsconfig, contexts, infojson, 8)
-        elif int(option) in [9, 10]:
-            infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
-            quiet()
+                        boot_utils(source, V.DNA_DIST_DIR, 2)
             for file in infile:
                 f_basename = os.path.basename(file).rsplit('_', 1)[0]
                 source = V.DNA_MAIN_DIR + f_basename
@@ -1674,7 +1650,9 @@ def menu_main(project):
                             V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                     if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                         if not V.JM:
-                            if int(option) == 10:
+                            if int(option) == 8:
+                                display(f'是否合成: {f_basename}.img [1/0]: ', end='')
+                            elif int(option) == 10:
                                 display(f'是否合成: {f_basename}.new.dat.br [1/0]: ', end='')
                             else:
                                 display(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
