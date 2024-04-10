@@ -11,8 +11,6 @@
     "REPACK_SPARSE_IMG": "0",
     "REPACK_BR_LEVEL": "3",
     "SUPER_SIZE": "9126805504",
-    "GROUP_SIZE_A": "9122611200",
-    "GROUP_SIZE_B": "9122611200",
     "GROUP_NAME": "qti_dynamic_partitions",
     "SUPER_SECTOR": "2048",
     "SUPER_SPARSE": "1",

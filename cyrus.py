@@ -230,8 +230,6 @@ def set_default_env_setup():
         'REPACK_SPARSE_IMG': "0",
         'REPACK_BR_LEVEL': "3",
         'SUPER_SIZE': "9126805504",
-        'GROUP_SIZE_A': "9122611200",
-        'GROUP_SIZE_B': "9122611200",
         'GROUP_NAME': "qti_dynamic_partitions",
         'SUPER_SECTOR': "2048",
         'SUPER_SPARSE': "1",
@@ -274,8 +272,6 @@ def env_setup():
         '压缩BROTLI等级[0-9|3]': "REPACK_BR_LEVEL",
         '动态分区簇名称[qti_dynamic_partitions]': "GROUP_NAME",
         '动态SUPER分区总大小[9126805504]': "SUPER_SIZE",
-        '插槽A簇大小[9122611200]': "GROUP_SIZE_A",
-        '插槽B簇大小[9122611200]': "GROUP_SIZE_B",
         '动态分区扇区大小[2048]': "SUPER_SECTOR",
         '自定义UTC时间戳[live]': "UTC",
         '分段DAT/IMG支持个数[15]': "UNPACK_SPLIT_DAT"}
@@ -295,8 +291,7 @@ def env_setup():
             return
         if sum_ not in data1.keys():
             continue
-        hh = input(data1[sum_] + "：")
-        data[question_list[data1[sum_]]] = hh
+        data[question_list[data1[sum_]]] = input(data1[sum_] + "：")
         validate_default_env_setup(data)
         with open(SETUP_JSON, 'w', encoding='utf-8') as ss:
             json.dump(data, ss, ensure_ascii=False, indent=4)
