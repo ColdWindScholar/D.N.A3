@@ -1474,7 +1474,7 @@ def menu_more():
                 continue
             with CoastTime():
                 for line in open(reduce_conf):
-                    line = line.replace("/", os.sep).strip("\n")
+                    line = line.replace("/", os.sep).strip()
                     if line:
                         if not line.startswith("#"):
                             if os.path.exists(V.DNA_MAIN_DIR + line):
