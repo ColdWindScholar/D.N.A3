@@ -614,7 +614,7 @@ def repack_super():
                 for slot in ('_a', '_b', ''):
                     if os.path.isfile(os.path.join(V.DNA_DIST_DIR, i + slot + '.img')):
                         os.remove(os.path.join(V.DNA_DIST_DIR, i + slot + '.img'))
-    except:
+    except (BaseException, Exception):
         ...
 
 
