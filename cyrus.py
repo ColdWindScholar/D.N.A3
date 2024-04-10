@@ -1434,7 +1434,8 @@ def menu_once():
                 input(f"> Number \x1b[0;33m{choice}\x1b[0m enter error !")
 
 
-def menu_more(project):
+def menu_more():
+    project = V.project
     while True:
         os.system("cls" if os.name == "nt" else "clear")
         print(f"\x1b[1;36m> 当前工程: \x1b[0m{project}")
@@ -1561,6 +1562,16 @@ def quiet():
     V.JM = input('> 是否开启静默 [0/1]: ') == '1'
 
 
+menu_actions = {
+    55: lambda: input(
+        "Github: https://github.com/ColdWindScholar/D.N.A3/\nWrote By ColdWindScholar (3590361911@qq.com)"),
+    88: sys.exit,
+    0: menu_once,
+    7: menu_modules,
+    6: menu_more
+}
+
+
 def menu_main(project):
     envelop_project(V.project)
     V.JM = True
@@ -1578,13 +1589,8 @@ def menu_main(project):
     if not option.isdigit():
         input('> 输入序号数字')
     else:
-        if int(option) == 55:
-            input("Github: https://github.com/ColdWindScholar/D.N.A3/")
-            input("Wrote By ColdWindScholar (3590361911@qq.com)")
-        if int(option) == 88:
-            sys.exit()
-        elif int(option) == 0:
-            menu_once()
+        if int(option) in menu_actions.keys():
+            menu_actions[int(option)]()
         elif int(option) == 1:
             infile = V.DNA_TEMP_DIR + 'payload.bin'
             if not os.path.exists(infile):
@@ -1612,10 +1618,6 @@ def menu_main(project):
             quiet()
             decompress_win(list(set(sorted(infile))))
             input('> 任意键继续')
-        elif int(option) == 6:
-            menu_more(project)
-        elif int(option) == 7:
-            menu_modules()
         elif int(option) == 8:
             infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
             infile_kernel = glob(V.DNA_CONF_DIR + '*_kernel.txt')
@@ -1636,7 +1638,7 @@ def menu_main(project):
                     fsconfig = V.DNA_CONF_DIR + f_basename + '_fsconfig.txt'
                     contexts = V.DNA_CONF_DIR + f_basename + '_contexts.txt'
                     infojson = None if not os.path.isfile(V.DNA_CONF_DIR + f_basename + '_info.txt') else (
-                                V.DNA_CONF_DIR + f_basename + '_info.txt')
+                            V.DNA_CONF_DIR + f_basename + '_info.txt')
                     if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '1':
                         if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
                             V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
