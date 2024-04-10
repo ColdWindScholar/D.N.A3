@@ -197,9 +197,8 @@ def load_setup_json():
     if not os.path.isdir(f"{add_dir}/addons"):
         os.makedirs(f"{add_dir}/addons")
     if not os.path.isfile(f"{add_dir}/ramdisk.cpio"):
-        file_path = os.path.join(add_dir, "ramdisk.cpio.txt")
         try:
-            open(file_path, 'w').close()
+            open(os.path.join(add_dir, "ramdisk.cpio.txt"), 'w').close()
         except Exception:
             ...
     if not os.path.isfile(f"{add_dir}/reduce.txt"):
