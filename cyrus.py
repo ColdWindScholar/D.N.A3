@@ -623,8 +623,7 @@ def walk_contexts(contexts):
     if os.path.isfile(contexts):
         os.remove(contexts)
     with open(contexts, "a+", encoding="utf-8") as f:
-        for i in text_list:
-            f.write(i)
+        f.writelines(text_list)
 
 
 def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
