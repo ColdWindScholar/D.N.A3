@@ -1528,7 +1528,7 @@ def menu_modules():
                     if which:
                         if int(which) == 0 or not which.isdigit():
                             continue
-                        if int(which) < len(V.dict0):
+                        if int(which) <= len(V.dict0):
                             if input(
                                     f"\x1b[0;31m> 是否删除 \x1b[0;34mNo.{which} \x1b[0;31m插件: \x1b[0;32m{os.path.basename(V.dict0[int(which)])}\x1b[0;31m [0/1]:\x1b[0m ") == "1":
                                 if os.path.isdir(V.dict0[int(which)]):
