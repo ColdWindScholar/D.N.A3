@@ -955,7 +955,8 @@ def decompress_img(source, distance, keep=1):
                             os.rename(img, new_source)
                         except:
                             ...
-                        decompress_img(new_source, V.DNA_MAIN_DIR + os.path.basename(new_source).rsplit('.', 1)[0], keep=0)
+                        decompress_img(new_source, V.DNA_MAIN_DIR + os.path.basename(new_source).rsplit('.', 1)[0],
+                                       keep=0)
             else:
                 print(F'> ..., not support fs_type [{file_type}]')
             distance = V.DNA_MAIN_DIR + os.path.basename(source).replace('.unsparse.img', '').replace('.img', '')
@@ -1408,10 +1409,9 @@ def menu_once():
 
 
 def menu_more():
-    project = V.project
     while True:
         os.system("cls" if os.name == "nt" else "clear")
-        print(f"\x1b[1;36m> 当前工程: \x1b[0m{project}")
+        print(f"\x1b[1;36m> 当前工程: \x1b[0m{V.project}")
         print("-------------------------------------------------------\n")
         print("\x1b[0;31m  0> 返回上级    \x1b[0m")
         print("\x1b[0;32m  1> 去除AVB    \x1b[0m")
@@ -1494,17 +1494,16 @@ def menu_modules():
         elif int(choice) == 44:
             if V.dict0:
                 which = input("> 输入序号进行删除: ")
-                if which:
-                    if int(which) == 0 or not which.isdigit():
-                        continue
-                    if int(which) <= len(V.dict0):
-                        if input(
-                                f"\x1b[0;31m> 是否删除 \x1b[0;34mNo.{which} \x1b[0;31m插件: \x1b[0;32m{os.path.basename(V.dict0[int(which)])}\x1b[0;31m [0/1]:\x1b[0m ") == "1":
-                            if os.path.isdir(V.dict0[int(which)]):
-                                rmdire(V.dict0[int(which)])
-                                continue
-                            else:
-                                input(f"> Number {which} Error !")
+                if int(which) == 0 or not which.isdigit():
+                    continue
+                if int(which) <= len(V.dict0):
+                    if input(
+                            f"\x1b[0;31m> 是否删除 \x1b[0;34mNo.{which} \x1b[0;31m插件: \x1b[0;32m{os.path.basename(V.dict0[int(which)])}\x1b[0;31m [0/1]:\x1b[0m ") == "1":
+                        if os.path.isdir(V.dict0[int(which)]):
+                            rmdire(V.dict0[int(which)])
+                            continue
+                        else:
+                            input(f"> Number {which} Error !")
         elif int(choice) == 0:
             return
         if 0 < int(choice) < len(V.dict0):
