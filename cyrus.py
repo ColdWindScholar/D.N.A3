@@ -1358,7 +1358,7 @@ def download_rom(rom, url):
 
 
 def download_zrom():
-    url = input("> 输入zip直链: ")
+    url = input("> 输入直链: ")
     if url:
         s_file_path = ROM_DIR + url.split("/")[-1]
         if not os.path.isfile(s_file_path):
