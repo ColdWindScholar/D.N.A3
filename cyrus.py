@@ -56,7 +56,7 @@ RED, WHITE, CYAN, YELLOW, MAGENTA, GREEN, BOLD, CLOSE = ['\x1b[91m',
                                                          '\x1b[1m', '\x1b[0m']
 
 
-class global_value(object):
+class GlobalValue(object):
     JM = False
 
     def __init__(self):
@@ -72,7 +72,7 @@ class global_value(object):
             return "None"
 
 
-V = global_value()
+V = GlobalValue()
 
 
 def change_permissions_recursive(path, mode):
@@ -602,7 +602,7 @@ def repack_super():
                 image_size_a = imgextractor.ULTRAMAN().LEMON(img_a)
                 image_size_b = imgextractor.ULTRAMAN().LEMON(img_b)
                 argvs += f'--partition {i}_a:readonly:{image_size_a}:{V.SETUP_MANIFEST["GROUP_NAME"]}_a --image {i}_a={img_a} --partition {i}_b:readonly:{image_size_b}:{V.SETUP_MANIFEST["GROUP_NAME"]}_b --image {i}_b={img_b} '
-    if not parts or not "--image" in argvs:
+    if not parts or "--image" not in argvs:
         input('> 未发现002_DNA文件夹下存在可用镜像文件')
         return
     if V.SETUP_MANIFEST['SUPER_SPARSE'] == '1':
@@ -1242,29 +1242,19 @@ def extract_zrom(rom):
         sub_dir = MOD_DIR + 'DNA_' + mod_name
         if not os.path.isdir(sub_dir):
             DISPLAY(f'是否安装插件: {mod_name} ? [1/0]: ', 2, '')
-            if input() != '0':
-                fantasy_zip.extractall(sub_dir)
-                fantasy_zip.close()
-                if os.path.isfile(sub_dir + os.sep + 'run.sh'):
-                    if os.name == 'nt':
-                        change_permissions_recursive(sub_dir, 0o777)
-                    print('\x1b[1;31m\n 安装完成 !!!\x1b[0m')
-                else:
-                    rmdire(sub_dir)
-                    print('\x1b[1;31m\n 安装失败 !!!\x1b[0m')
+        else:
+            DISPLAY(f'已安装插件: {mod_name}，是否删除原插件后安装 ? [0/1]: ', 2, '')
+        if input() == '1':
+            rmdire(sub_dir)
+            fantasy_zip.extractall(sub_dir)
+            fantasy_zip.close()
+            if os.path.isfile(sub_dir + os.sep + 'run.sh'):
+                if os.name != 'nt':
+                    change_permissions_recursive(sub_dir, 0o777)
+                print('\x1b[1;31m\n 安装完成 !!!\x1b[0m')
             else:
-                DISPLAY(f'已安装插件: {mod_name}，是否删除原插件后安装 ? [0/1]: ', 2, '')
-                if input() == '1':
-                    rmdire(sub_dir)
-                    fantasy_zip.extractall(sub_dir)
-                    fantasy_zip.close()
-                    if os.path.isfile(sub_dir + os.sep + 'run.sh'):
-                        if os.name == 'nt':
-                            change_permissions_recursive(sub_dir, 0o777)
-                        print('\x1b[1;31m\n 安装完成 !!!\x1b[0m')
-                    else:
-                        rmdire(sub_dir)
-                        print('\x1b[1;31m\n 安装失败 !!!\x1b[0m')
+                rmdire(sub_dir)
+                print('\x1b[1;31m\n 安装失败 !!!\x1b[0m')
     else:
         able = 5
         infile = []
