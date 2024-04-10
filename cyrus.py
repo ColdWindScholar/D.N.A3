@@ -1019,10 +1019,7 @@ def decompress_dat(transfer, source, distance, keep=0):
                 os.remove(source.rsplit(".", 2)[0] + ".patch.dat")
         elif keep == 2:
             os.remove(source)
-            keep = 0
-        else:
-            keep = 0
-        decompress_img(distance, V.DNA_MAIN_DIR + os.path.basename(distance).split(".")[0], keep)
+        decompress_img(distance, V.DNA_MAIN_DIR + os.path.basename(distance).split(".")[0], 0)
     else:
         print("\x1b[1;31m [Failed]\x1b[0m")
 
