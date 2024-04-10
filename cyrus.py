@@ -488,8 +488,7 @@ def patch_magisk(bootimg):
                 patch_cmds += '"patch" "backup ramdisk.cpio.orig" "mkdir 000 .backup" "add 000 .backup/.magisk config"'
                 call(patch_cmds)
                 for file_pattern in ['ramdisk.cpio.orig', 'config', 'magisk*.xz', 'magiskinit', 'magisk*']:
-                    matching_files = glob(file_pattern)
-                    for file_to_delete in matching_files:
+                    for file_to_delete in glob(file_pattern):
                         try:
                             os.remove(file_to_delete)
                             print(f"Clean: {file_to_delete}")
