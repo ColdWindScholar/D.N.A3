@@ -1001,10 +1001,10 @@ def decompress_img(source, distance, keep=1):
 def decompress_dat(transfer, source, distance, keep=0):
     sTime = time.time()
     if os.path.isfile(source + ".1"):
-        max = V.SETUP_MANIFEST["UNPACK_SPLIT_DAT"]
-        display(f"合并: {os.path.basename(source)}.1~{max} ...")
+        max__ = V.SETUP_MANIFEST["UNPACK_SPLIT_DAT"]
+        display(f"合并: {os.path.basename(source)}.1~{max__} ...")
         with open(source, "ab") as f:
-            for i in range(1, int(max)):
+            for i in range(1, int(max__)):
                 if os.path.exists("{}.{}".format(source, i)):
                     with open("{}.{}".format(source, i), "rb") as f2:
                         f.write(f2.read())
