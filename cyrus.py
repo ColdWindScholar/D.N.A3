@@ -638,7 +638,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
         source = source.replace("\\", '/')
     timestamp = int(time.time()) if V.SETUP_MANIFEST["UTC"].lower() == "live" else V.SETUP_MANIFEST["UTC"]
     read = "ro"
-    RESIZE2RW = False
+    resize2_rw = False
     fsize = None
     if dumpinfo:
         (fsize, dsize, inodes, block_size, blocks, per_group, mount_point) = load_image_json(dumpinfo, source)
@@ -653,7 +653,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
     if V.SETUP_MANIFEST["REPACK_EROFS_IMG"] == "0":
         fs_variant = "ext4"
         if (V.SETUP_MANIFEST["REPACK_TO_RW"] == "1" and V.SETUP_MANIFEST["IS_DYNAMIC"] == "1") or not fsize:
-            RESIZE2RW = True
+            resize2_rw = True
             read = "rw"
             block_size = 4096
             blocks = ceil(int(size) / int(block_size))
@@ -710,7 +710,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                     ...
     if os.path.isfile(distance):
         print(" Done")
-        if RESIZE2RW and os.name == 'posix':
+        if resize2_rw and os.name == 'posix':
             os.system(f"e2fsck -E unshare_blocks {distance}")
             new_size = os.path.getsize(distance)
             if dumpinfo:
