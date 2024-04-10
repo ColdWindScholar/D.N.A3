@@ -543,8 +543,7 @@ def repack_super():
     ]
     parts = []
     for i in parts_1:
-        infile = glob(V.DNA_DIST_DIR + i + '*' + '.img')
-        for file in infile:
+        for file in glob(V.DNA_DIST_DIR + i + '*' + '.img'):
             parts.append(os.path.basename(file).rsplit('.', 1)[0])
     argvs = f'lpmake --metadata-size 65536 --super-name super --device super:{V.SETUP_MANIFEST["SUPER_SIZE"]}:{int(V.SETUP_MANIFEST["SUPER_SECTOR"]) * 512} '
     if V.SETUP_MANIFEST['IS_VAB'] == '1':
@@ -897,7 +896,7 @@ def boot_utils(source, distance, flag=1):
 def decompress_img(source, distance, keep=1):
     if os.path.basename(source) in ('dsp.img', 'exaid.img', 'cust.img'):
         return
-    sTime = time.time()
+    s_time = time.time()
     file_type = seekfd.gettype(source)
     if file_type == 'boot' or file_type == 'vendor_boot':
         if os.path.isdir(distance):
@@ -908,7 +907,6 @@ def decompress_img(source, distance, keep=1):
             os.makedirs(V.DNA_CONF_DIR)
         boot_info = V.DNA_CONF_DIR + os.path.basename(distance) + '_kernel.txt'
         open(boot_info, 'w', encoding='utf-8').close()
-
     elif file_type == 'sparse':
         display(f'正在转换: Unsparse Format [{os.path.basename(source)}] ...')
         new_source = imgextractor.ULTRAMAN().APPLE(source)
@@ -983,7 +981,7 @@ def decompress_img(source, distance, keep=1):
                             shutil.rmtree(V.DNA_MAIN_DIR + 'config')
 
         if os.path.isdir(distance):
-            print('\x1b[1;32m %ds Done\x1b[0m' % (time.time() - sTime))
+            print('\x1b[1;32m %ds Done\x1b[0m' % (time.time() - s_time))
             if keep == 0:
                 if os.path.isfile(source):
                     os.remove(source)
