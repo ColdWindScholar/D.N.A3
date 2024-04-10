@@ -1472,14 +1472,13 @@ def menu_more():
             with CoastTime():
                 for line in open(reduce_conf):
                     line = line.replace("/", os.sep).strip()
-                    if line:
-                        if not line.startswith("#"):
-                            if os.path.exists(V.DNA_MAIN_DIR + line):
-                                print(line)
-                                try:
-                                    shutil.rmtree(V.DNA_MAIN_DIR + line)
-                                except NotADirectoryError:
-                                    os.remove(V.DNA_MAIN_DIR + line)
+                    if not line.startswith("#"):
+                        if os.path.exists(V.DNA_MAIN_DIR + line):
+                            print(line)
+                            try:
+                                shutil.rmtree(V.DNA_MAIN_DIR + line)
+                            except NotADirectoryError:
+                                os.remove(V.DNA_MAIN_DIR + line)
             input('> 任意键继续')
 
         elif int(option) == 5:
