@@ -1450,11 +1450,9 @@ def menu_more():
         elif int(option) == 1:
             with CoastTime():
                 kill_avb()
-            input('> 任意键继续')
         elif int(option) == 2:
             with CoastTime():
                 kill_dm()
-            input('> 任意键继续')
         elif int(option) == 3:
             with CoastTime():
                 devdex.deodex(project)
@@ -1478,12 +1476,9 @@ def menu_more():
                                 shutil.rmtree(V.DNA_MAIN_DIR + line)
                             except NotADirectoryError:
                                 os.remove(V.DNA_MAIN_DIR + line)
-            input('> 任意键继续')
-
         elif int(option) == 5:
             with CoastTime():
                 patch_addons()
-            input('> 任意键继续')
         elif int(option) in [6, 7]:
             currentbootimg = None
             if os.path.isfile(V.DNA_DIST_DIR + "boot.img"):
@@ -1495,12 +1490,11 @@ def menu_more():
             if os.path.isfile(currentbootimg):
                 with CoastTime():
                     patch_twrp(currentbootimg) if int(option) == 6 else patch_magisk(currentbootimg)
-            input('> 任意键继续')
         elif int(option) == 8:
             repack_super()
-            input('> 任意键继续')
         else:
             input(f"> Number \x1b[0;33m{option}\x1b[0m enter error !")
+        input('> 任意键继续')
 
 
 def menu_modules():
