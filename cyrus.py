@@ -393,7 +393,7 @@ def patch_twrp(BOOTIMG):
             f"> 未发现local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/ramdisk.cpio文件")
 
 
-def patch_magisk(BOOTIMG):
+def patch_magisk(bootimg):
     magisk_manifest = {}
     if os.path.isfile(MAGISK_JSON):
         with open(MAGISK_JSON, "r", encoding="utf-8") as manifest_file:
@@ -422,17 +422,17 @@ def patch_magisk(BOOTIMG):
     if not MAGISK_FILES:
         input(f"> 未发现local/etc/magisk/{magisk_manifest['CLASS']}/Magisk-*.apk文件")
         return
-    if os.path.isfile(BOOTIMG):
+    if os.path.isfile(bootimg):
         if os.path.isdir(f"{V.DNA_MAIN_DIR}bootimg"):
             rmdire(f"{V.DNA_MAIN_DIR}bootimg")
         os.makedirs(V.DNA_MAIN_DIR + "bootimg")
         print("- Unpacking boot image")
         os.chdir(V.DNA_MAIN_DIR + "bootimg")
-        call(f"magiskboot unpack {BOOTIMG}")
+        call(f"magiskboot unpack {bootimg}")
         if os.path.isfile("kernel"):
             if os.path.isfile("ramdisk.cpio"):
                 sha1_ = sha1()
-                with open(BOOTIMG, "rb") as f:
+                with open(bootimg, "rb") as f:
                     while True:
                         file_data = f.read(2048)
                         if not file_data:
@@ -440,8 +440,7 @@ def patch_magisk(BOOTIMG):
                         else:
                             sha1_.update(file_data)
                 SHA1 = sha1_.digest().hex()
-                with open(BOOTIMG, 'rb') as source_file:
-                    with open('stock_boot.img', 'wb') as dest_file:
+                with open(bootimg, 'rb') as source_file, open('stock_boot.img', 'wb') as dest_file:
                         shutil.copyfileobj(source_file, dest_file)
 
                 shutil.copy2('ramdisk.cpio', 'ramdisk.cpio.orig')
@@ -497,13 +496,13 @@ def patch_magisk(BOOTIMG):
                             print(f"Clean: {file_to_delete}")
                         except Exception as e:
                             print(f"Error deleting {file_to_delete}: {e}")
-                patch_kernel(BOOTIMG)
+                patch_kernel(bootimg)
 
                 if os.path.isfile("new-boot.img"):
                     print("+ Done")
                     if not os.path.isdir(V.DNA_DIST_DIR):
                         os.mkdir(V.DNA_DIST_DIR)
-                    new_boot_img_name = os.path.basename(BOOTIMG).split(".")[0] + "_magisk.img"
+                    new_boot_img_name = os.path.basename(bootimg).split(".")[0] + "_magisk.img"
                     destination_path = os.path.join(V.DNA_DIST_DIR, new_boot_img_name)
                     shutil.move("new-boot.img", destination_path)
                     if os.path.isdir(V.DNA_MAIN_DIR + "system" + os.sep + "system"):
@@ -1561,7 +1560,8 @@ def run_modules(sub):
 def quiet():
     V.JM = input('> 是否开启静默 [0/1]: ') == '1'
 
-
+def pack_info():
+    pass
 def menu_main(project):
     envelop_project(V.project)
     V.JM = True
