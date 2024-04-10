@@ -1399,13 +1399,12 @@ def menu_once():
         elif int(choice) == 0:
             creat_project()
             break
+        elif 0 < int(choice) < len(V.dict0):
+            V.project = V.dict0[int(choice)]
+            menu_main()
+            break
         else:
-            if 0 < int(choice) < len(V.dict0):
-                V.project = V.dict0[int(choice)]
-                menu_main()
-                break
-            else:
-                input(f"> Number \x1b[0;33m{choice}\x1b[0m enter error !")
+            input(f"> Number \x1b[0;33m{choice}\x1b[0m enter error !")
 
 
 def menu_more():
