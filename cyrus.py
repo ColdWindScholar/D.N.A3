@@ -1188,14 +1188,14 @@ def decompress(infile, flag=4):
         decompress_img(part, V.DNA_MAIN_DIR + os.path.basename(part).rsplit('.', 1)[0])
 
 
-def envelop_project(project):
-    V.DNA_MAIN_DIR = PWD_DIR + project + os.sep
+def envelop_project():
+    V.DNA_MAIN_DIR = PWD_DIR + V.project + os.sep
     V.DNA_TEMP_DIR = V.DNA_MAIN_DIR + "001_DNA" + os.sep
     V.DNA_CONF_DIR = V.DNA_MAIN_DIR + "000_DNA" + os.sep
     V.DNA_DIST_DIR = V.DNA_MAIN_DIR + "002_DNA" + os.sep
     if IS_ARM64:
-        V.DNA_TEMP_DIR = ROM_DIR + "D.N.A" + os.sep + project + os.sep + "001_DNA" + os.sep
-        V.DNA_DIST_DIR = ROM_DIR + "D.N.A" + os.sep + project + os.sep + "002_DNA" + os.sep
+        V.DNA_TEMP_DIR = ROM_DIR + "D.N.A" + os.sep + V.project + os.sep + "001_DNA" + os.sep
+        V.DNA_DIST_DIR = ROM_DIR + "D.N.A" + os.sep + V.project + os.sep + "002_DNA" + os.sep
     if not os.path.isdir(V.DNA_TEMP_DIR):
         os.makedirs(V.DNA_TEMP_DIR)
     if not os.path.isdir(V.DNA_TEMP_DIR):
@@ -1214,13 +1214,13 @@ def extract_zrom(rom):
         return
     if 'payload.bin' in zip_lists:
         print(f'> 解压缩: {os.path.basename(rom)}')
-        envelop_project(V.project)
+        envelop_project()
         infile = fantasy_zip.extract('payload.bin', V.DNA_TEMP_DIR)
         fantasy_zip.close()
         if os.path.isfile(V.DNA_TEMP_DIR + 'payload.bin'):
             decompress_bin(infile, V.DNA_TEMP_DIR,
                            input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> '))
-            menu_main(V.project)
+            menu_main()
     elif 'run.sh' in zip_lists:
         if not os.path.isdir(MOD_DIR):
             os.makedirs(MOD_DIR)
@@ -1245,7 +1245,7 @@ def extract_zrom(rom):
         able = 5
         infile = []
         print(f'> 解压缩: {os.path.basename(rom)}')
-        envelop_project(V.project)
+        envelop_project()
         fantasy_zip.extractall(V.DNA_TEMP_DIR)
         fantasy_zip.close()
         if [part_name for part_name in sorted(zip_lists) if part_name.endswith(".new.dat.br")]:
@@ -1262,7 +1262,7 @@ def extract_zrom(rom):
         else:
             quiet()
             decompress(infile, able)
-        menu_main(V.project)
+        menu_main()
 
 
 def lists_project(dTitle, sPath, flag):
@@ -1370,7 +1370,7 @@ def creat_project():
         V.project = "DNA_" + creat_name
         if not os.path.isdir(V.project):
             os.mkdir(V.project)
-            menu_main(V.project)
+            menu_main()
         else:
             input(f"\x1b[0;31m\n 工程目录< \x1b[0;32m{V.project} \x1b[0;31m>已存在, 回车返回 ...\x1b[0m\n")
             del V.project
@@ -1420,7 +1420,7 @@ def menu_once():
         else:
             if 0 < int(choice) < len(V.dict0):
                 V.project = V.dict0[int(choice)]
-                menu_main(V.project)
+                menu_main()
                 break
             else:
                 input(f"> Number \x1b[0;33m{choice}\x1b[0m enter error !")
@@ -1472,7 +1472,7 @@ def menu_more():
             with CoastTime():
                 for line in open(reduce_conf):
                     line = line.replace("/", os.sep).strip()
-                    if not line.startswith("#"):
+                    if not line.startswith("#") and line:
                         if os.path.exists(V.DNA_MAIN_DIR + line):
                             print(line)
                             try:
@@ -1556,11 +1556,11 @@ menu_actions = {
 }
 
 
-def menu_main(project):
-    envelop_project(V.project)
+def menu_main():
+    envelop_project()
     V.JM = True
     os.system('cls' if os.name == 'nt' else 'clear')
-    print(f'\x1b[1;36m> 当前工程: \x1b[0m{project}')
+    print(f'\x1b[1;36m> 当前工程: \x1b[0m{V.project}')
     print('-------------------------------------------------------\n')
     print('\x1b[0;31m\t  0> 选择[etc]          1> 分解[bin]\x1b[0m\n')
     print('\x1b[0;32m\t  2> 分解[bro]          3> 分解[dat]\x1b[0m\n')
@@ -1638,4 +1638,4 @@ def menu_main(project):
         else:
             input(f'\x1b[0;33m{option}\x1b[0m enter error !')
         input('> 任意键继续')
-    menu_main(project)
+    menu_main()
