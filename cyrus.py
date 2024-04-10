@@ -1065,7 +1065,6 @@ def decompress_bin(infile, outdir, flag='1'):
     else:
         print(f"> {YELLOW}提取【{os.path.basename(infile)}】所有镜像文件:{CLOSE}\n")
         extract_payload.main(infile, outdir)
-        os.system("cls" if os.name == "nt" else "clear")
         infile = glob(outdir + "*.img")
         if infile:
             decompress(infile)
