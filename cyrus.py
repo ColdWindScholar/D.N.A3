@@ -1559,8 +1559,7 @@ def menu_main():
                                input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> '))
         elif int(option) in [2, 3, 4]:
             quiet()
-            suf = {2: "*.br", 3: "*.new.dat", 4: "*.img"}
-            decompress(glob(V.DNA_TEMP_DIR + suf[int(option)]), int(option))
+            decompress(glob(V.DNA_TEMP_DIR + {2: "*.br", 3: "*.new.dat", 4: "*.img"}[int(option)]), int(option))
         elif int(option) == 5:
             infile = glob(V.DNA_TEMP_DIR + '*.win*')
             for i in glob(V.DNA_TEMP_DIR + '*.win'):
@@ -1568,11 +1567,9 @@ def menu_main():
             quiet()
             decompress_win(list(set(sorted(infile))))
         elif int(option) in [8, 9, 10]:
-            infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
             quiet()
             if int(option) == 8:
-                infile_kernel = glob(V.DNA_CONF_DIR + '*_kernel.txt')
-                for file in infile_kernel:
+                for file in glob(V.DNA_CONF_DIR + '*_kernel.txt'):
                     f_basename = os.path.basename(file).rsplit('_', 1)[0]
                     source = V.DNA_MAIN_DIR + f_basename
                     if os.path.isdir(source):
@@ -1581,7 +1578,7 @@ def menu_main():
                             if input() != '1':
                                 continue
                         boot_utils(source, V.DNA_DIST_DIR, 2)
-            for file in infile:
+            for file in glob(V.DNA_CONF_DIR + '*_contexts.txt'):
                 f_basename = os.path.basename(file).rsplit('_', 1)[0]
                 source = V.DNA_MAIN_DIR + f_basename
                 if os.path.isdir(source):
