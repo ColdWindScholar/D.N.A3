@@ -1439,15 +1439,15 @@ def menu_more(project):
         os.system("cls" if os.name == "nt" else "clear")
         print(f"\x1b[1;36m> 当前工程: \x1b[0m{project}")
         print("-------------------------------------------------------\n")
-        print("\x1b[0;31m  00> 返回上级    \x1b[0m")
-        print("\x1b[0;32m  01> 去除AVB    \x1b[0m")
-        print("\x1b[0;34m  02> 去除DM     \x1b[0m")
-        print("\x1b[0;31m  05> [A11+]全局合并    \x1b[0m")
-        print("\x1b[0;35m  06> 标准精简    \x1b[0m")
-        print("\x1b[0;32m  07> 添加文件    \x1b[0m")
-        print("\x1b[0;34m  08> 修补boot.img @twrp    \x1b[0m")
-        print("\x1b[0;36m  09> 修补boot.img @magisk    \x1b[0m")
-        print("\x1b[0;33m  11> 合成super.img    \x1b[0m\n")
+        print("\x1b[0;31m  0> 返回上级    \x1b[0m")
+        print("\x1b[0;32m  1> 去除AVB    \x1b[0m")
+        print("\x1b[0;34m  2> 去除DM     \x1b[0m")
+        print("\x1b[0;31m  3> [A11+]全局合并    \x1b[0m")
+        print("\x1b[0;35m  4> 标准精简    \x1b[0m")
+        print("\x1b[0;32m  5> 添加文件    \x1b[0m")
+        print("\x1b[0;34m  6> 修补boot.img @twrp    \x1b[0m")
+        print("\x1b[0;36m  7> 修补boot.img @magisk    \x1b[0m")
+        print("\x1b[0;33m  8> 合成super.img    \x1b[0m\n")
         print("-------------------------------------------------------")
         option = input(f"> {RED}输入序号{CLOSE} >> ")
         if not option.isdigit():
@@ -1463,10 +1463,10 @@ def menu_more(project):
             with CoastTime():
                 kill_dm(project)
             input('> 任意键继续')
-        elif int(option) == 5:
+        elif int(option) == 3:
             with CoastTime():
                 devdex.deodex(project)
-        elif int(option) == 6:
+        elif int(option) == 4:
             add_dir = f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}"
             if os.path.isfile(f"{add_dir}/reduce.txt"):
                 reduce_conf = f"{add_dir}/reduce.txt"
@@ -1489,11 +1489,11 @@ def menu_more(project):
                                     os.remove(V.DNA_MAIN_DIR + line)
             input('> 任意键继续')
 
-        elif int(option) == 7:
+        elif int(option) == 5:
             with CoastTime():
                 patch_addons()
             input('> 任意键继续')
-        elif int(option) in [8, 9]:
+        elif int(option) in [6, 7]:
             currentbootimg = None
             if os.path.isfile(V.DNA_DIST_DIR + "boot.img"):
                 currentbootimg = V.DNA_DIST_DIR + "boot.img"
@@ -1503,9 +1503,9 @@ def menu_more(project):
                 continue
             if os.path.isfile(currentbootimg):
                 with CoastTime():
-                    patch_twrp(currentbootimg) if int(option) == 8 else patch_magisk(currentbootimg)
+                    patch_twrp(currentbootimg) if int(option) == 6 else patch_magisk(currentbootimg)
             input('> 任意键继续')
-        elif int(option) == 11:
+        elif int(option) == 8:
             repack_super()
             input('> 任意键继续')
         else:
