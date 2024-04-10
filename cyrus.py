@@ -749,9 +749,8 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                 ST.write(CONTENT)
         renew_size = os.path.getsize(distance)
         with open(new_op_list, "r", encoding="UTF-8") as f_r:
-            data = f_r.readlines()
             with open(new_op_list, "w", encoding="UTF-8") as f_w:
-                for line in data:
+                for line in f_r.readlines():
                     if f"resize {label} " in line:
                         line = f"resize {label} {renew_size}\n"
                     elif f"resize {label}_a " in line:
@@ -768,9 +767,8 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
                     ...
             if os.path.isfile(distance.rsplit(".", 1)[0] + "_sparse.img"):
                 source_file = distance.rsplit(".", 1)[0] + "_sparse.img"
-                destination_file = distance
                 try:
-                    os.rename(source_file, destination_file)
+                    os.rename(source_file, distance)
                 except Exception as e:
                     print("Error moving file:", e)
                 if flag > 8:
