@@ -323,8 +323,7 @@ def kill_avb():
     for tab in find_file(V.project, "^fstab.*?"):
         print(f"> 解除AVB加密: {tab}")
         with open(tab, "r") as sf:
-            details = sf.read()
-        details = re.sub("avb.*?,", "", details)
+            details = re.sub("avb.*?,", "", sf.read())
         details = re.sub(",avb,", ",", details)
         details = re.sub(",avb_keys=.*", "", details)
         with open(tab, "w") as tf:
@@ -335,8 +334,7 @@ def kill_dm():
     for tab in find_file(V.project, "^fstab.*?"):
         print(f"> 解除DM加密: {tab}")
         with open(tab, "r") as sf:
-            details = sf.read()
-        details = re.sub("forceencrypt=", "encryptable=", details)
+            details = re.sub("forceencrypt=", "encryptable=", sf.read())
         details = re.sub(",fileencryption=.*metadata_encryption", "", details)
         with open(tab, "w") as tf:
             tf.write(details)
