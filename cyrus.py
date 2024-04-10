@@ -344,6 +344,19 @@ def kill_dm(project):
             tf.write(details)
 
 
+def patch_kernel(Boot):
+    for dt in ('dtb', 'kernel_dtb', 'extra'):
+        if os.path.isfile(dt):
+            print(f"- Patch fstab in {dt}")
+            call(f"magiskboot dtb {dt} patch")
+        call(
+            "magiskboot hexpatch kernel 736B69705F696E697472616D667300 77616E745F696E697472616D667300")
+        call("magiskboot hexpatch kernel 77616E745F696E697472616D6673 736B69705F696E697472616D6673")
+        call("magiskboot hexpatch kernel 747269705F696E697472616D6673 736B69705F696E697472616D6673")
+        print("- Repacking boot image")
+        call(f"magiskboot repack {Boot}")
+
+
 def patch_twrp(BOOTIMG):
     if os.path.isfile(
             f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/ramdisk.cpio") and os.path.isfile(
@@ -360,16 +373,7 @@ def patch_twrp(BOOTIMG):
                 shutil.copy(
                     f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}/ramdisk.cpio",
                     os.path.join(os.path.abspath("."), "ramdisk.cpio"))
-                for dt in ('dtb', 'kernel_dtb', 'extra'):
-                    if os.path.isfile(dt):
-                        print(f"- Patch fstab in {dt}")
-                        call(f"magiskboot dtb {dt} patch")
-                    call(
-                        "magiskboot hexpatch kernel 736B69705F696E697472616D667300 77616E745F696E697472616D667300")
-                    call("magiskboot hexpatch kernel 77616E745F696E697472616D6673 736B69705F696E697472616D6673")
-                    call("magiskboot hexpatch kernel 747269705F696E697472616D6673 736B69705F696E697472616D6673")
-                    print("- Repacking boot image")
-                    call(f"magiskboot repack {BOOTIMG}")
+                patch_kernel(BOOTIMG)
 
                 if os.path.isfile("new-boot.img"):
                     print("+ Done")
@@ -493,16 +497,7 @@ def patch_magisk(BOOTIMG):
                             print(f"Clean: {file_to_delete}")
                         except Exception as e:
                             print(f"Error deleting {file_to_delete}: {e}")
-                for dt in ('dtb', 'kernel_dtb', 'extra'):
-                    if os.path.isfile(dt):
-                        print(f"- Patch fstab in {dt}")
-                        call(F"magiskboot dtb {dt} patch")
-                    call(
-                        "magiskboot hexpatch kernel 736B69705F696E697472616D667300 77616E745F696E697472616D667300")
-                    call("magiskboot hexpatch kernel 77616E745F696E697472616D6673 736B69705F696E697472616D6673")
-                    call("magiskboot hexpatch kernel 747269705F696E697472616D6673 736B69705F696E697472616D6673")
-                    print("- Repacking boot image")
-                    call(f"magiskboot repack {BOOTIMG}")
+                patch_kernel(BOOTIMG)
 
                 if os.path.isfile("new-boot.img"):
                     print("+ Done")
@@ -1274,7 +1269,7 @@ def extract_zrom(rom):
         if not infile:
             input('> 仅支持含有payload.bin/*.new.dat/*.new.dat.br/*.img的zip固件')
         else:
-            V.JM = True
+            quiet()
             decompress(infile, able)
         menu_main(V.project)
 
