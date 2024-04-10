@@ -1168,7 +1168,7 @@ def decompress(infile, flag=4):
             continue
         if not V.JM:
             display(f'是否分解: {os.path.basename(part)} [1/0]: ', 2, '')
-            if input() == '0':
+            if input() != '1':
                 continue
         decompress_img(part, V.DNA_MAIN_DIR + os.path.basename(part).rsplit('.', 1)[0])
 
@@ -1571,7 +1571,6 @@ def menu_main():
                 infile.append(i)
             quiet()
             decompress_win(list(set(sorted(infile))))
-            input('> 任意键继续')
         elif int(option) in [8, 9, 10]:
             infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
             quiet()
