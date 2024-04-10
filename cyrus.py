@@ -1197,10 +1197,9 @@ def extract_zrom(rom):
     if 'payload.bin' in zip_lists:
         print(f'> 解压缩: {os.path.basename(rom)}')
         envelop_project()
-        infile = fantasy_zip.extract('payload.bin', V.DNA_TEMP_DIR)
         fantasy_zip.close()
         if os.path.isfile(V.DNA_TEMP_DIR + 'payload.bin'):
-            decompress_bin(infile, V.DNA_TEMP_DIR,
+            decompress_bin(fantasy_zip.extract('payload.bin', V.DNA_TEMP_DIR), V.DNA_TEMP_DIR,
                            input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> '))
             menu_main()
     elif 'run.sh' in zip_lists:
