@@ -311,12 +311,10 @@ def check_permissions():
 
 
 def find_file(path, rule):
-    finds = []
     for (root, lists, files) in os.walk(path):
         for file in files:
             if re.search(rule, os.path.basename(file)):
-                finds.append(os.path.join(root, file))
-    return finds
+                yield os.path.join(root, file)
 
 
 def kill_avb():
