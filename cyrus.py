@@ -1526,9 +1526,7 @@ def menu_modules():
                 if V.dict0:
                     which = input("> 输入序号进行删除: ")
                     if which:
-                        if int(which) == 0:
-                            return
-                        if not which.isdigit():
+                        if int(which) == 0 or not which.isdigit():
                             continue
                         if int(which) < len(V.dict0):
                             if input(
