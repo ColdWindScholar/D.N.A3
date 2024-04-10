@@ -1553,7 +1553,7 @@ def run_modules(sub):
     print(f"\x1b[1;31m> 执行插件:\x1b[0m {os.path.basename(sub)}\n")
     shell_sub = sub + os.sep + "run.sh"
     if os.path.isfile(shell_sub):
-        call(f"busybox bash {shell_sub} {V.DNA_MAIN_DIR}")
+        call(f"busybox bash {shell_sub} {V.DNA_MAIN_DIR.replace(os.sep, '/')}")
     input('> 任意键继续')
 
 
