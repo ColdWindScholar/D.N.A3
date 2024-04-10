@@ -933,9 +933,8 @@ def decompress_img(source, distance, keep=1):
                     os.unlink(source)
         else:
             if file_type == 'erofs':
-                image_size = os.path.getsize(source)
                 with open(V.DNA_CONF_DIR + os.path.basename(distance) + '_size.txt', 'w') as sf:
-                    sf.write(str(image_size))
+                    sf.write(str(os.path.getsize(source)))
                 if 'unsparse' in os.path.basename(source):
                     try:
                         os.rename(source, source.replace('.unsparse', ''))
@@ -951,8 +950,7 @@ def decompress_img(source, distance, keep=1):
                     if not V.SETUP_MANIFEST['IS_VAB'] == '1' or os.path.getsize(img) == 0:
                         os.remove(img)
                     else:
-                        new_distance = V.DNA_MAIN_DIR + os.path.basename(img).rsplit('.', 1)[0]
-                        decompress_img(img, new_distance, keep=0)
+                        decompress_img(img, V.DNA_MAIN_DIR + os.path.basename(img).rsplit('.', 1)[0], keep=0)
                 else:
                     for img in glob(V.DNA_TEMP_DIR + '*_a.img'):
                         new_source = img.rsplit('_', 1)[0] + '.img'
@@ -960,8 +958,7 @@ def decompress_img(source, distance, keep=1):
                             os.rename(img, new_source)
                         except:
                             ...
-                        new_distance = V.DNA_MAIN_DIR + os.path.basename(new_source).rsplit('.', 1)[0]
-                        decompress_img(new_source, new_distance, keep=0)
+                        decompress_img(new_source, V.DNA_MAIN_DIR + os.path.basename(new_source).rsplit('.', 1)[0], keep=0)
             else:
                 print(F'> ..., not support fs_type [{file_type}]')
             distance = V.DNA_MAIN_DIR + os.path.basename(source).replace('.unsparse.img', '').replace('.img', '')
