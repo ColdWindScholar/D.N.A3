@@ -1437,7 +1437,7 @@ def menu_more():
                 kill_dm()
         elif int(option) == 3:
             with CoastTime():
-                devdex.deodex(project)
+                devdex.deodex(V.project)
         elif int(option) == 4:
             add_dir = f"{PWD_DIR}local/etc/devices/{V.SETUP_MANIFEST['DEVICE_CODE']}/{V.SETUP_MANIFEST['ANDROID_SDK']}"
             if os.path.isfile(f"{add_dir}/reduce.txt"):
