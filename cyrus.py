@@ -1588,9 +1588,7 @@ def menu_main(project):
             suf = {2: "*.br", 3: "*.new.dat", 4: "*.img"}
             decompress(glob(V.DNA_TEMP_DIR + suf[int(option)]), int(option))
         elif int(option) == 5:
-            infile = glob(V.DNA_TEMP_DIR + '*.win[0-9][0-9][0-9]')
-            for i in glob(V.DNA_TEMP_DIR + '*.win*'):
-                infile.append(i)
+            infile = glob(V.DNA_TEMP_DIR + '*.win*')
             for i in glob(V.DNA_TEMP_DIR + '*.win'):
                 infile.append(i)
             quiet()
