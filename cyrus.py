@@ -1177,7 +1177,7 @@ def decompress(infile, flag=4):
                 if input() != '1':
                     continue
             if flag == 2:
-                decompress_bro(transfer, part,  part.rsplit('.', 1)[0])
+                decompress_bro(transfer, part, part.rsplit('.', 1)[0])
             elif flag == 3:
                 decompress_dat(transfer, part, part.rsplit('.', 2)[0] + '.img')
             continue
@@ -1540,17 +1540,13 @@ def menu_modules():
             elif int(choice) == 0:
                 return
             if 0 < int(choice) < len(V.dict0):
-                run_modules(V.dict0[int(choice)])
+                os.system("cls" if os.name == "nt" else "clear")
+                print(f"\x1b[1;31m> 执行插件:\x1b[0m {os.path.basename(V.dict0[int(choice)])}\n")
+                if os.path.isfile(shell_sub := (V.dict0[int(choice)] + os.sep + "run.sh")):
+                    call(f"busybox bash {shell_sub} {V.DNA_MAIN_DIR.replace(os.sep, '/')}")
+                input('> 任意键继续')
             else:
                 print(f"> Number \x1b[0;33m{choice}\x1b[0m enter error !")
-
-
-def run_modules(sub):
-    os.system("cls" if os.name == "nt" else "clear")
-    print(f"\x1b[1;31m> 执行插件:\x1b[0m {os.path.basename(sub)}\n")
-    if os.path.isfile(shell_sub:=(sub + os.sep + "run.sh")):
-        call(f"busybox bash {shell_sub} {V.DNA_MAIN_DIR.replace(os.sep, '/')}")
-    input('> 任意键继续')
 
 
 def quiet():
