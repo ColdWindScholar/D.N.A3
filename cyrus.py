@@ -183,8 +183,7 @@ def load_image_json(dumpinfo, source_dir):
             dsize = str(isize)
     else:
         dsize = fsize
-    return (
-        fsize, dsize, inodes, block_size, blocks, per_group, mount_point)
+    return fsize, dsize, inodes, block_size, blocks, per_group, mount_point
 
 
 def load_setup_json():
