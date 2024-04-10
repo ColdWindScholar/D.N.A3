@@ -1600,15 +1600,15 @@ def menu_main(project):
                                input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> '))
         elif int(option) == 2:
             quiet()
-            decompress(glob(V.DNA_TEMP_DIR + '*.br'), int(option))
+            decompress(glob(V.DNA_TEMP_DIR + '*.br'), 2)
         elif int(option) == 3:
             quiet()
-            decompress(glob(V.DNA_TEMP_DIR + '*.dat'), int(option))
+            decompress(glob(V.DNA_TEMP_DIR + '*.dat'), 3)
             quiet()
-            decompress(glob(V.DNA_TEMP_DIR + '*.img'), int(option))
+            decompress(glob(V.DNA_TEMP_DIR + '*.img'), 3)
         elif int(option) == 4:
             quiet()
-            decompress(glob(V.DNA_TEMP_DIR + '*.img'), int(option))
+            decompress(glob(V.DNA_TEMP_DIR + '*.img'), 4)
         elif int(option) == 5:
             infile = glob(V.DNA_TEMP_DIR + '*.win[0-9][0-9][0-9]')
             for i in glob(V.DNA_TEMP_DIR + '*.win*'):
@@ -1652,7 +1652,7 @@ def menu_main(project):
                             display(f'是否合成: {f_basename}.img [1/0]: ', end='')
                             if input() != '1':
                                 continue
-                        recompress(source, fsconfig, contexts, infojson, int(option))
+                        recompress(source, fsconfig, contexts, infojson, 8)
         elif int(option) == 9:
             infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
             quiet()
@@ -1678,7 +1678,7 @@ def menu_main(project):
                             display(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
                             if input() != '1':
                                 continue
-                        recompress(source, fsconfig, contexts, infojson, int(option))
+                        recompress(source, fsconfig, contexts, infojson, 9)
         elif int(option) == 10:
             infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
             quiet()
@@ -1728,7 +1728,7 @@ def menu_main(project):
                                 display(f'是否合成: {f_basename}.new.dat.br [1/0]: ', end='')
                                 if input() != '1':
                                     continue
-                            recompress(source, fsconfig, contexts, infojson, int(option))
+                            recompress(source, fsconfig, contexts, infojson, 10)
         else:
             input(f'\x1b[0;33m{option}\x1b[0m enter error !')
         input('> 任意键继续')
