@@ -320,8 +320,8 @@ def find_file(path, rule):
     return finds
 
 
-def kill_avb(project):
-    for tab in find_file(project, "^fstab.*?"):
+def kill_avb():
+    for tab in find_file(V.project, "^fstab.*?"):
         print(f"> 解除AVB加密: {tab}")
         with open(tab, "r") as sf:
             details = sf.read()
@@ -332,8 +332,8 @@ def kill_avb(project):
             tf.write(details)
 
 
-def kill_dm(project):
-    for tab in find_file(project, "^fstab.*?"):
+def kill_dm():
+    for tab in find_file(V.project, "^fstab.*?"):
         print(f"> 解除DM加密: {tab}")
         with open(tab, "r") as sf:
             details = sf.read()
@@ -1453,11 +1453,11 @@ def menu_more():
             break
         elif int(option) == 1:
             with CoastTime():
-                kill_avb(project)
+                kill_avb()
             input('> 任意键继续')
         elif int(option) == 2:
             with CoastTime():
-                kill_dm(project)
+                kill_dm()
             input('> 任意键继续')
         elif int(option) == 3:
             with CoastTime():
