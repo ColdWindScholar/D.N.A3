@@ -1587,15 +1587,10 @@ def menu_main(project):
             else:
                 decompress_bin(infile, V.DNA_TEMP_DIR,
                                input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> '))
-        elif int(option) == 2:
+        elif int(option) in [2, 3, 4]:
             quiet()
-            decompress(glob(V.DNA_TEMP_DIR + '*.br'), 2)
-        elif int(option) == 3:
-            quiet()
-            decompress(glob(V.DNA_TEMP_DIR + '*.new.dat'), 3)
-        elif int(option) == 4:
-            quiet()
-            decompress(glob(V.DNA_TEMP_DIR + '*.img'), 4)
+            suf = {2: "*.br", 3: "*.new.dat", 4: "*.img"}
+            decompress(glob(V.DNA_TEMP_DIR + suf[int(option)]), int(option))
         elif int(option) == 5:
             infile = glob(V.DNA_TEMP_DIR + '*.win[0-9][0-9][0-9]')
             for i in glob(V.DNA_TEMP_DIR + '*.win*'):
