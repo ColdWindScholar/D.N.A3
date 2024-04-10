@@ -700,9 +700,8 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
         print(" Done")
         if resize2_rw and os.name == 'posix':
             os.system(f"e2fsck -E unshare_blocks {distance}")
-            new_size = os.path.getsize(distance)
             if dumpinfo:
-                if int(new_size) > int(fsize):
+                if int(os.path.getsize(distance)) > int(fsize):
                     os.system(f"resize2fs -M {distance}")
                 if V.SETUP_MANIFEST["RESIZE_IMG"] == "1":
                     if V.SETUP_MANIFEST["REPACK_EROFS_IMG"] == "0":
@@ -941,8 +940,7 @@ def decompress_img(source, distance, keep=1):
                     source = source.replace('.unsparse', '')
                 call(f'extract.erofs -i {source.replace(os.sep, "/")} -o {V.DNA_MAIN_DIR} -x')
             elif file_type == 'super':
-                lpunpack_cmd = f'lpunpack {source} {V.DNA_TEMP_DIR}'
-                call(lpunpack_cmd)
+                call(f'lpunpack {source} {V.DNA_TEMP_DIR}')
                 for img in glob(V.DNA_TEMP_DIR + '*_b.img'):
                     if not V.SETUP_MANIFEST['IS_VAB'] == '1' or os.path.getsize(img) == 0:
                         os.remove(img)
