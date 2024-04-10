@@ -222,7 +222,6 @@ def set_default_env_setup():
         'IS_DYNAMIC': "1",
         'ANDROID_SDK': "12",
         'DEVICE_CODE': "alioth",
-        'AUTHOR_INFO': "DNA",
         'REPACK_EROFS_IMG': "0",
         'REPACK_TO_RW': "0",
         'RESIZE_IMG': "0",
@@ -260,7 +259,6 @@ def env_setup():
     question_list = {
         '安卓版本[12]': "ANDROID_SDK",
         '机型代号[alioth]': "DEVICE_CODE",
-        '作者信息[DNA]': "AUTHOR_INFO",
         '是否动态分区[1/0]': "IS_DYNAMIC",
         '是否虚拟AB分区[1/0]': "IS_VAB",
         '合成镜像类型[0:EXT4/1:EROFS]': "REPACK_EROFS_IMG",

@@ -3,7 +3,6 @@
     "IS_DYNAMIC": "1",
     "ANDROID_SDK": "12",
     "DEVICE_CODE": "alioth",
-    "AUTHOR_INFO": "DNA",
     "REPACK_EROFS_IMG": "0",
     "REPACK_TO_RW": "0",
     "RESIZE_IMG": "0",
