@@ -894,17 +894,15 @@ def dboot(infile, dist):
             os.rename("ramdisk-new.cpio", "ramdisk.cpio")
         if comp == "cpio":
             flag = "-n"
-        ramdisk = True
     else:
-        ramdisk = False
+        os.chdir(infile)
     if call("magiskboot repack %s %s" % (flag, os.path.join(infile, "boot_o.img"))) != 0:
         print("Pack boot Fail...")
         return
     else:
-        if ramdisk:
-            if os.path.exists(os.path.join(dist, os.path.basename(infile) + ".img")):
-                os.remove(os.path.join(dist, os.path.basename(infile) + ".img"))
-            os.rename(infile + os.sep + "new-boot.img", os.path.join(dist, os.path.basename(infile) + ".img"))
+        if os.path.exists(os.path.join(dist, os.path.basename(infile) + ".img")):
+            os.remove(os.path.join(dist, os.path.basename(infile) + ".img"))
+        os.rename(infile + os.sep + "new-boot.img", os.path.join(dist, os.path.basename(infile) + ".img"))
         os.chdir(or_dir)
         print("Pack Successful...")
 
