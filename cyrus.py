@@ -1674,35 +1674,13 @@ def menu_main(project):
                             V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                     if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                         if not V.JM:
-                            display(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
+                            if int(option) == 10:
+                                display(f'是否合成: {f_basename}.new.dat.br [1/0]: ', end='')
+                            else:
+                                display(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
                             if input() != '1':
                                 continue
-                        recompress(source, fsconfig, contexts, infojson, 9)
-            if int(option) == 10:
-                for _file in infile:
-                    f_basename = os.path.basename(_file).rsplit('_', 1)[0]
-                    source = V.DNA_MAIN_DIR + f_basename
-                    if os.path.isdir(source):
-                        fsconfig = V.DNA_CONF_DIR + f_basename + '_fsconfig.txt'
-                        contexts = V.DNA_CONF_DIR + f_basename + '_contexts.txt'
-                        infojson = V.DNA_CONF_DIR + f_basename + '_info.txt'
-                        if not os.path.isfile(infojson):
-                            infojson = None
-                        if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '1':
-                            if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
-                                V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
-                                V.SETUP_MANIFEST['REPACK_TO_RW'] = '1'
-                        elif V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST[
-                            'REPACK_TO_RW'] == '0':
-                            if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
-                                V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
-                                V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
-                        if os.path.isfile(contexts) and os.path.isfile(fsconfig):
-                            if not V.JM:
-                                display(f'是否合成: {f_basename}.new.dat.br [1/0]: ', end='')
-                                if input() != '1':
-                                    continue
-                            recompress(source, fsconfig, contexts, infojson, 10)
+                        recompress(source, fsconfig, contexts, infojson, int(option))
         else:
             input(f'\x1b[0;33m{option}\x1b[0m enter error !')
         input('> 任意键继续')
