@@ -1733,6 +1733,6 @@ def menu_main(project):
                                     continue
                             recompress(source, fsconfig, contexts, infojson, int(option))
         else:
-            input('\x1b[0;33m{option}\x1b[0m enter error !')
+            input(f'\x1b[0;33m{option}\x1b[0m enter error !')
         input('> 任意键继续')
     menu_main(project)
