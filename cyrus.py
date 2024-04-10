@@ -241,21 +241,21 @@ def set_default_env_setup():
         json.dump(properties, ss, ensure_ascii=False, indent=4)
 
 
-def validate_default_env_setup(SETUP_MANIFEST):
+def validate_default_env_setup(setup_manifest):
     for k in ('IS_VAB', 'IS_DYNAMIC', 'REPACK_EROFS_IMG', 'REPACK_SPARSE_IMG', 'REPACK_TO_RW',
               'SUPER_SPARSE', 'RESIZE_IMG'):
-        if SETUP_MANIFEST[k] not in ('1', '0'):
+        if setup_manifest[k] not in ('1', '0'):
             sys.exit(f"Invalid [{k}] - must be one of <1/0>")
 
-    if SETUP_MANIFEST["RESIZE_EROFSIMG"] not in ('1', '2', '0'):
+    if setup_manifest["RESIZE_EROFSIMG"] not in ('1', '2', '0'):
         sys.exit("Invalid [RESIZE_EROFSIMG] - must be one of <1/2/0>")
-    if not re.match("\\d{1,2}", SETUP_MANIFEST["ANDROID_SDK"]) or int(SETUP_MANIFEST["ANDROID_SDK"]) < 5:
-        sys.exit(f"Invalid [ANDROID_SDK : {SETUP_MANIFEST['ANDROID_SDK']}] - must be one of <5+>")
-    if not re.match("[0-9]", SETUP_MANIFEST["REPACK_BR_LEVEL"]):
-        sys.exit(f"Invalid [{SETUP_MANIFEST['REPACK_BR_LEVEL']}] - must be one of <0-9>")
-    if not re.match("\\d{1,3}", SETUP_MANIFEST["UNPACK_SPLIT_DAT"]):
+    if not re.match("\\d{1,2}", setup_manifest["ANDROID_SDK"]) or int(setup_manifest["ANDROID_SDK"]) < 5:
+        sys.exit(f"Invalid [ANDROID_SDK : {setup_manifest['ANDROID_SDK']}] - must be one of <5+>")
+    if not re.match("[0-9]", setup_manifest["REPACK_BR_LEVEL"]):
+        sys.exit(f"Invalid [{setup_manifest['REPACK_BR_LEVEL']}] - must be one of <0-9>")
+    if not re.match("\\d{1,3}", setup_manifest["UNPACK_SPLIT_DAT"]):
         sys.exit(
-            f'Invalid ["UNPACK_SPLIT_DAT" : "{SETUP_MANIFEST["UNPACK_SPLIT_DAT"]}"] - must be one of <1-999>')
+            f'Invalid ["UNPACK_SPLIT_DAT" : "{setup_manifest["UNPACK_SPLIT_DAT"]}"] - must be one of <1-999>')
 
 
 def env_setup():
@@ -342,7 +342,7 @@ def kill_dm():
             tf.write(details)
 
 
-def patch_kernel(Boot):
+def patch_kernel(boot):
     for dt in ('dtb', 'kernel_dtb', 'extra'):
         if os.path.isfile(dt):
             print(f"- Patch fstab in {dt}")
@@ -352,7 +352,7 @@ def patch_kernel(Boot):
         call("magiskboot hexpatch kernel 77616E745F696E697472616D6673 736B69705F696E697472616D6673")
         call("magiskboot hexpatch kernel 747269705F696E697472616D6673 736B69705F696E697472616D6673")
         print("- Repacking boot image")
-        call(f"magiskboot repack {Boot}")
+        call(f"magiskboot repack {boot}")
 
 
 def patch_twrp(BOOTIMG):
@@ -416,8 +416,8 @@ def patch_magisk(bootimg):
     if magisk_manifest["TARGET"] not in ('arm', 'arm64', 'armeabi-v7a', 'arm64-v8a',
                                          'x86', 'x86_64'):
         sys.exit("Invalid [TARGET] - must be one of <arm/x86>")
-    MAGISK_FILES = glob(f"{PWD_DIR}local/etc/magisk/{magisk_manifest['CLASS']}/Magisk-*.apk")
-    if not MAGISK_FILES:
+    magisk_files = glob(f"{PWD_DIR}local/etc/magisk/{magisk_manifest['CLASS']}/Magisk-*.apk")
+    if not magisk_files:
         input(f"> 未发现local/etc/magisk/{magisk_manifest['CLASS']}/Magisk-*.apk文件")
         return
     if os.path.isfile(bootimg):
@@ -464,9 +464,9 @@ def patch_magisk(bootimg):
                     if is_64bit:
                         magisk_dict["magiskinit"] = ('lib/x86_64/libmagiskinit.so',)
                         magisk_dict["magisk64"] = "lib/x86_64/libmagisk64.so"
-                MAGISK_FILES = sorted(MAGISK_FILES, key=(lambda x: os.path.getmtime(x)), reverse=True)
-                MAGISK_FILE = MAGISK_FILES[0]
-                fantasy_zip = zipfile.ZipFile(MAGISK_FILE)
+                magisk_files = sorted(magisk_files, key=(lambda x: os.path.getmtime(x)), reverse=True)
+                magisk_file = magisk_files[0]
+                fantasy_zip = zipfile.ZipFile(magisk_file)
                 zip_lists = fantasy_zip.namelist()
                 for (k, v) in magisk_dict.items():
                     if v in zip_lists:
@@ -512,12 +512,12 @@ def patch_magisk(bootimg):
                             destination_path = os.path.join(V.DNA_MAIN_DIR, 'system', 'system', 'data-app',
                                                             'Magisk',
                                                             'Magisk.apk')
-                            shutil.copy(MAGISK_FILE, destination_path)
+                            shutil.copy(magisk_file, destination_path)
                     elif os.path.isdir(V.DNA_MAIN_DIR + "vendor"):
                         os.makedirs(V.DNA_MAIN_DIR + "vendor" + os.sep + "data-app" + os.sep + "Magisk")
                         destination_path = os.path.join(V.DNA_MAIN_DIR, 'vendor', 'data-app', 'Magisk',
                                                         'Magisk.apk')
-                        shutil.copy(MAGISK_FILE, destination_path)
+                        shutil.copy(magisk_file, destination_path)
             os.chdir(PWD_DIR)
             if os.path.isdir(f"{V.DNA_MAIN_DIR}bootimg"):
                 rmdire(f"{V.DNA_MAIN_DIR}bootimg")
