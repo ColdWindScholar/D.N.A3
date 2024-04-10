@@ -1514,37 +1514,36 @@ def menu_modules():
         print("\x1b[0;33m> 插件列表\x1b[0m")
         lists_project("返回上级", MOD_DIR + "DNA_*", 2)
         choice = input("> 选择: ")
-        if choice:
-            if not choice.isdigit():
-                continue
-            if int(choice) == 88:
-                sys.exit()
-            elif int(choice) == 33:
-                extract_zrom(input("请输入插件路径："))
-            elif int(choice) == 44:
-                if V.dict0:
-                    which = input("> 输入序号进行删除: ")
-                    if which:
-                        if int(which) == 0 or not which.isdigit():
-                            continue
-                        if int(which) <= len(V.dict0):
-                            if input(
-                                    f"\x1b[0;31m> 是否删除 \x1b[0;34mNo.{which} \x1b[0;31m插件: \x1b[0;32m{os.path.basename(V.dict0[int(which)])}\x1b[0;31m [0/1]:\x1b[0m ") == "1":
-                                if os.path.isdir(V.dict0[int(which)]):
-                                    rmdire(V.dict0[int(which)])
-                                    continue
-                                else:
-                                    input(f"> Number {which} Error !")
-            elif int(choice) == 0:
-                return
-            if 0 < int(choice) < len(V.dict0):
-                os.system("cls" if os.name == "nt" else "clear")
-                print(f"\x1b[1;31m> 执行插件:\x1b[0m {os.path.basename(V.dict0[int(choice)])}\n")
-                if os.path.isfile(shell_sub := (V.dict0[int(choice)] + os.sep + "run.sh")):
-                    call(f"busybox bash {shell_sub} {V.DNA_MAIN_DIR.replace(os.sep, '/')}")
-                input('> 任意键继续')
-            else:
-                print(f"> Number \x1b[0;33m{choice}\x1b[0m enter error !")
+        if not choice.isdigit():
+            continue
+        if int(choice) == 88:
+            sys.exit()
+        elif int(choice) == 33:
+            extract_zrom(input("请输入插件路径："))
+        elif int(choice) == 44:
+            if V.dict0:
+                which = input("> 输入序号进行删除: ")
+                if which:
+                    if int(which) == 0 or not which.isdigit():
+                        continue
+                    if int(which) <= len(V.dict0):
+                        if input(
+                                f"\x1b[0;31m> 是否删除 \x1b[0;34mNo.{which} \x1b[0;31m插件: \x1b[0;32m{os.path.basename(V.dict0[int(which)])}\x1b[0;31m [0/1]:\x1b[0m ") == "1":
+                            if os.path.isdir(V.dict0[int(which)]):
+                                rmdire(V.dict0[int(which)])
+                                continue
+                            else:
+                                input(f"> Number {which} Error !")
+        elif int(choice) == 0:
+            return
+        if 0 < int(choice) < len(V.dict0):
+            os.system("cls" if os.name == "nt" else "clear")
+            print(f"\x1b[1;31m> 执行插件:\x1b[0m {os.path.basename(V.dict0[int(choice)])}\n")
+            if os.path.isfile(shell_sub := (V.dict0[int(choice)] + os.sep + "run.sh")):
+                call(f"busybox bash {shell_sub} {V.DNA_MAIN_DIR.replace(os.sep, '/')}")
+            input('> 任意键继续')
+        else:
+            print(f"> Number \x1b[0;33m{choice}\x1b[0m enter error !")
 
 
 def quiet():
