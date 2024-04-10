@@ -441,7 +441,7 @@ def patch_magisk(bootimg):
                             sha1_.update(file_data)
                 SHA1 = sha1_.digest().hex()
                 with open(bootimg, 'rb') as source_file, open('stock_boot.img', 'wb') as dest_file:
-                        shutil.copyfileobj(source_file, dest_file)
+                    shutil.copyfileobj(source_file, dest_file)
 
                 shutil.copy2('ramdisk.cpio', 'ramdisk.cpio.orig')
                 print(F"- Patching ramdisk magisk@{magisk_manifest['CLASS']}")
@@ -1560,8 +1560,11 @@ def run_modules(sub):
 def quiet():
     V.JM = input('> 是否开启静默 [0/1]: ') == '1'
 
+
 def pack_info():
     pass
+
+
 def menu_main(project):
     envelop_project(V.project)
     V.JM = True
@@ -1576,63 +1579,137 @@ def menu_main(project):
     print('\x1b[0;34m\t  10> 合成[bro]          88> 退出[bye]\x1b[0m\n')
     print('-------------------------------------------------------')
     option = input(f'> {RED}输入序号{CLOSE} >> ')
-    if option:
-        if not option.isdigit():
-            input('> 输入序号数字')
-        else:
-            if int(option) == 55:
-                input("Github: https://github.com/ColdWindScholar/D.N.A3/")
-                input("Wrote By ColdWindScholar (3590361911@qq.com)")
-            if int(option) == 88:
-                sys.exit()
-            elif int(option) == 0:
-                menu_once()
-            elif int(option) == 1:
-                infile = V.DNA_TEMP_DIR + 'payload.bin'
-                if not os.path.exists(infile):
-                    input("未发现Payload.Bin")
-                else:
-                    decompress_bin(infile, V.DNA_TEMP_DIR,
-                                   input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> '))
-            elif int(option) == 2:
-                quiet()
-                decompress(glob(V.DNA_TEMP_DIR + '*.br'), int(option))
-            elif int(option) == 3:
-                quiet()
-                decompress(glob(V.DNA_TEMP_DIR + '*.dat'), int(option))
-                quiet()
-                decompress(glob(V.DNA_TEMP_DIR + '*.img'), int(option))
-            elif int(option) == 4:
-                quiet()
-                decompress(glob(V.DNA_TEMP_DIR + '*.img'), int(option))
-            elif int(option) == 5:
-                infile = glob(V.DNA_TEMP_DIR + '*.win[0-9][0-9][0-9]')
-                for i in glob(V.DNA_TEMP_DIR + '*.win*'):
-                    infile.append(i)
-                for i in glob(V.DNA_TEMP_DIR + '*.win'):
-                    infile.append(i)
-                quiet()
-                decompress_win(list(set(sorted(infile))))
-                input('> 任意键继续')
-            elif int(option) == 6:
-                menu_more(project)
-            elif int(option) == 7:
-                menu_modules()
-            elif int(option) == 8:
-                infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
-                infile_kernel = glob(V.DNA_CONF_DIR + '*_kernel.txt')
-                quiet()
-                for file in infile_kernel:
-                    f_basename = os.path.basename(file).rsplit('_', 1)[0]
-                    source = V.DNA_MAIN_DIR + f_basename
-                    if os.path.isdir(source):
+    if not option.isdigit():
+        input('> 输入序号数字')
+    else:
+        if int(option) == 55:
+            input("Github: https://github.com/ColdWindScholar/D.N.A3/")
+            input("Wrote By ColdWindScholar (3590361911@qq.com)")
+        if int(option) == 88:
+            sys.exit()
+        elif int(option) == 0:
+            menu_once()
+        elif int(option) == 1:
+            infile = V.DNA_TEMP_DIR + 'payload.bin'
+            if not os.path.exists(infile):
+                input("未发现Payload.Bin")
+            else:
+                decompress_bin(infile, V.DNA_TEMP_DIR,
+                               input(f'> {RED}选择提取方式:  [0]全盘提取  [1]指定镜像{CLOSE} >> '))
+        elif int(option) == 2:
+            quiet()
+            decompress(glob(V.DNA_TEMP_DIR + '*.br'), int(option))
+        elif int(option) == 3:
+            quiet()
+            decompress(glob(V.DNA_TEMP_DIR + '*.dat'), int(option))
+            quiet()
+            decompress(glob(V.DNA_TEMP_DIR + '*.img'), int(option))
+        elif int(option) == 4:
+            quiet()
+            decompress(glob(V.DNA_TEMP_DIR + '*.img'), int(option))
+        elif int(option) == 5:
+            infile = glob(V.DNA_TEMP_DIR + '*.win[0-9][0-9][0-9]')
+            for i in glob(V.DNA_TEMP_DIR + '*.win*'):
+                infile.append(i)
+            for i in glob(V.DNA_TEMP_DIR + '*.win'):
+                infile.append(i)
+            quiet()
+            decompress_win(list(set(sorted(infile))))
+            input('> 任意键继续')
+        elif int(option) == 6:
+            menu_more(project)
+        elif int(option) == 7:
+            menu_modules()
+        elif int(option) == 8:
+            infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
+            infile_kernel = glob(V.DNA_CONF_DIR + '*_kernel.txt')
+            quiet()
+            for file in infile_kernel:
+                f_basename = os.path.basename(file).rsplit('_', 1)[0]
+                source = V.DNA_MAIN_DIR + f_basename
+                if os.path.isdir(source):
+                    if not V.JM:
+                        display(f'是否合成: {f_basename}.img [1/0]: ', end='')
+                        if input() != '1':
+                            continue
+                    boot_utils(source, V.DNA_DIST_DIR, 2)
+            for file in infile:
+                f_basename = os.path.basename(file).rsplit('_', 1)[0]
+                source = V.DNA_MAIN_DIR + f_basename
+                if os.path.isdir(source):
+                    fsconfig = V.DNA_CONF_DIR + f_basename + '_fsconfig.txt'
+                    contexts = V.DNA_CONF_DIR + f_basename + '_contexts.txt'
+                    infojson = V.DNA_CONF_DIR + f_basename + '_info.txt'
+                    if not os.path.isfile(infojson):
+                        infojson = None
+                    if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '1':
+                        if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
+                            V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
+                            V.SETUP_MANIFEST['REPACK_TO_RW'] = '1'
+                    elif V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '0':
+                        if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
+                            V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
+                            V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
+                    if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                         if not V.JM:
                             display(f'是否合成: {f_basename}.img [1/0]: ', end='')
                             if input() != '1':
                                 continue
-                        boot_utils(source, V.DNA_DIST_DIR, 2)
-                for file in infile:
-                    f_basename = os.path.basename(file).rsplit('_', 1)[0]
+                        recompress(source, fsconfig, contexts, infojson, int(option))
+        elif int(option) == 9:
+            infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
+            quiet()
+            for file in infile:
+                f_basename = os.path.basename(file).rsplit('_', 1)[0]
+                source = V.DNA_MAIN_DIR + f_basename
+                if os.path.isdir(source):
+                    fsconfig = V.DNA_CONF_DIR + f_basename + '_fsconfig.txt'
+                    contexts = V.DNA_CONF_DIR + f_basename + '_contexts.txt'
+                    infojson = V.DNA_CONF_DIR + f_basename + '_info.txt'
+                    if not os.path.isfile(infojson):
+                        infojson = None
+                    if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '1':
+                        if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
+                            V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
+                            V.SETUP_MANIFEST['REPACK_TO_RW'] = '1'
+                    elif V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '0':
+                        if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
+                            V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
+                            V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
+                    if os.path.isfile(contexts) and os.path.isfile(fsconfig):
+                        if not V.JM:
+                            display(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
+                            if input() != '1':
+                                continue
+                        recompress(source, fsconfig, contexts, infojson, int(option))
+        elif int(option) == 10:
+            infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
+            quiet()
+            for file in infile:
+                f_basename = os.path.basename(file).rsplit('_', 1)[0]
+                source = V.DNA_MAIN_DIR + f_basename
+                if os.path.isdir(source):
+                    fsconfig = V.DNA_CONF_DIR + f_basename + '_fsconfig.txt'
+                    contexts = V.DNA_CONF_DIR + f_basename + '_contexts.txt'
+                    infojson = V.DNA_CONF_DIR + f_basename + '_info.txt'
+                    if not os.path.isfile(infojson):
+                        infojson = None
+                    if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '1':
+                        if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
+                            V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
+                            V.SETUP_MANIFEST['REPACK_TO_RW'] = '1'
+                    elif V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '0':
+                        if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
+                            V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
+                            V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
+                    if os.path.isfile(contexts) and os.path.isfile(fsconfig):
+                        if not V.JM:
+                            display(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
+                            if input() != '1':
+                                continue
+                        recompress(source, fsconfig, contexts, infojson, 9)
+                for _file in infile:
+                    f_basename = os.path.basename(_file).rsplit('_', 1)[0]
                     source = V.DNA_MAIN_DIR + f_basename
                     if os.path.isdir(source):
                         fsconfig = V.DNA_CONF_DIR + f_basename + '_fsconfig.txt'
@@ -1644,93 +1721,18 @@ def menu_main(project):
                             if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
                                 V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
                                 V.SETUP_MANIFEST['REPACK_TO_RW'] = '1'
-                        elif V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '0':
+                        elif V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST[
+                            'REPACK_TO_RW'] == '0':
                             if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
                                 V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
                                 V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
                         if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                             if not V.JM:
-                                display(f'是否合成: {f_basename}.img [1/0]: ', end='')
+                                display(f'是否合成: {f_basename}.new.dat.br [1/0]: ', end='')
                                 if input() != '1':
                                     continue
                             recompress(source, fsconfig, contexts, infojson, int(option))
-            elif int(option) == 9:
-                infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
-                quiet()
-                for file in infile:
-                    f_basename = os.path.basename(file).rsplit('_', 1)[0]
-                    source = V.DNA_MAIN_DIR + f_basename
-                    if os.path.isdir(source):
-                        fsconfig = V.DNA_CONF_DIR + f_basename + '_fsconfig.txt'
-                        contexts = V.DNA_CONF_DIR + f_basename + '_contexts.txt'
-                        infojson = V.DNA_CONF_DIR + f_basename + '_info.txt'
-                        if not os.path.isfile(infojson):
-                            infojson = None
-                        if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '1':
-                            if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
-                                V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
-                                V.SETUP_MANIFEST['REPACK_TO_RW'] = '1'
-                        elif V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '0':
-                            if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
-                                V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
-                                V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
-                        if os.path.isfile(contexts) and os.path.isfile(fsconfig):
-                            if not V.JM:
-                                display(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
-                                if input() != '1':
-                                    continue
-                            recompress(source, fsconfig, contexts, infojson, int(option))
-            elif int(option) == 10:
-                infile = glob(V.DNA_CONF_DIR + '*_contexts.txt')
-                quiet()
-                for file in infile:
-                    f_basename = os.path.basename(file).rsplit('_', 1)[0]
-                    source = V.DNA_MAIN_DIR + f_basename
-                    if os.path.isdir(source):
-                        fsconfig = V.DNA_CONF_DIR + f_basename + '_fsconfig.txt'
-                        contexts = V.DNA_CONF_DIR + f_basename + '_contexts.txt'
-                        infojson = V.DNA_CONF_DIR + f_basename + '_info.txt'
-                        if not os.path.isfile(infojson):
-                            infojson = None
-                        if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '1':
-                            if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
-                                V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
-                                V.SETUP_MANIFEST['REPACK_TO_RW'] = '1'
-                        elif V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '0':
-                            if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
-                                V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
-                                V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
-                        if os.path.isfile(contexts) and os.path.isfile(fsconfig):
-                            if not V.JM:
-                                display(f'是否合成: {f_basename}.new.dat [1/0]: ', end='')
-                                if input() != '1':
-                                    continue
-                            recompress(source, fsconfig, contexts, infojson, 9)
-                    for _file in infile:
-                        f_basename = os.path.basename(_file).rsplit('_', 1)[0]
-                        source = V.DNA_MAIN_DIR + f_basename
-                        if os.path.isdir(source):
-                            fsconfig = V.DNA_CONF_DIR + f_basename + '_fsconfig.txt'
-                            contexts = V.DNA_CONF_DIR + f_basename + '_contexts.txt'
-                            infojson = V.DNA_CONF_DIR + f_basename + '_info.txt'
-                            if not os.path.isfile(infojson):
-                                infojson = None
-                            if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST['REPACK_TO_RW'] == '1':
-                                if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
-                                    V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '0'
-                                    V.SETUP_MANIFEST['REPACK_TO_RW'] = '1'
-                            elif V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '0' and V.SETUP_MANIFEST[
-                                'REPACK_TO_RW'] == '0':
-                                if V.SETUP_MANIFEST['REPACK_EROFS_IMG'] == '1':
-                                    V.SETUP_MANIFEST['REPACK_EROFS_IMG'] = '1'
-                                    V.SETUP_MANIFEST['REPACK_TO_RW'] = '0'
-                            if os.path.isfile(contexts) and os.path.isfile(fsconfig):
-                                if not V.JM:
-                                    display(f'是否合成: {f_basename}.new.dat.br [1/0]: ', end='')
-                                    if input() != '1':
-                                        continue
-                                recompress(source, fsconfig, contexts, infojson, int(option))
-            else:
-                input('\x1b[0;33m{option}\x1b[0m enter error !')
-            input('> 任意键继续')
+        else:
+            input('\x1b[0;33m{option}\x1b[0m enter error !')
+        input('> 任意键继续')
     menu_main(project)
