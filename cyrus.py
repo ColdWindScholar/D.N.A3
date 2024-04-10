@@ -1592,9 +1592,7 @@ def menu_main(project):
             decompress(glob(V.DNA_TEMP_DIR + '*.br'), 2)
         elif int(option) == 3:
             quiet()
-            decompress(glob(V.DNA_TEMP_DIR + '*.dat'), 3)
-            quiet()
-            decompress(glob(V.DNA_TEMP_DIR + '*.img'), 3)
+            decompress(glob(V.DNA_TEMP_DIR + '*.new.dat'), 3)
         elif int(option) == 4:
             quiet()
             decompress(glob(V.DNA_TEMP_DIR + '*.img'), 4)
