@@ -1166,8 +1166,7 @@ def decompress_win(infile_list):
 def decompress(infile, flag=4):
     for part in infile:
         if os.path.isfile(part) and flag < 4:
-            transfer = os.path.basename(part).split('.')[0] + '.transfer.list'
-            transfer = os.path.join(os.path.dirname(part), transfer)
+            transfer = os.path.join(os.path.dirname(part), os.path.basename(part).split('.')[0] + '.transfer.list')
             if not os.path.isfile(transfer):
                 if flag == 3:
                     continue
@@ -1178,11 +1177,9 @@ def decompress(infile, flag=4):
                 if input() != '1':
                     continue
             if flag == 2:
-                distance = part.rsplit('.', 1)[0]
-                decompress_bro(transfer, part, distance)
+                decompress_bro(transfer, part,  part.rsplit('.', 1)[0])
             elif flag == 3:
-                distance = part.rsplit('.', 2)[0] + '.img'
-                decompress_dat(transfer, part, distance)
+                decompress_dat(transfer, part, part.rsplit('.', 2)[0] + '.img')
             continue
         if flag == 4 and os.path.basename(part) in ('dsp.img', 'cust.img'):
             continue
