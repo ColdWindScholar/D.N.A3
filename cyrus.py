@@ -1051,7 +1051,7 @@ def decompress_bin(infile, outdir, flag='1'):
     os.system("cls" if os.name == "nt" else "clear")
     if flag == "1":
         payload_partitions = extract_payload.info(infile)
-        print(f"> {YELLOW}包含的所有镜像文件: {len(payload_partitions)}{CLOSE}\n{payload_partitions}")
+        print(f"> {YELLOW}包含的所有镜像文件: {CLOSE}\n{extract_payload.info(infile)}")
         partitions = input(
             f"> {RED}根据以上信息输入一个或多个镜像，以空格分开{CLOSE}\n> {MAGENTA}").split()
         print("\n")
