@@ -714,7 +714,7 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
         else:
             CONTENT = "remove_all_groups\n"
             for slot in ('_a', '_b'):
-                CONTENT += f"add_group qti_dynamic_partitions{slot} {V.SETUP_MANIFEST['GROUP_SIZE' + slot.upper()]}\n"
+                CONTENT += f"add_group qti_dynamic_partitions{slot} {V.SETUP_MANIFEST['SUPER_SIZE']}\n"
 
             for partition in ('system', 'system_ext', 'product', 'vendor', 'odm'):
                 for slot in ('_a', '_b'):
