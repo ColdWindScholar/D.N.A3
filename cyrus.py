@@ -1369,7 +1369,7 @@ def menu_once():
         elif int(choice) == 44:
             if V.dict0:
                 which = input("> 输入序号进行删除: ")
-                if which and not int(which) == 0 and not which.isdigit():
+                if not which.isdigit():
                     continue
                 elif int(which) > 0:
                     if int(which) < len(V.dict0):
