@@ -133,10 +133,10 @@ def deodex(sysroot):
         for f in files:
             full_path = str(pathlib.Path(root) / f)
             if f.endswith('.apk') or f.endswith('.jar'):
-                print('Processing: ' + full_path)
+                print(f'Processing: {full_path}')
                 try:
                     deodex_file(full_path)
-                except DeodexException as e:
+                except DeodexException:
                     traceback.print_exc()
                     failed.append(full_path)
             elif f == 'boot.art' or f == 'boot.oat' or f == 'boot.vdex':

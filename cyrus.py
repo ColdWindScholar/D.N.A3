@@ -1407,7 +1407,7 @@ def menu_more():
         print("\x1b[0;31m  0> 返回上级    \x1b[0m")
         print("\x1b[0;32m  1> 去除AVB    \x1b[0m")
         print("\x1b[0;34m  2> 去除DM     \x1b[0m")
-        print("\x1b[0;31m  3> [A11+]全局合并    \x1b[0m")
+        print("\x1b[0;31m  3> [A11+]全局合并dev    \x1b[0m")
         print("\x1b[0;35m  4> 标准精简    \x1b[0m")
         print("\x1b[0;32m  5> 添加文件    \x1b[0m")
         print("\x1b[0;34m  6> 修补boot.img @twrp    \x1b[0m")
