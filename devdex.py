@@ -75,8 +75,7 @@ def deodex_vdex(vdex, temp_dir):
 
 
 def zipalign(path):
-    result = subprocess.run(['zipalign', '-c', '4', path])
-    if result.returncode != 0:
+    if subprocess.run(['zipalign', '-c', '4', path]).returncode != 0:
         output_path = path + '.zipaligned'
         subprocess.run(['zipalign', '4', path, output_path], check=True)
         os.rename(output_path, path)
@@ -144,7 +143,7 @@ def deodex(sysroot):
     if failed:
         print('Failed to deodex:', file=sys.stderr)
         for f in failed:
-            print('- ' + f, file=sys.stderr)
+            print(f'- {f}', file=sys.stderr)
         return False
     else:
         return True
