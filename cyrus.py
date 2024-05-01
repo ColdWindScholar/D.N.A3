@@ -823,7 +823,7 @@ def unpackboot(file, distance):
             os.mkdir(distance + os.sep + "ramdisk")
         os.chdir(distance)
         print("Unpacking Ramdisk...")
-        call("cpio -i -d -F %s -D %s" % ("ramdisk.cpio", "ramdisk"))
+        call('cpio -i -d -F ramdisk.cpio -D ramdisk')
         os.chdir(or_dir)
     else:
         print("Unpack Done!")
