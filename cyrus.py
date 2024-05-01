@@ -898,7 +898,7 @@ def decompress_img(source, distance, keep=1):
         return
     s_time = time.time()
     file_type = seekfd.gettype(source)
-    if file_type == 'boot' or file_type == 'vendor_boot':
+    if file_type in ['boot', 'vendor_boot']:
         if os.path.isdir(distance):
             shutil.rmtree(distance)
         os.makedirs(distance)
