@@ -11,7 +11,7 @@ formats = ([b'PK', "zip"], [b'OPPOENCRYPT!', "ozip"], [b'7z', "7z"], [b'\x53\xef
            [b'\x03\x21\x4c\x18', 'lz4'], [b'\x04\x22\x4d\x18', 'lz4'],
            [b'\x1f\x8b\x08\x00\x00\x00\x00\x00\x02\x03', "zopfli"], [b'\xfd7zXZ', 'xz'],
            [b']\x00\x00\x00\x04\xff\xff\xff\xff\xff\xff\xff\xff', 'lzma'], [b'\x02!L\x18', 'lz4_lg'],
-           [b'\x89PNG', 'png'], [b"LOGO!!!!", 'logo'])
+           [b'\x89PNG', 'png'], [b"LOGO!!!!", 'logo'], [b'\x67\x44\x6c\x61', 'super', 4096], [b'\x10\x20\xF5\xF2', 'f2fs', 1024])
 
 
 def gettype(file) -> str:
@@ -23,20 +23,6 @@ def gettype(file) -> str:
             f.seek(number)
             return f.read(len(header)) == header
 
-    def is_super(fil) -> any:
-        with open(fil, 'rb') as file_:
-            try:
-                file_.seek(4096,0)
-            except:
-                return False
-            buf = bytearray(file_.read(4))
-        return buf == b'\x67\x44\x6c\x61'
-
-    try:
-        if is_super(file):
-            return 'super'
-    except IndexError:
-        pass
     for f_ in formats:
         if len(f_) == 2:
             if compare(f_[0]):
