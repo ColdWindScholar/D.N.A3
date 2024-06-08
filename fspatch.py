@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os
+from typing import Generator
 
 
 def scanfs(file) -> dict:
@@ -18,7 +19,7 @@ def scanfs(file) -> dict:
     return filesystem_config
 
 
-def scan_dir(folder) -> list:
+def scan_dir(folder) -> Generator:
     allfiles = ['/', '/lost+found', f'/{os.path.basename(folder)}/lost+found', f'/{os.path.basename(folder)}/']
     if os.name == 'nt':
         yield os.path.basename(folder).replace('\\', '')
