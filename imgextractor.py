@@ -255,7 +255,7 @@ class ULTRAMAN(object):
             return unsparse_file
 
     def EXT4_EXTRACTOR(self):
-        CONFIGS_DIR = os.path.dirname(self.EXTRACT_DIR) + os.sep + '000_DNA' + os.sep
+        CONFIGS_DIR = os.path.dirname(self.EXTRACT_DIR) + os.sep + 'config' + os.sep
         if not os.path.isdir(CONFIGS_DIR):
             os.mkdir(CONFIGS_DIR)
         dna_contexts = CONFIGS_DIR + self.FileName + '_contexts.txt'
