@@ -940,7 +940,7 @@ def decompress_img(source, distance, keep=1):
                 call(f'extract.erofs -i {source.replace(os.sep, "/")} -o {V.DNA_MAIN_DIR} -x')
             elif file_type == 'super':
                 call(f'lpunpack {source} {V.input}')
-                j = input('> 是否开启静默 [0/1]: ') == '1'
+                j = input('> 是否继续分解img [0/1]: ')
                 if int(j) != 1:
                     return
                 for img in glob(V.input + '*_b.img'):
