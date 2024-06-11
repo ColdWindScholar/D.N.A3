@@ -1165,13 +1165,15 @@ def decompress(infile, flag=4):
 
 
 def envelop_project():
+    after = "DNA"
     V.DNA_MAIN_DIR = PWD_DIR + V.project + os.sep
-    V.input = V.DNA_MAIN_DIR + "001_DNA" + os.sep
-    V.config = V.DNA_MAIN_DIR + "config" + os.sep
-    V.out = V.DNA_MAIN_DIR + "out" + os.sep
+    V.input = V.DNA_MAIN_DIR + after + "_input" + os.sep
+    V.config = V.DNA_MAIN_DIR + after + "_config" + os.sep
+    V.out = V.DNA_MAIN_DIR + after + "_out" + os.sep
     if IS_ARM64:
-        V.input = ROM_DIR + "D.N.A" + os.sep + V.project + os.sep + "001_DNA" + os.sep
-        V.out = ROM_DIR + "D.N.A" + os.sep + V.project + os.sep + "out" + os.sep
+        V.input = ROM_DIR + "D.N.A" + os.sep + V.project + os.sep + after + "_input" + os.sep
+        V.out = ROM_DIR + "D.N.A" + os.sep + V.project + os.sep + after + "_out" + os.sep
+        V.config = ROM_DIR + "D.N.A" + os.sep + V.project + os.sep + after + "_config" + os.sep
     if not os.path.isdir(V.input):
         os.makedirs(V.input)
     if not os.path.isdir(V.input):
@@ -1345,6 +1347,7 @@ def creat_project():
         V.project = "DNA_" + creat_name
         if not os.path.isdir(V.project):
             os.mkdir(V.project)
+            envelop_project()
             menu_main()
         else:
             input(f"\x1b[0;31m\n 工程目录< \x1b[0;32m{V.project} \x1b[0;31m>已存在, 回车返回 ...\x1b[0m\n")
@@ -1394,6 +1397,7 @@ def menu_once():
             break
         elif 0 < int(choice) < len(V.dict0):
             V.project = V.dict0[int(choice)]
+            envelop_project()
             menu_main()
             break
         else:
@@ -1523,7 +1527,6 @@ menu_actions = {
 
 
 def menu_main():
-    envelop_project()
     V.JM = True
     os.system('cls' if os.name == 'nt' else 'clear')
     print(f'\x1b[1;36m> 当前工程: \x1b[0m{V.project}')
