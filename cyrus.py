@@ -940,23 +940,22 @@ def decompress_img(source, distance, keep=1):
                 call(f'extract.erofs -i {source.replace(os.sep, "/")} -o {V.DNA_MAIN_DIR} -x')
             elif file_type == 'super':
                 call(f'lpunpack {source} {V.input}')
-                j = input('> 是否继续分解img [0/1]: ') == 1
-                if j != 1:
-                    return
                 for img in glob(V.input + '*_b.img'):
                     if not V.SETUP_MANIFEST['IS_VAB'] == '1' or os.path.getsize(img) == 0:
                         os.remove(img)
                     else:
                         decompress_img(img, V.DNA_MAIN_DIR + os.path.basename(img).rsplit('.', 1)[0], keep=0)
-                else:
-                    for img in glob(V.input + '*_a.img'):
-                        new_source = img.rsplit('_', 1)[0] + '.img'
-                        try:
-                            os.rename(img, new_source)
-                        except:
-                            ...
-                        decompress_img(new_source, V.DNA_MAIN_DIR + os.path.basename(new_source).rsplit('.', 1)[0],
-                                       keep=0)
+                for img in glob(V.input + '*_a.img'):
+                    new_source = img.rsplit('_', 1)[0] + '.img'
+                    try:
+                        os.rename(img, new_source)
+                    except:
+                        ...
+                j = input('> 是否继续分解img [0/1]: ') == 1
+                if j != 1:
+                    return
+                for img in glob(V.input + '*_a.img'):
+                    decompress_img(img, V.DNA_MAIN_DIR + os.path.basename(img).rsplit('.', 1)[0],keep=0)
             else:
                 print(F'> ..., not support fs_type [{file_type}]')
             distance = V.DNA_MAIN_DIR + os.path.basename(source).replace('.unsparse.img', '').replace('.img', '')
