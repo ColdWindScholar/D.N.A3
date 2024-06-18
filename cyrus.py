@@ -941,7 +941,7 @@ def decompress_img(source, distance, keep=1):
             elif file_type == 'super':
                 call(f'lpunpack {source} {V.input}')
                 j = input('> 是否继续分解img [0/1]: ') == 1
-                if j:
+                if j != 1:
                     return
                 for img in glob(V.input + '*_b.img'):
                     if not V.SETUP_MANIFEST['IS_VAB'] == '1' or os.path.getsize(img) == 0:
