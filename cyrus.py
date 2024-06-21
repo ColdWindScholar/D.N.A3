@@ -48,7 +48,6 @@ if platform.machine() in ('aarch64', 'armv8l', 'arm64'):
         IS_ARM64 = True
         ROM_DIR = "/sdcard/Download/"
 BIN_PATH = PWD_DIR + f"local/bin/{ostype}/{platform.machine()}/"
-
 RED, WHITE, CYAN, YELLOW, MAGENTA, GREEN, BOLD, CLOSE = ['\x1b[91m',
                                                          '\x1b[97m', '\x1b[36m',
                                                          '\x1b[93m', '\x1b[1;35m',
@@ -222,10 +221,10 @@ def set_default_env_setup():
         'IS_DYNAMIC': "1",
         'ANDROID_SDK': "12",
         'DEVICE_CODE': "alioth",
-        'REPACK_EROFS_IMG': "0",
+        'REPACK_EROFS_IMG': "1",
         'REPACK_TO_RW': "0",
         'RESIZE_IMG': "0",
-        'RESIZE_EROFSIMG': "0",
+        'RESIZE_EROFSIMG': "1",
         'REPACK_SPARSE_IMG': "0",
         'REPACK_BR_LEVEL': "3",
         'SUPER_SIZE': "9126805504",
@@ -659,13 +658,12 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
     else:
         fs_variant = "erofs"
         mkerofs_cmd = "mkfs.erofs "
-        if not re.match("5.3", platform.uname().release):
-            mkerofs_cmd += "-E legacy-compress "
         if V.SETUP_MANIFEST["RESIZE_EROFSIMG"] == "1":
-            mkerofs_cmd += "-zlz4hc "
+            mkerofs_cmd += "-zlz4hc,1 "
         elif V.SETUP_MANIFEST["RESIZE_EROFSIMG"] == "2":
-            mkerofs_cmd += "-zlz4 "
-        mkerofs_cmd += f"-T{timestamp} --mount-point=/{label} --fs-config-file={fsconfig} --file-contexts={contexts} {distance} {source}"
+            mkerofs_cmd += "-zlz4,1 "
+        mkerofs_cmd += f"-T {timestamp} --mount-point=/{label} --fs-config-file={fsconfig} --file-contexts={contexts} {distance} {source}"
+        print(mkerofs_cmd)
     printinform = f"Size:{size}|FsT:{fs_variant}|FsR:{read}|Sparse:{V.SETUP_MANIFEST['REPACK_SPARSE_IMG']}"
     if V.SETUP_MANIFEST["REPACK_EROFS_IMG"] == "0":
         if V.SETUP_MANIFEST["RESIZE_IMG"] == "1" and V.SETUP_MANIFEST["REPACK_TO_RW"] == "1":
