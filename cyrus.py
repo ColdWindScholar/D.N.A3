@@ -663,7 +663,6 @@ def recompress(source, fsconfig, contexts, dumpinfo, flag=8):
         elif V.SETUP_MANIFEST["RESIZE_EROFSIMG"] == "2":
             mkerofs_cmd += "-zlz4,1 "
         mkerofs_cmd += f"-T {timestamp} --mount-point=/{label} --fs-config-file={fsconfig} --file-contexts={contexts} {distance} {source}"
-        print(mkerofs_cmd)
     printinform = f"Size:{size}|FsT:{fs_variant}|FsR:{read}|Sparse:{V.SETUP_MANIFEST['REPACK_SPARSE_IMG']}"
     if V.SETUP_MANIFEST["REPACK_EROFS_IMG"] == "0":
         if V.SETUP_MANIFEST["RESIZE_IMG"] == "1" and V.SETUP_MANIFEST["REPACK_TO_RW"] == "1":
