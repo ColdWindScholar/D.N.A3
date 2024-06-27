@@ -1,8 +1,11 @@
+#!/usr/bin/env python
+
 import os
+import sys
 
 formats = ([b'PK', "zip"], [b'OPPOENCRYPT!', "ozip"], [b'7z', "7z"], [b'\x53\xef', 'ext', 1080],
            [b'\x3a\xff\x26\xed', "sparse"], [b'\xe2\xe1\xf5\xe0', "erofs", 1024], [b"CrAU", "payload"],
-           [b"AVB0", "vbmeta"], [b'\xd7\xb7\xab\x1e', "dtbo"],
+           [b"AVB0", "vbmeta"], [b'\xd7\xb7\xab\x1e', "dtbo"], [b'(\xb5/\xfd','zst'],
            [b'\xd0\x0d\xfe\xed', "dtb"], [b"MZ", "exe"], [b".ELF", 'elf'],
            [b"ANDROID!", "boot"], [b"VNDRBOOT", "vendor_boot"],
            [b'AVBf', "avb_foot"], [b'BZh', "bzip2"],
@@ -40,3 +43,6 @@ def findfile(file, dir_) -> str:
                 return (root + os.sep + file).replace("\\", '/')
             else:
                 return root + os.sep + file
+
+if __name__ == "__main__":
+    print(gettype(sys.argv[1]))

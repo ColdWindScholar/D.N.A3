@@ -48,7 +48,7 @@ print("Building...")
 import PyInstaller.__main__
 
 PyInstaller.__main__.run([
-        'dna.py',
+        'run.py',
         '-F',
         '--exclude-module',
         'numpy',
