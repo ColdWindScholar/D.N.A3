@@ -2,6 +2,7 @@ import multiprocessing
 import sys
 from pys import cyrus
 
+
 def exception_handler(exception_type, exception, traceback):
     del traceback
     print("很抱歉，工具出现错误， 请把以下日志提交给开发者：")
