@@ -1,6 +1,6 @@
 import multiprocessing
 import sys
-
+from pys import cyrus
 
 def exception_handler(exception_type, exception, traceback):
     del traceback
@@ -13,8 +13,6 @@ def exception_handler(exception_type, exception, traceback):
 
 
 def init():
-
-    from pys import cyrus
     cyrus.check_permissions()
 
 
