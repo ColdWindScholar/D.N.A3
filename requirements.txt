@@ -1,13 +1,9 @@
 backports.statistics
 Requests
 rich
-Pillow>=10.0.1
 protobuf==3.20.1
 pycryptodome>=3.19.1
-sv_ttk
-windnd
 pyinstaller
-chlorophyll
 future
 pip
 Pygments
