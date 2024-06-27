@@ -55,11 +55,11 @@ PyInstaller.__main__.run([
         '-i', 'logo.ico'
     ])
 if os.name == 'nt':
-    if os.path.exists(local + os.sep + "dist" + os.sep + "dna.exe"):
-        shutil.move(local + os.sep + "dist" + os.sep + "dna.exe", local)
+    if os.path.exists(local + os.sep + "dist" + os.sep + "run.exe"):
+        shutil.move(local + os.sep + "dist" + os.sep + "run.exe", local)
 else:
-    if os.path.exists(local + os.sep + "dist" + os.sep + "dna"):
-        shutil.move(local + os.sep + "dist" + os.sep + "dna", local)
+    if os.path.exists(local + os.sep + "dist" + os.sep + "run"):
+        shutil.move(local + os.sep + "dist" + os.sep + "run", local)
 pclist = ['bin', 'etc', 'set', 'usr', 'temp', 'extra_flash.zip', 'setting.ini', ostype]
 for i in os.listdir(local + os.sep + "local"):
     if i in pclist:
@@ -78,7 +78,7 @@ for i in os.listdir(local + os.sep + "local" + os.sep + "bin"):
         else:
             os.remove(local + os.sep + "local" + os.sep + "bin" + os.sep + i)
 for i in os.listdir(local):
-    if i not in ['dna', 'dna.exe', 'local', 'LICENSE']:
+    if i not in ['run', 'run.exe', 'local', 'LICENSE']:
         print(f"Removing {i}")
         if os.path.isdir(local + os.sep + i):
             try:
