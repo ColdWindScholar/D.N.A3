@@ -1,6 +1,6 @@
-import cyrus
-import multiprocessing
+import os
 import sys
+import multiprocessing
 
 
 def exception_handler(exception_type, exception, traceback):
@@ -12,8 +12,11 @@ def exception_handler(exception_type, exception, traceback):
     else:
         sys.exit(1)
 
-
 def init():
+    path = os.path.join(os.getcwd(),'py')
+    sys.path.append(path)
+
+    import cyrus
     cyrus.check_permissions()
 
 
