@@ -212,6 +212,8 @@ class Dumper:
 
 
 def run(payload, outdir, images=""):
+    if not os.path.isdir(outdir):
+        os.mkdir(outdir)
     list=""
     if images != "":
         for i in images.split():
@@ -237,9 +239,12 @@ def info(fname):
 
 if __name__ == '__main__':
     if len(sys.argv) == 4:
-        run(sys.argv[1],sys[2],sys[3])
+        run(sys.argv[1],sys.argv[2],sys.argv[3])
+        sys.exit()
     if len(sys.argv) == 3:
-        run(sys.argv[1],sys[2],"")
+        run(sys.argv[1],sys.argv[2],"")
+        sys.exit()
     if len(sys.argv) == 2:
         info(sys.argv[1])
+        sys.exit()
     print(sys.argv)
