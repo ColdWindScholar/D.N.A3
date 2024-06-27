@@ -10,7 +10,7 @@ if os.name == 'nt':
     from ctypes.wintypes import LPCSTR, DWORD
     from stat import FILE_ATTRIBUTE_SYSTEM
 
-import ext4
+from pys import ext4
 
 SPARSE_HEADER_MAGIC = 0xED26FF3A
 EXT4_RAW_HEADER_MAGIC = 0xED26FF3A

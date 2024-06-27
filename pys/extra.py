@@ -1,9 +1,9 @@
 import os
 import re
 
-import contextpatch
-import fspatch
-from posix import symlink
+from pys import contextpatch
+from pys import fspatch
+from pys.posix import symlink
 import zstandard
 
 

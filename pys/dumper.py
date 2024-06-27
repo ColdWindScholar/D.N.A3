@@ -7,9 +7,9 @@ import sys
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from multiprocessing import cpu_count
-from extra import ZstdImageExtract
-import gettype
-import update_metadata_pb2 as um
+from pys.extra import ZstdImageExtract
+from pys import gettype
+from pys import update_metadata_pb2 as um
 
 flatten = lambda l: [item for sublist in l for item in sublist]
 
