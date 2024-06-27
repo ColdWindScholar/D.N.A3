@@ -16,13 +16,13 @@ from rich import print as echo
 from rich.console import Console
 from rich.progress import Progress
 
-import devdex
-import dumper as extract_payload
-import fspatch
-import img2sdat
-import imgextractor
-import sdat2img
-import gettype 
+from pys import devdex
+from pys import dumper as extract_payload
+from pys import fspatch
+from pys import img2sdat
+from pys import imgextractor
+from pys import sdat2img
+from pys import gettype
 
 if os.name == 'nt':
     import ctypes
