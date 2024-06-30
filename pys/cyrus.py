@@ -532,17 +532,15 @@ def patch_addons():
 
 def repack_super():
     parts_1 = [
-        'system',
-        'system_ext',
+        'system*',
         'product',
-        'vendor',
+        'vendor*',
         'odm',
-        "vendor_dlmk",
-        "my_"
+        "my_*"
     ]
     parts = []
     for i in parts_1:
-        for file in glob(V.out + i + '*' + '.img'):
+        for file in glob(V.out + i + '.img'):
             parts.append(os.path.basename(file).rsplit('.', 1)[0])
     argvs = f'lpmake --metadata-size 65536 --super-name super --device super:{V.SETUP_MANIFEST["SUPER_SIZE"]}:{int(V.SETUP_MANIFEST["SUPER_SECTOR"]) * 512} '
     if V.SETUP_MANIFEST['IS_VAB'] == '1':
@@ -551,6 +549,7 @@ def repack_super():
             if os.path.isfile(V.out + i + '.img'):
                 img_a = V.out + i + '.img'
                 file_type = gettype.gettype(img_a)
+                print(img_a)
                 if file_type == 'sparse':
                     new_img_a = imgextractor.ULTRAMAN().APPLE(img_a)
                     if os.path.isfile(new_img_a):
@@ -1176,8 +1175,8 @@ def envelop_project():
         V.config = ROM_DIR + "D.N.A" + os.sep + V.project + os.sep + after + "_config" + os.sep
     if not os.path.isdir(V.input):
         os.makedirs(V.input)
-    if not os.path.isdir(V.input):
-        os.makedirs(V.main_dir)
+    if not os.path.isdir(V.out):
+        os.makedirs(V.out)
     if not os.path.isdir(V.main_dir):
         os.makedirs(V.main_dir)
 
