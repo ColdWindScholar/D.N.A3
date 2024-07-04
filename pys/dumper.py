@@ -7,8 +7,7 @@ import sys
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from multiprocessing import cpu_count
-from pys.extra import ZstdImageExtract
-from pys import gettype
+import zstandard
 from pys import update_metadata_pb2 as um
 
 flatten = lambda l: [item for sublist in l for item in sublist]
@@ -159,10 +158,21 @@ class Dumper:
                     data = b''
         elif op.type == op.REPLACE:
             out_file.seek(op.dst_extents[0].start_block * self.block_size)
-            while processed_len < data_length:
-                data = payloadfile.read(buffsize)
-                processed_len += len(data)
-                out_file.write(data)
+            dec = zstandard.ZstdDecompressor().decompressobj()
+            if payloadfile.read(4) == b'\x28\xb5\x2f\xfd':
+                payloadfile.seek(payloadfile.tell() - 4)
+                while processed_len < data_length:
+                    data = payloadfile.read(buffsize)
+                    processed_len += len(data)
+                    data = dec.decompress(data)
+                    out_file.write(data)
+                out_file.write(dec.flush())
+            else:
+                payloadfile.seek(payloadfile.tell() - 4)
+                while processed_len < data_length:
+                    data = payloadfile.read(buffsize)
+                    processed_len += len(data)
+                    out_file.write(data)
         elif op.type == op.SOURCE_COPY:
             if not self.diff:
                 print("SOURCE_COPY supported only for differential OTA")
@@ -212,6 +222,8 @@ class Dumper:
 
 
 def run(payload, outdir, images=""):
+    if not os.path.isdir(outdir):
+        os.mkdir(outdir)
     list=""
     if images != "":
         for i in images.split():
@@ -237,9 +249,12 @@ def info(fname):
 
 if __name__ == '__main__':
     if len(sys.argv) == 4:
-        run(sys.argv[1],sys[2],sys[3])
+        run(sys.argv[1],sys.argv[2],sys.argv[3])
+        sys.exit()
     if len(sys.argv) == 3:
-        run(sys.argv[1],sys[2],"")
+        run(sys.argv[1],sys.argv[2],"")
+        sys.exit()
     if len(sys.argv) == 2:
         info(sys.argv[1])
+        sys.exit()
     print(sys.argv)

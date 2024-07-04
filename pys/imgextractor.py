@@ -187,10 +187,10 @@ class ULTRAMAN(object):
             self.EXT4_EXTRACTOR()
 
     def LEMON(self, target):
-        from seekfd import gettype
+        from pys import gettype
         if not os.path.exists(target):
             return 0
-        target_type = gettype(target)
+        target_type = gettype.gettype(target)
         if target_type == 'sparse':
             return self.__ImgSizeFromSparseFile(target)
         else:
