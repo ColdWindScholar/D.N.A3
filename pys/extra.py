@@ -4,7 +4,6 @@ import re
 from pys import contextpatch
 from pys import fspatch
 from pys.posix import symlink
-import zstandard
 
 
 class updaterutil:
