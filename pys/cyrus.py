@@ -23,7 +23,7 @@ from pys import img2sdat
 from pys import imgextractor
 from pys import sdat2img
 from pys import gettype
-
+from pys import lpunpack
 if os.name == 'nt':
     import ctypes
     from tkinter.filedialog import askopenfilename
@@ -60,7 +60,7 @@ class GlobalValue(object):
 
     def __init__(self):
         self.programs = ["mv", "cpio", "brotli", "img2simg", "e2fsck", "resize2fs",
-                         "mke2fs", "e2fsdroid", "mkfs.erofs", "lpmake", "lpunpack", "extract.erofs", "magiskboot"]
+                         "mke2fs", "e2fsdroid", "mkfs.erofs", "lpmake", "extract.erofs", "magiskboot"]
         if os.name == 'nt':
             self.programs = []
 
@@ -842,7 +842,7 @@ def dboot(infile, dist):
             print("Ramdisk Not Found.. %s" % e)
             return
         cpio = gettype.findfile("cpio.exe" if os.name != 'posix' else 'cpio',
-                               BIN_PATH).replace(
+                                BIN_PATH).replace(
             '\\', "/")
         call(exe="busybox ash -c \"find | sed 1d | %s -H newc -R 0:0 -o -F ../ramdisk-new.cpio\"" % cpio, sp=1,
              shstate=True)
@@ -937,13 +937,17 @@ def decompress_img(source, distance, keep=1):
                     source = source.replace('.unsparse', '')
                 call(f'extract.erofs -i {source.replace(os.sep, "/")} -o {V.main_dir} -x')
             elif file_type == 'super':
-                call(f'lpunpack {source} {V.input}')
+                lpunpack.unpack(source,V.input )
                 for img in glob(V.input + '*_*.img'):
                     if not V.SETUP_MANIFEST['IS_VAB'] == '1' or os.path.getsize(img) == 0:
                         os.remove(img)
                     else:
-                        new_source = img.replace('_a.img','.img')
-                        new_source = img.replace('_b.img','.img')
+                        new_source = img.replace('_a.img', '.img')
+                        try:
+                            os.rename(img, new_source)
+                        except:
+                            ...
+                        new_source = img.replace('_b.img', '.img')
                         try:
                             os.rename(img, new_source)
                         except:
@@ -952,7 +956,7 @@ def decompress_img(source, distance, keep=1):
                 if j != 1:
                     return
                 for img in glob(V.input + '*.img'):
-                    decompress_img(img, V.main_dir + os.path.basename(img).rsplit('.', 1)[0],keep=0)
+                    decompress_img(img, V.main_dir + os.path.basename(img).rsplit('.', 1)[0], keep=0)
             else:
                 print(F'> ..., not support fs_type [{file_type}]')
             distance = V.main_dir + os.path.basename(source).replace('.unsparse.img', '').replace('.img', '')
@@ -968,10 +972,10 @@ def decompress_img(source, distance, keep=1):
                                     '') + '_fs_config'
                     if os.path.isfile(contexts) and os.path.isfile(fsconfig):
                         new_contexts = V.config + os.path.basename(source).replace('.unsparse.img',
-                                                                                         '').replace(
+                                                                                   '').replace(
                             '.img', '') + '_contexts.txt'
                         new_fsconfig = V.config + os.path.basename(source).replace('.unsparse.img',
-                                                                                         '').replace(
+                                                                                   '').replace(
                             '.img', '') + '_fsconfig.txt'
                         shutil.copy(contexts, new_contexts)
                         shutil.copy(fsconfig, new_fsconfig)
@@ -1058,8 +1062,8 @@ def decompress_bin(infile, outdir, flag='1'):
         if j != 1:
             return
         for img in glob(V.input + '*.img'):
-            decompress_img(img, V.main_dir + os.path.basename(img).rsplit('.', 1)[0],keep=0)
-        
+            decompress_img(img, V.main_dir + os.path.basename(img).rsplit('.', 1)[0], keep=0)
+
 
 def appendf(msg, log):
     if not os.path.isfile(log) and not os.path.exists(log):
