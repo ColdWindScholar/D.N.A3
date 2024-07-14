@@ -2,13 +2,14 @@
 import bz2
 import lzma
 import struct
-import os
 import sys
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from multiprocessing import cpu_count
+
 import zstandard
-from pys import update_metadata_pb2 as um
+
+import update_metadata_pb2 as um
 
 flatten = lambda l: [item for sublist in l for item in sublist]
 
@@ -23,7 +24,7 @@ def u64(x):
 
 class Dumper:
     def __init__(
-            self, payloadfile, out,images="", diff=None, old=None, workers=cpu_count(), buffsize=8192
+            self, payloadfile, out, diff=None, old=None, images="", workers=cpu_count(), buffsize=8192
     ):
         self.payloadpath = payloadfile
         payloadfile = self.open_payloadfile()
@@ -40,19 +41,12 @@ class Dumper:
     def open_payloadfile(self):
         return open(self.payloadpath, 'rb')
 
-    def info(self):
-        images = ''
-        for i in self.dam.partitions:
-            images += f'{i.partition_name} '
-        print(images)
-        return images
-    
-    def run(self, slow=False):
+    def run(self, slow=False) -> bool:
         if self.images == "":
             partitions = self.dam.partitions
         else:
             partitions = []
-            for image in self.images.split():
+            for image in self.images:
                 found = False
                 for dam_part in self.dam.partitions:
                     if dam_part.partition_name == image:
@@ -60,11 +54,11 @@ class Dumper:
                         found = True
                         break
                 if not found:
-                    print("Partition %s not found in image" % image)
+                    print(f"Partition {image} not found in image")
 
         if len(partitions) == 0:
             print("Not operating on any partitions")
-            return 0
+            return False
 
         partitions_with_ops = []
         for partition in partitions:
@@ -90,6 +84,7 @@ class Dumper:
             self.extract_slow(partitions_with_ops)
         else:
             self.multiprocess_partitions(partitions_with_ops)
+        return True
 
     def extract_slow(self, partitions):
         for part in partitions:
@@ -102,9 +97,9 @@ class Dumper:
                 partition_name = futures[future]['partition'].partition_name
                 try:
                     future.result()
-                    print(f"{partition_name}.img \t extract Done.")
+                    print(f"{partition_name} Done!")
                 except Exception as exc:
-                    print(f"{partition_name}.img - processing generated an exception: {exc}")
+                    print(f"{partition_name} - processing generated an exception: {exc}")
 
     def validate_magic(self):
         magic = self.payloadfile.read(4)
@@ -173,6 +168,7 @@ class Dumper:
                     data = payloadfile.read(buffsize)
                     processed_len += len(data)
                     out_file.write(data)
+
         elif op.type == op.SOURCE_COPY:
             if not self.diff:
                 print("SOURCE_COPY supported only for differential OTA")
@@ -196,16 +192,16 @@ class Dumper:
                     processed_len += len(data)
                 processed_len = 0
         else:
-            print("Unsupported type = %d" % op.type)
+            print(f"Unsupported type = {op.type:d}")
             sys.exit(-1)
         del data
 
     def dump_part(self, part):
         name = part["partition"].partition_name
-        out_file = open("%s/%s.img" % (self.out, name), "wb")
+        out_file = open(f"{self.out}/{name}.img", "wb")
 
         if self.diff:
-            old_file = open("%s/%s.img" % (self.old, name), "rb")
+            old_file = open(f"{self.old}/{name}.img", "rb")
         else:
             old_file = None
 
@@ -213,48 +209,7 @@ class Dumper:
             self.tls.payloadfile = payloadfile
             self.do_ops_for_part(part, out_file, old_file)
         out_file.close()
-        if gettype.gettype("%s/%s.img" % (self.out, name)) == 'zstd':
-            ZstdImageExtract("%s/%s.img" % (self.out, name), "%s/%s_e.img" % (self.out, name)).extract(overwrite=True)
 
     def do_ops_for_part(self, part, out_file, old_file):
         for op in part["operations"]:
             self.data_for_op(op, out_file, old_file)
-
-
-def run(payload, outdir, images=""):
-    if not os.path.isdir(outdir):
-        os.mkdir(outdir)
-    list=""
-    if images != "":
-        for i in images.split():
-            i=i.replace('.img', '')
-            list+=f'{i} '
-    Dumper(
-        payload,
-        outdir,
-        list,
-        diff=False,
-        old='old',
-    ).run(slow=False)
-
-def info(fname):
-    return Dumper(
-        fname,
-        os.getcwd(),
-        "",
-        diff=False,
-        old='old',
-    ).info()
-
-
-if __name__ == '__main__':
-    if len(sys.argv) == 4:
-        run(sys.argv[1],sys.argv[2],sys.argv[3])
-        sys.exit()
-    if len(sys.argv) == 3:
-        run(sys.argv[1],sys.argv[2],"")
-        sys.exit()
-    if len(sys.argv) == 2:
-        info(sys.argv[1])
-        sys.exit()
-    print(sys.argv)
